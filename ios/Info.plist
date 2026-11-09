@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  The whole app bundle, minus the binary. There is no Xcode project, no
+  storyboard and no asset catalog: `simctl install` accepts a directory with
+  this file and an executable in it, and winit's `run_app` supplies the
+  `UIApplicationMain` that Info.plist's `CFBundleExecutable` names.
+
+  Three keys here are load-bearing rather than boilerplate:
+
+  * `UILaunchScreen` (an EMPTY dict is enough, iOS 13+). Without a launch
+    screen -- storyboard or this key -- UIKit runs the app in a 320x480
+    compatibility box letterboxed inside the real screen, and the map draws
+    into a postage stamp with black bars. That is not an error anywhere; it
+    just silently looks wrong.
+  * `CFBundleSupportedPlatforms = [iPhoneSimulator]`, which is how `simctl
+    install` tells a simulator bundle from a device one.
+  * `CADisableMinimumFrameDurationOnPhone`. Absent it, iOS imposes a MINIMUM
+    frame duration of 1/60 s on every iPhone app, and a CAMetalLayer hands
+    out drawables no faster than that however quickly the app asks.
+
+    It is NECESSARY and it is NOT SUFFICIENT, which is the part worth
+    writing down. This key lifts a ceiling; it does not raise the rate. A
+    process that has never told Core Animation what cadence it wants is
+    given the iPhone default of 60 whether the key is present or not, and
+    measuring it says so plainly -- `ios/src/app.rs`'s `[perf]` line, same
+    build, same phone, same idle map:
+
+        no key,  no display link    59.2 fps   p50 16.66 ms
+        key,     no display link    61.7 fps   p50 16.65 ms   <- unchanged
+        key, plus a display link    78.0 fps   p50  8.33 ms touch-to-present
+
+    The thing that actually asks is `ios/src/display_link.rs`; that file has
+    the reasoning. This key is what makes the asking legal.
+
+    Note that even together the two are a ceiling lift and not a floor:
+    Core Animation still picks the rate, and the `[perf]` histogram shows it
+    moving between 60 and 120 as the app's own load changes. Nothing here
+    forces 120 Hz on a scene that cannot sustain it, which is correct --
+    a map that is not moving has no business holding a panel at 120.
+-->
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleExecutable</key>
+    <string>gpui-map-demo</string>
+    <key>CFBundleIdentifier</key>
+    <string>dev.gpuimaps.iosdemo</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>gpui-map</string>
+    <key>CFBundleDisplayName</key>
+    <string>gpui-map</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.1</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleSupportedPlatforms</key>
+    <array>
+        <string>iPhoneSimulator</string>
+    </array>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>MinimumOSVersion</key>
+    <string>13.0</string>
+    <key>UIDeviceFamily</key>
+    <array>
+        <integer>1</integer>
+    </array>
+    <key>UILaunchScreen</key>
+    <dict/>
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>arm64</string>
+        <string>metal</string>
+    </array>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+    <key>UIStatusBarHidden</key>
+    <true/>
+    <key>CADisableMinimumFrameDurationOnPhone</key>
+    <true/>
+</dict>
+</plist>

@@ -1,0 +1,33 @@
+{
+  "version": "v1",
+  "config": {
+    "visState": {
+      "filters": [
+        { "dataId": ["trips"], "id": "when", "name": ["pickup_time"], "type": "timeRange", "value": [1704067200000, 1704153600000], "enabled": true, "plotType": { "type": "histogram" }, "animationWindow": "free", "yAxis": null, "speed": 2, "view": "enlarged" },
+        { "dataId": ["trips"], "id": "kind", "name": ["vehicle"], "type": "multiSelect", "value": ["bus", "van"], "enabled": false },
+        { "dataId": ["trips"], "id": "night", "name": ["is_night"], "type": "select", "value": true, "enabled": true }
+      ],
+      "layers": [
+        {
+          "id": "pickups",
+          "type": "point",
+          "config": {
+            "dataId": "trips",
+            "label": "Pickups",
+            "color": [240, 120, 40],
+            "columns": { "lat": "pickup_lat", "lng": "pickup_lon" },
+            "isVisible": true,
+            "visConfig": { "radius": 8, "opacity": 0.9, "outline": false, "thickness": 2, "strokeColor": null, "filled": true }
+          },
+          "visualChannels": { "colorField": null, "colorScale": "quantile", "sizeField": null, "sizeScale": "linear" }
+        }
+      ],
+      "interactionConfig": {
+        "tooltip": { "fieldsToShow": { "trips": [{ "name": "pickup_time", "format": "L LT" }, { "name": "vehicle", "format": null }] }, "enabled": true }
+      },
+      "layerBlending": "normal"
+    },
+    "mapState": { "latitude": 35.68, "longitude": 139.76, "zoom": 11 },
+    "mapStyle": { "styleType": "light" }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "story": 1,
+  "title": "Orbit Marina Bay",
+  "output": { "preset": "1080p30" },
+  "scene": {
+    "style": "../mapbox-streets-style.json",
+    "basemap": { "source": "mapbox" }
+  },
+  "camera": [
+    { "type": "jump", "label": "start", "to": { "lon": 103.8588, "lat": 1.2834, "zoom": 15.5, "pitch": 60, "bearing": 0 } },
+    { "type": "orbit", "degrees": 360, "duration": 12, "easing": "linear" }
+  ],
+  "events": []
+}

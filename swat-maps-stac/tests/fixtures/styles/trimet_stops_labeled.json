@@ -1,0 +1,122 @@
+{
+  "version": 8,
+  "name": "TriMet Stops with names",
+  "metadata": {
+    "description": "Stops colored by mode with STOP_NAME shown from zoom 14. Stop names are intersections or street addresses, so they read as cross-streets rather than as station names."
+  },
+  "sources": {
+    "data": {
+      "type": "vector",
+      "url": "pmtiles://../stops.pmtiles"
+    }
+  },
+  "layers": [
+    {
+      "id": "stops-legend",
+      "type": "fill",
+      "source": "data",
+      "source-layer": "stops",
+      "paint": {
+        "fill-color": [
+          "match",
+          [
+            "get",
+            "type"
+          ],
+          "BUS",
+          "#4679AA",
+          "MAX",
+          "#1359AE",
+          "SC",
+          "#72A130",
+          "CR",
+          "#6E6E6E",
+          "AT",
+          "#898E91",
+          "BSC",
+          "#0093B2",
+          "MAX/SC",
+          "#D05F27",
+          "#CCCCCC"
+        ],
+        "fill-opacity": 0
+      }
+    },
+    {
+      "id": "stops",
+      "type": "circle",
+      "source": "data",
+      "source-layer": "stops",
+      "paint": {
+        "circle-radius": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          9,
+          1.6,
+          13,
+          3.4,
+          16,
+          6
+        ],
+        "circle-color": [
+          "match",
+          [
+            "get",
+            "type"
+          ],
+          "BUS",
+          "#4679AA",
+          "MAX",
+          "#1359AE",
+          "SC",
+          "#72A130",
+          "CR",
+          "#6E6E6E",
+          "AT",
+          "#898E91",
+          "BSC",
+          "#0093B2",
+          "MAX/SC",
+          "#D05F27",
+          "#CCCCCC"
+        ],
+        "circle-stroke-color": "#1A1A1A",
+        "circle-stroke-width": 1.6
+      }
+    },
+    {
+      "id": "stops-labels",
+      "type": "symbol",
+      "source": "data",
+      "source-layer": "stops",
+      "minzoom": 14,
+      "layout": {
+        "text-field": [
+          "get",
+          "stop_name"
+        ],
+        "text-font": [
+          "Noto Sans Regular"
+        ],
+        "text-size": 10,
+        "text-anchor": "top",
+        "text-max-width": 9,
+        "text-padding": 4,
+        "text-offset": [
+          0,
+          0.8
+        ]
+      },
+      "paint": {
+        "text-color": "#1A1A1A",
+        "text-halo-color": "#FFFFFF",
+        "text-halo-width": 1.4
+      }
+    }
+  ]
+}

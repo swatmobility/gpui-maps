@@ -1,0 +1,15 @@
+# The Singapore overlay's downloads: the ONE list of URLs, read by
+# scripts/fetch-singapore-overlay.sh and compiled into
+# kit/src/panels/overlay_features.rs (include_str!). Edit here only.
+#
+# Columns: FILE  KIND  TARGET
+#   KIND datagovsg: TARGET is a data.gov.sg dataset id, fetched in two steps
+#                   (GET the poll URL below, then the signed URL it returns).
+#   KIND url:       TARGET is fetched as is.
+# Files land in ~/.cache/gpui-map-data/singapore/.
+POLL https://api-open.data.gov.sg/v1/public/api/datasets/{id}/poll-download
+planning-areas.geojson datagovsg d_4765db0e87b9c86336792efe8a1f7a66
+rail-lines.geojson datagovsg d_222bfc84eb86c7c11994d02f8939da8d
+station-exits.geojson datagovsg d_b39d3a0871985372d7e1637193335da5
+station-codes.csv datagovsg d_f5d9f95e7691f70f87f9a2347454e069
+population.json url https://tablebuilder.singstat.gov.sg/api/table/tabledata/C020125?limit=5000

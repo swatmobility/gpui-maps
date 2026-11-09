@@ -1,0 +1,13 @@
+{
+  "story": 1,
+  "title": "minimal",
+  "output": { "width": 480, "height": 270, "fps": 10 },
+  "scene": { "style": "../../../examples/liberty-style.json", "basemap": { "source": "openfreemap" } },
+  "camera": [
+    { "type": "jump", "label": "start", "to": { "lon": 103.851, "lat": 1.2905, "zoom": 14, "pitch": 0, "bearing": 0 } },
+    { "type": "hold", "duration": 0.5, "settle": true },
+    { "type": "ease", "label": "in", "to": { "zoom": 15, "pitch": 40 }, "duration": 1.0 },
+    { "type": "orbit", "degrees": 30, "duration": 0.5 }
+  ],
+  "events": [ { "at": { "after": "in", "offset": 0 }, "caption": { "text": "Marina Bay", "anchor": "bottom-left", "size_px": 20 }, "until": 2.0 } ]
+}

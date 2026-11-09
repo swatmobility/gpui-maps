@@ -1,0 +1,358 @@
+{
+  "type": "Collection",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://schemas.portolan-sdi.org/portolan/v0.1.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json",
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/web-map-links/v1.3.0/schema.json",
+    "https://stac-extensions.github.io/alternate-assets/v1.2.0/schema.json"
+  ],
+  "id": "routes",
+  "title": "TriMet Routes",
+  "description": "All existing bus and rail lines. 200 LineString features covering [TriMet](https://developer.trimet.org/gis/)'s service district in the Portland, Oregon metropolitan area, published by TriMet as [`tm_routes`](https://developer.trimet.org/gis/data/tm_routes.zip) and last updated at the source on July 13, 2026.\n\nThis is a cloud-native mirror: the same data as GeoParquet and PMTiles. The GeoParquet keeps TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)), so lengths and areas are in feet; only the PMTiles are reprojected to WGS84. The original [Shapefile](https://developer.trimet.org/gis/data/tm_routes.zip), [KML](https://developer.trimet.org/gis/data/tm_routes.kml) and [metadata page](https://developer.trimet.org/gis/meta_tm_routes.shtml) are linked as assets, and column descriptions and code lists are TriMet's own, taken from that page.\n\nThe [collection README](https://source.coop/cholmes/trimet/routes/README.md) covers suggested uses, limitations and the full schema.\n\n**Agents:** [`AGENTS.md`](https://source.coop/cholmes/trimet/routes/AGENTS.md) is the guide written for you \u2014 what joins to what and on which column, the quirks that produce silently wrong answers (documented codes that do not appear in the data, columns TriMet's metadata omits, counts that mean different things in different collections), what the coordinate system implies for measurement, and query recipes that have each been run against these files.",
+  "license": "other",
+  "keywords": [
+    "transit",
+    "public transport",
+    "TriMet",
+    "Portland",
+    "Oregon",
+    "linestring"
+  ],
+  "providers": [
+    {
+      "name": "TriMet",
+      "description": "Tri-County Metropolitan Transportation District of Oregon, the transit agency for the Portland metropolitan area and the originator of this data.",
+      "roles": [
+        "producer",
+        "licensor"
+      ],
+      "url": "https://developer.trimet.org/gis/",
+      "email": "gis@trimet.org"
+    },
+    {
+      "name": "Chris Holmes",
+      "description": "Maintains this cloud-native mirror. Not affiliated with TriMet.",
+      "roles": [
+        "host"
+      ],
+      "url": "https://github.com/cholmes/portolan-catalog-trimet",
+      "email": "cholmes@9eo.org"
+    }
+  ],
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -123.11573,
+          45.28495,
+          -122.332951,
+          45.639118
+        ]
+      ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "2026-07-13T00:00:00Z",
+          null
+        ]
+      ]
+    }
+  },
+  "updated": "2026-08-02T18:02:50Z",
+  "table:columns": [
+    {
+      "name": "rte",
+      "type": "int32",
+      "description": "Route number."
+    },
+    {
+      "name": "dir",
+      "type": "int32",
+      "description": "Direction of route. Values: 0 = Direction 0; 1 = Direction 1."
+    },
+    {
+      "name": "rte_desc",
+      "type": "string",
+      "description": "Route name."
+    },
+    {
+      "name": "public_rte",
+      "type": "string",
+      "description": "Public route number."
+    },
+    {
+      "name": "dir_desc",
+      "type": "string",
+      "description": "Description of route direction."
+    },
+    {
+      "name": "frequent",
+      "type": "string",
+      "description": "Indicates whether a route or route segment has frequent service. Values: True = Route segment has frequent service; False = Route segment does not have frequent service."
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "description": "Type of service. Values: AT = Aerial Tram; BUS = Bus; CR = Commuter rail; MAX = Light rail; SC = Streetcar."
+    },
+    {
+      "name": "geometry",
+      "type": "binary",
+      "description": "Feature geometry in TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)). Coordinates are feet, not degrees."
+    },
+    {
+      "name": "geometry_bbox",
+      "type": "struct<xmin: float not null, ymin: float not null, xmax: float not null, ymax: float not null>",
+      "description": "Per-feature bounding box struct, the GeoParquet covering column. Same projected feet as the geometry."
+    }
+  ],
+  "table:primary_geometry": "geometry",
+  "table:row_count": 200,
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "describedby",
+      "href": "./README.md",
+      "type": "text/markdown",
+      "title": "TriMet Routes README"
+    },
+    {
+      "rel": "agents",
+      "href": "./AGENTS.md",
+      "type": "text/markdown",
+      "title": "TriMet Routes agent guide"
+    },
+    {
+      "rel": "license",
+      "href": "https://developer.trimet.org/terms_of_use.shtml",
+      "type": "text/html",
+      "title": "TriMet Terms of Use"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://source.coop/cholmes/trimet/routes/",
+      "type": "text/html",
+      "title": "TriMet Routes on Source Cooperative"
+    },
+    {
+      "rel": "via",
+      "href": "https://developer.trimet.org/gis/meta_tm_routes.shtml",
+      "type": "text/html",
+      "title": "TriMet metadata for tm_routes"
+    },
+    {
+      "rel": "via",
+      "href": "https://developer.trimet.org/gis/",
+      "type": "text/html",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "icon",
+      "href": "../_assets/trimet-logo.png",
+      "type": "image/png",
+      "title": "TriMet"
+    },
+    {
+      "rel": "pmtiles",
+      "href": "./routes.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "title": "TriMet Routes vector tiles",
+      "pmtiles:layers": [
+        "routes"
+      ]
+    }
+  ],
+  "assets": {
+    "data": {
+      "href": "./routes.parquet",
+      "type": "application/vnd.apache.parquet",
+      "title": "TriMet Routes (GeoParquet)",
+      "description": "All existing bus and rail lines. In TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)), not reprojected, so lengths and areas are in feet. Hilbert-ordered, zstd-compressed, with a GeoParquet 1.1 bbox covering column for row-group pruning.",
+      "roles": [
+        "data"
+      ],
+      "file:size": 813016,
+      "file:checksum": "1220d065c75b75e2dc925238e94533edf68c48c39a6bf40876accaf893e10099a334",
+      "table:columns": [
+        {
+          "name": "rte",
+          "type": "int32",
+          "description": "Route number."
+        },
+        {
+          "name": "dir",
+          "type": "int32",
+          "description": "Direction of route. Values: 0 = Direction 0; 1 = Direction 1."
+        },
+        {
+          "name": "rte_desc",
+          "type": "string",
+          "description": "Route name."
+        },
+        {
+          "name": "public_rte",
+          "type": "string",
+          "description": "Public route number."
+        },
+        {
+          "name": "dir_desc",
+          "type": "string",
+          "description": "Description of route direction."
+        },
+        {
+          "name": "frequent",
+          "type": "string",
+          "description": "Indicates whether a route or route segment has frequent service. Values: True = Route segment has frequent service; False = Route segment does not have frequent service."
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "Type of service. Values: AT = Aerial Tram; BUS = Bus; CR = Commuter rail; MAX = Light rail; SC = Streetcar."
+        },
+        {
+          "name": "geometry",
+          "type": "binary",
+          "description": "Feature geometry in TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)). Coordinates are feet, not degrees."
+        },
+        {
+          "name": "geometry_bbox",
+          "type": "struct<xmin: float not null, ymin: float not null, xmax: float not null, ymax: float not null>",
+          "description": "Per-feature bounding box struct, the GeoParquet covering column. Same projected feet as the geometry."
+        }
+      ],
+      "table:primary_geometry": "geometry",
+      "table:row_count": 200,
+      "proj:code": "EPSG:2913",
+      "alternate": {
+        "s3": {
+          "href": "s3://us-west-2.opendata.source.coop/cholmes/trimet/routes/routes.parquet",
+          "title": "S3 URI"
+        }
+      }
+    },
+    "visual": {
+      "href": "./routes.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "title": "TriMet Routes (PMTiles)",
+      "description": "Vector tiles for web display, layer name `routes`, reprojected to WGS84 as tiles require. Built with tippecanoe keeping every feature at every zoom, so what a map draws matches the GeoParquet exactly.",
+      "roles": [
+        "visual",
+        "data"
+      ],
+      "file:size": 850179,
+      "file:checksum": "12208aeba6fecdf9a1ee60774288bbe8dda8a91e716e70a22f25c67c4d52a2514105",
+      "alternate": {
+        "s3": {
+          "href": "s3://us-west-2.opendata.source.coop/cholmes/trimet/routes/routes.pmtiles",
+          "title": "S3 URI"
+        }
+      }
+    },
+    "thumbnail": {
+      "href": "./thumbnail.webp",
+      "type": "image/webp",
+      "title": "TriMet Routes preview",
+      "description": "Rendered from this collection's styles/default.json with MapLibre GL Native, over a light basemap. WebP is allowed for thumbnails by spec PR portolan-sdi/portolan-spec#121, which this catalog targets; Portolan 0.1 alone permits only PNG and JPEG.",
+      "roles": [
+        "thumbnail"
+      ],
+      "file:size": 49518,
+      "file:checksum": "12203a88a14229d52dc1bf4c7692d8ffb03dbd46e9a1a0a9c0ffb223ec3bd9c90782"
+    },
+    "style": {
+      "href": "./styles/default.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Routes by service type",
+      "description": "Every fixed-route alignment colored by TYPE, following TriMet's own `trimet-routes` MapLibre style: bus lines thin and blue, MAX heaviest, streetcar thin, commuter rail gray. Colors are TriMet's GTFS route_color values, which is what that style resolves at draw time.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 2969,
+      "file:checksum": "1220ec55eb211b01c742f2329e3df52d051e9eb07fec2fc68db3d36c5647e0607865"
+    },
+    "style-by-direction": {
+      "href": "./styles/by-direction.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Routes by direction",
+      "description": "Colors the two DIR values apart. Each route appears twice in this layer, once per direction, and the two alignments are rarely identical because of one-way streets \u2014 this style makes those divergences visible. Offsetting the two directions by a couple of pixels keeps coincident segments from hiding each other.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 2113,
+      "file:checksum": "1220e17a18f35553ec6be0f188888faa7000fe093775e53015fa421ae6676acaf758"
+    },
+    "style-frequent-service": {
+      "href": "./styles/frequent-service.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Routes \u2014 Frequent Service",
+      "description": "Splits the network on the FREQUENT flag. The 51 route-direction segments flagged True are drawn heavy in TriMet's FX green; the remaining 149 recede to a thin gray, so the frequent-service spine stands out against the rest of the system.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 2033,
+      "file:checksum": "1220c5469994e52efe41c0806b1b6730b8a215fcc8a04f1b2d5a69dc752cbba7f6bd"
+    },
+    "style-labeled": {
+      "href": "./styles/labeled.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Routes with route numbers",
+      "description": "The service-type styling with PUBLIC_RTE drawn along each alignment. Use PUBLIC_RTE rather than RTE for display: it is the number riders see, and it is where lettered services such as FX2 appear.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 3469,
+      "file:checksum": "1220945e8c7529478fe905fd868c1c72b118c0197e67f8fba5665a1b6decc5a6cf54"
+    },
+    "source_shapefile": {
+      "href": "https://developer.trimet.org/gis/data/tm_routes.zip",
+      "type": "application/zip",
+      "title": "TriMet Routes \u2014 original TriMet Shapefile",
+      "description": "TriMet's own distribution of `tm_routes`, in NAD83(HARN) / Oregon North (ft). This is the file this collection was built from. Size and checksum are of what TriMet served at the sync time recorded in `updated`.",
+      "roles": [
+        "data",
+        "source"
+      ],
+      "file:size": 757147,
+      "file:checksum": "12206a72cc514baadbfc0ccffe9168b92c3e179c6f6cc75155905469bdfcaf2bfa20"
+    },
+    "source_kml": {
+      "href": "https://developer.trimet.org/gis/data/tm_routes.kml",
+      "type": "application/vnd.google-earth.kml+xml",
+      "title": "TriMet Routes \u2014 original TriMet KML",
+      "description": "TriMet's KML distribution of the same layer.",
+      "roles": [
+        "data",
+        "source"
+      ],
+      "file:size": 6851807,
+      "file:checksum": "1220745616f45568b2b85a263070db18dd8d16e6b44aaaaa0b25641551bc35308515"
+    },
+    "source_style": {
+      "href": "./styles/trimet-routes.style.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet MapLibre style trimet-routes",
+      "description": "TriMet's published MapLibre style for the whole network, from tiles.trimet.org. Its line widths, caps and colors are what styles/default.json follows.",
+      "roles": [
+        "style",
+        "source"
+      ],
+      "file:size": 18120,
+      "file:checksum": "12205498bb66697a089062f126a233a3ef1b7cc89c0549d4d647dcf1f08b43f0e35d"
+    }
+  }
+}

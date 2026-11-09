@@ -1,0 +1,228 @@
+{
+  "story": 1,
+  "title": "Port to port (design)",
+  "summary": "A container ship's passage from Singapore's Pasir Panjang terminal west through the Singapore Strait and north up the Strait of Malacca to Port Klang in Malaysia, drawn as a line on the map.",
+  "lang": "en",
+  "output": {
+    "aspect": "9:16",
+    "tier": "fullhd",
+    "fps": 30,
+    "safe_area": "reels",
+    "burn_captions": true
+  },
+  "scene": {
+    "style": "../liberty-style.json",
+    "basemap": {
+      "source": "openfreemap"
+    },
+    "labels": true,
+    "overlays": [
+      {
+        "id": "voyage",
+        "data": "data/port-route.geojson",
+        "line_metrics": true,
+        "attribution": "Hand-drawn route, illustrative",
+        "layers": [
+          {
+            "id": "route",
+            "type": "line",
+            "role": "route"
+          },
+          {
+            "id": "ports",
+            "type": "circle",
+            "role": "stops"
+          }
+        ]
+      }
+    ]
+  },
+  "furniture": {
+    "sources": [
+      {
+        "key": "Map data",
+        "text": "OpenStreetMap"
+      }
+    ]
+  },
+  "chapters": [
+    {
+      "id": "departure",
+      "title": "Departure from Singapore",
+      "from": "open",
+      "to": "at-port",
+      "still_at": 7.0,
+      "alt": "A title card reading Port to port over Singapore, then the camera tilts down onto the container terminal at Pasir Panjang, where a port marker drops onto the map and a callout with an illustration of a quay crane and a ship names the terminal.",
+      "card": {
+        "headline": "Port to port",
+        "body": "Singapore to Port Klang, through the busiest straits on Earth."
+      }
+    },
+    {
+      "id": "passage",
+      "title": "Through the straits",
+      "from": "passage",
+      "to": "passage",
+      "alt": "The camera follows a red line as it draws west through the Singapore Strait and north-west up the Strait of Malacca, with a callout naming the Strait of Malacca on the way.",
+      "card": {
+        "headline": "Through the straits",
+        "stats": [
+          {
+            "value": "~370",
+            "unit": "km",
+            "label": "Passage, illustrative"
+          },
+          {
+            "value": "2",
+            "label": "Straits crossed"
+          }
+        ]
+      }
+    },
+    {
+      "id": "arrival",
+      "title": "Arrival at Port Klang",
+      "from": "overview",
+      "to": "arrival",
+      "alt": "The camera pulls back to show the whole route from Singapore to Port Klang; the destination port marker turns yellow while the other dims, and a lower third describes Port Klang.",
+      "card": {
+        "headline": "Port Klang",
+        "body": "Malaysia's busiest port, at the end of a passage that hugs the coast."
+      }
+    }
+  ],
+  "camera": [
+    {
+      "type": "jump",
+      "label": "open",
+      "to": {
+        "lon": 103.8,
+        "lat": 1.24,
+        "zoom": 10.2,
+        "pitch": 0,
+        "bearing": 0
+      }
+    },
+    {
+      "type": "hold",
+      "label": "title",
+      "duration": 3.0,
+      "settle": true
+    },
+    {
+      "type": "fly",
+      "label": "to-port",
+      "to": {
+        "lon": 103.765,
+        "lat": 1.235,
+        "zoom": 12.6,
+        "pitch": 40,
+        "bearing": -15
+      },
+      "duration": 3.0
+    },
+    {
+      "type": "hold",
+      "label": "at-port",
+      "duration": 3.0
+    },
+    {
+      "type": "follow",
+      "label": "passage",
+      "follow_draw": "route",
+      "duration": 8.0,
+      "zoom": 8.6,
+      "pitch": 30
+    },
+    {
+      "type": "ease",
+      "label": "overview",
+      "to": {
+        "lon": 102.55,
+        "lat": 2.1,
+        "zoom": 7.3,
+        "pitch": 0,
+        "bearing": 0
+      },
+      "duration": 2.5,
+      "easing": "ease-in-out"
+    },
+    {
+      "type": "hold",
+      "label": "arrival",
+      "duration": 5.0
+    }
+  ],
+  "events": [
+    {
+      "at": 3.6,
+      "until": 24.5,
+      "overlay": {
+        "layer": "ports",
+        "effect": "drop",
+        "stagger_s": 0.5
+      }
+    },
+    {
+      "at": 6.0,
+      "until": 9.0,
+      "callout": {
+        "at_coord": [
+          103.762,
+          1.272
+        ],
+        "text": "Pasir Panjang Terminal",
+        "image": {
+          "src": "img/port-at-dawn.png",
+          "alt": "An illustration of red quay cranes over stacked containers and a container ship at dawn.",
+          "credit": "Illustration: self-made, CC0",
+          "fit": "cover"
+        },
+        "fade_s": 0.3
+      }
+    },
+    {
+      "at": 9.0,
+      "until": 17.0,
+      "overlay": {
+        "layer": "route",
+        "effect": "draw",
+        "easing": "linear",
+        "head": {
+          "radius_px": 9,
+          "color": "#ffffff"
+        }
+      }
+    },
+    {
+      "at": 11.5,
+      "until": 15.0,
+      "callout": {
+        "at_coord": [
+          102.55,
+          1.8
+        ],
+        "text": "Strait of Malacca",
+        "fade_s": 0.3
+      }
+    }
+  ],
+  "captions": [
+    {
+      "from": 3.2,
+      "to": 8.8,
+      "text": "The voyage starts at Pasir Panjang, Singapore's container terminal."
+    },
+    {
+      "from": 9.2,
+      "to": 16.8,
+      "text": "Ships head west through the Singapore Strait, then north up the Strait of Malacca."
+    },
+    {
+      "from": 17.2,
+      "to": 24.3,
+      "text": "The route ends at Port Klang, on Malaysia's west coast."
+    }
+  ],
+  "design": {}
+}

@@ -1,0 +1,61 @@
+{
+  "version": "v1",
+  "config": {
+    "visState": {
+      "filters": [
+        { "dataId": ["regions"], "id": "pop-range", "name": ["population"], "type": "range", "value": [1000, 250000], "enabled": true, "plotType": { "type": "histogram" }, "animationWindow": "free", "yAxis": null, "speed": 1 }
+      ],
+      "layers": [
+        {
+          "id": "regions-fill",
+          "type": "geojson",
+          "config": {
+            "dataId": "regions",
+            "label": "Regions",
+            "color": [120, 90, 200],
+            "columns": { "geojson": "_geojson" },
+            "isVisible": true,
+            "visConfig": {
+              "opacity": 0.6,
+              "strokeOpacity": 0.9,
+              "thickness": 0.5,
+              "strokeColor": [255, 255, 255],
+              "colorRange": {
+                "name": "Plum 6",
+                "type": "sequential",
+                "category": "Made up",
+                "colors": ["#F4E8F0", "#DDBBD5", "#C08AB5", "#9E5C96", "#723B74", "#4A1F4F"]
+              },
+              "radius": 10,
+              "stroked": true,
+              "filled": true,
+              "enable3d": false,
+              "wireframe": false
+            },
+            "hidden": false
+          },
+          "visualChannels": {
+            "colorField": { "name": "population", "type": "integer" },
+            "colorScale": "quantile",
+            "strokeColorField": null,
+            "strokeColorScale": "quantile",
+            "sizeField": null,
+            "sizeScale": "linear",
+            "heightField": null,
+            "heightScale": "linear",
+            "radiusField": null,
+            "radiusScale": "linear"
+          }
+        }
+      ],
+      "interactionConfig": {
+        "tooltip": { "fieldsToShow": { "regions": [{ "name": "name", "format": null }, { "name": "population", "format": "," }] }, "enabled": true },
+        "brush": { "size": 0.5, "enabled": false }
+      },
+      "layerBlending": "normal",
+      "splitMaps": []
+    },
+    "mapState": { "bearing": 12, "latitude": 1.35, "longitude": 103.8, "pitch": 30, "zoom": 10.5, "mapViewMode": "MODE_3D" },
+    "mapStyle": { "styleType": "positron", "mapStyles": {} }
+  }
+}

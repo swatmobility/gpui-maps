@@ -1,0 +1,47 @@
+{
+  "version": "v1",
+  "config": {
+    "visState": {
+      "layers": [
+        {
+          "id": "stops-pts",
+          "type": "point",
+          "config": { "dataId": "stops", "label": "Stops", "color": [40, 160, 140], "columns": { "lat": "lat", "lng": "lon" }, "isVisible": true, "visConfig": { "radius": 6, "opacity": 0.8, "filled": true, "outline": false, "thickness": 2, "strokeColor": null, "colorRange": { "name": "Four Inks", "type": "qualitative", "category": "Made up", "colors": ["#1B6CA8", "#D1495B", "#EDAE49", "#00798C"] } } },
+          "visualChannels": { "colorField": { "name": "operator", "type": "string" }, "colorScale": "ordinal" }
+        },
+        {
+          "id": "stops-hex",
+          "type": "hexagon",
+          "config": {
+            "dataId": "stops",
+            "label": "Stop density",
+            "color": [221, 178, 124],
+            "columns": { "lat": "lat", "lng": "lon" },
+            "isVisible": true,
+            "visConfig": {
+              "opacity": 0.75,
+              "worldUnitSize": 0.5,
+              "resolution": 8,
+              "colorRange": { "name": "Ochre 4", "type": "sequential", "category": "Made up", "colors": ["#FFF1D6", "#F2C38A", "#D98E3F", "#9C5414"] },
+              "coverage": 1,
+              "sizeRange": [0, 500],
+              "percentile": [0, 100],
+              "elevationPercentile": [0, 100],
+              "elevationScale": 5,
+              "colorAggregation": "count",
+              "sizeAggregation": "count",
+              "enable3d": true
+            },
+            "hidden": false,
+            "textLabel": [{ "field": null }]
+          },
+          "visualChannels": { "colorField": null, "colorScale": "quantile", "sizeField": null, "sizeScale": "linear" }
+        }
+      ],
+      "interactionConfig": { "tooltip": { "fieldsToShow": { "stops": [{ "name": "operator", "format": null }] }, "enabled": true } },
+      "layerBlending": "normal"
+    },
+    "mapState": { "latitude": 52.37, "longitude": 4.9, "zoom": 12 },
+    "mapStyle": { "styleType": "muted" }
+  }
+}

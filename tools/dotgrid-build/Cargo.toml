@@ -1,0 +1,37 @@
+# The offline GHSL -> `dotgrid` PMTiles converter. Its own package and its own
+# lockfile (the empty `[workspace]` below makes it a root), so `tiff`, `rayon`
+# and the PMTiles writer never reach the engine's dependency set. It links the
+# engine only for the grid geometry and the count-tile codec, so the archive it
+# writes and the reader that opens it share one definition of both.
+#
+#     cd tools/dotgrid-build
+#     CARGO_TARGET_DIR=... RUSTC_WRAPPER="" cargo build --release
+[package]
+name = "dotgrid-build"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+# No default features: the converter needs no
+# sprite fetch; the engine's file-range reader works without them.
+gpui-maps = { path = "../..", default-features = false }
+tiff = "0.9"
+rayon = "1"
+flate2 = "1"
+pmtiles = { version = "0.23", default-features = false, features = ["write"] }
+serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+anyhow = "1"
+# `--load-clickhouse`: the HTTP interface, and H3 to cross-check the server's
+# `geoToH3` bit for bit.
+reqwest = { version = "0.12", features = ["blocking", "rustls-tls"], default-features = false }
+h3o = "0.11"
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+debug = 1

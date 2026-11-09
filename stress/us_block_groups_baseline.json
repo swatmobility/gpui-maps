@@ -1,0 +1,1743 @@
+{
+  "taken_on": "2026-09-26, master cfdcf41, 5 reps per mode (headless); load 1m 6.26-7.88; 14 cpus. | points section: 2026-09-26, 700c1a2, 3 reps per mode (points); load 1m 3.46-3.50; 14 cpus. | live section: 2026-09-26, 876cdfb, 3 reps per mode (live); load 1m 3.84-5.87; 14 cpus. | dots section: 2026-09-26, 1fb80eb, 3 reps per mode (dots); load 1m 4.02-8.00; 14 cpus. | headless_states section: 2026-09-27, ba308c2, 3 reps per mode (headless_states); load 1m 16.17-16.97; 14 cpus. | headless.cover.national.vertices and .indices: 2026-09-27, f3278aa, exact counts (tiny-polygon reduction squares). | dots.relocate.* (new rows only; the rest of the dots section is untouched): 2026-09-27, 85dd2d1, 3 reps per mode (dots --only dots); load 1m 6.24-7.14; 14 cpus. | dots.pan section: 2026-09-27, b0e87af, 3 reps per mode (dots.pan); load 1m 2.03-3.75; 14 cpus. | buildings section: 2026-09-29, 34ce870, 3 reps per mode (buildings); load 1m 15.23-15.23; 14 cpus. | sats section: 2026-09-29, a3bb511, 3 reps per mode (sats); load 1m 10.35-11.22; 14 cpus. | cog section: 2026-10-04, 60e91151, 3 reps per mode (cog); load 1m 12.39-14.79; 14 cpus. | arcs section: 2026-10-04, 500cd8e2, 3 reps per mode (arcs); load 1m 20.82-23.44; 14 cpus. | story section: 2026-10-06, 9f9ef53a, 3 reps per mode (story); load 1m 17.23-20.00; 14 cpus. | hexbin section: 2026-10-05, e2e1e665, 3 reps per mode (hexbin); load 1m 20.42-20.42; 14 cpus. | arcs.pick_* rows (new rows only; the rest of the arcs section is untouched): 2026-10-05, ccc25008, 3 runs of arcs --measure; load 1m 7.01; 14 cpus. | arcs.uk.pick.checksum (new row only): 2026-10-05, 38dca631, 3 runs of arcs --measure, identical. | trips section: 2026-10-05, 0e19d3a6, 3 reps per mode (trips); load 1m 7.78-8.28; 14 cpus. | vtoverlay section: 2026-10-05, 22c61c5c, 3 reps per mode (vtoverlay); load 1m 17.78-18.90; 14 cpus. | merge 2 (2026-10-06): story.* rows from the story branch (f1b689b1), every other section from master 833c0656, unioned; no row re-taken. | explorer section: 2026-10-07, 7c4a4e67, 3 reps per mode (explorer); load 1m 7.93-9.19; 14 cpus. | night_race section: 2026-10-10, 96711f21, 3 reps per mode (night_race); load 1m 23.09-23.09; 14 cpus.",
+  "notes": "Written by scripts/perf-gate.sh --update-baseline from the measured spread; every rationale records its runs and its rule. Graded value is the p50 of the valid runs. See docs/perf-gate.md.",
+  "metrics": {
+    "arcs.build_ms": {
+      "baseline": 31.6,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 500cd8e2: p50 31.600, range 31.300-31.600 (0.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "arcs.pick_index_ms": {
+      "baseline": 158.6,
+      "tolerance": 1.25,
+      "unit": "ms",
+      "rationale": "3 run(s) on ccc25008: p50 158.600, range 152.900-164.500 (7.3% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10). New row (feat/interact-picking); no existing row re-baselined."
+    },
+    "arcs.pick_ms.p50": {
+      "baseline": 0.472,
+      "tolerance": 1.42,
+      "unit": "ms",
+      "rationale": "3 run(s) on ccc25008: p50 0.472, range 0.469-0.544 (15.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10). New row (feat/interact-picking); no existing row re-baselined."
+    },
+    "arcs.pick_ms.p99": {
+      "baseline": 5.69,
+      "tolerance": 2.97,
+      "unit": "ms",
+      "rationale": "3 run(s) on ccc25008: p50 5.690, range 5.671-10.987 (93.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10). New row (feat/interact-picking); no existing row re-baselined."
+    },
+    "arcs.taxi.draws": {
+      "baseline": 11.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 500cd8e2: p50 11.000, range 11.000-11.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "arcs.taxi.frame_ms": {
+      "baseline": 18.03,
+      "tolerance": 1.45,
+      "unit": "ms",
+      "rationale": "3 run(s) on 500cd8e2: p50 18.030, range 16.150-19.300 (17.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "arcs.taxi.vertices": {
+      "baseline": 9168098.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 500cd8e2: p50 9168098.000, range 9168098.000-9168098.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "arcs.uk.arcs": {
+      "baseline": 679639.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 500cd8e2: p50 679639.000, range 679639.000-679639.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "arcs.uk.draws": {
+      "baseline": 19.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 500cd8e2: p50 19.000, range 19.000-19.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "arcs.uk.frame_ms": {
+      "baseline": 24.24,
+      "tolerance": 1.81,
+      "unit": "ms",
+      "rationale": "3 run(s) on 500cd8e2: p50 24.240, range 24.140-32.640 (35.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "arcs.uk.pick.checksum": {
+      "baseline": 556922519.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 38dca631: p50 556922519.000, range 556922519.000-556922519.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact. New row (feat/interact-picking review M4).",
+      "floor": 1.0
+    },
+    "arcs.uk.pick.hit_hits": {
+      "baseline": 1440.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on ccc25008: p50 1440.000, range 1440.000-1440.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact. New row (feat/interact-picking).",
+      "floor": 1.0
+    },
+    "arcs.uk.vertices": {
+      "baseline": 17559762.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 500cd8e2: p50 17559762.000, range 17559762.000-17559762.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "arcs.upload_kb": {
+      "baseline": 21238.0,
+      "tolerance": 1.0,
+      "unit": "KB",
+      "rationale": "3 run(s) on 500cd8e2: p50 21238.000, range 21238.000-21238.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "buildings.tess.manhattan_z14.bake_ms": {
+      "baseline": 6.052,
+      "tolerance": 1.2,
+      "unit": "ms",
+      "rationale": "3 run(s) on 34ce870: p50 6.052, range 5.820-6.116 (4.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "buildings.tess.manhattan_z14.indices": {
+      "baseline": 229392.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 34ce870: p50 229392.000, range 229392.000-229392.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "buildings.tess.manhattan_z14.upload_mb": {
+      "baseline": 2.695,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 34ce870: p50 2.695, range 2.695-2.695 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "buildings.tess.manhattan_z14.vertices": {
+      "baseline": 142248.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 34ce870: p50 142248.000, range 142248.000-142248.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "buildings.tess.manhattan_z14.walls": {
+      "baseline": 28396.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 34ce870: p50 28396.000, range 28396.000-28396.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "buildings.tess.shinjuku_z14.bake_ms": {
+      "baseline": 8.888,
+      "tolerance": 1.58,
+      "unit": "ms",
+      "rationale": "3 run(s) on 34ce870: p50 8.888, range 8.753-10.850 (23.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "buildings.tess.shinjuku_z14.indices": {
+      "baseline": 371919.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 34ce870: p50 371919.000, range 371919.000-371919.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "buildings.tess.shinjuku_z14.upload_mb": {
+      "baseline": 4.329,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 34ce870: p50 4.329, range 4.329-4.329 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "buildings.tess.shinjuku_z14.vertices": {
+      "baseline": 235768.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 34ce870: p50 235768.000, range 235768.000-235768.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "buildings.tess.shinjuku_z14.walls": {
+      "baseline": 47104.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 34ce870: p50 47104.000, range 47104.000-47104.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "buildings.tess.singapore_z14.bake_ms": {
+      "baseline": 0.356,
+      "tolerance": 1.19,
+      "unit": "ms",
+      "rationale": "3 run(s) on 34ce870: p50 0.356, range 0.345-0.360 (4.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.933
+    },
+    "buildings.tess.singapore_z14.indices": {
+      "baseline": 11439.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 34ce870: p50 11439.000, range 11439.000-11439.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "buildings.tess.singapore_z14.upload_mb": {
+      "baseline": 0.108,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 34ce870: p50 0.108, range 0.108-0.108 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "buildings.tess.singapore_z14.vertices": {
+      "baseline": 6830.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 34ce870: p50 6830.000, range 6830.000-6830.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "buildings.tess.singapore_z14.walls": {
+      "baseline": 1359.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 34ce870: p50 1359.000, range 1359.000-1359.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "cog.open_us": {
+      "baseline": 27.0,
+      "tolerance": 1.33,
+      "unit": "us",
+      "rationale": "3 run(s) on 60e91151: p50 27.000, range 25.000-28.000 (11.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "cog.tile.dem.p50_us": {
+      "baseline": 11880.0,
+      "tolerance": 1.15,
+      "unit": "us",
+      "rationale": "3 run(s) on 60e91151: p50 11880.000, range 11848.000-11918.000 (0.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "cog.tile.dem.p95_us": {
+      "baseline": 16760.0,
+      "tolerance": 1.15,
+      "unit": "us",
+      "rationale": "3 run(s) on 60e91151: p50 16760.000, range 16671.000-16764.000 (0.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "cog.tile.dem_flat.p50_us": {
+      "baseline": 10722.0,
+      "tolerance": 1.15,
+      "unit": "us",
+      "rationale": "3 run(s) on 60e91151: p50 10722.000, range 10660.000-10765.000 (1.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "cog.tile.dem_flat.p95_us": {
+      "baseline": 15683.0,
+      "tolerance": 1.15,
+      "unit": "us",
+      "rationale": "3 run(s) on 60e91151: p50 15683.000, range 15584.000-15720.000 (0.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "cog.tile.rgb.p50_us": {
+      "baseline": 5440.0,
+      "tolerance": 1.15,
+      "unit": "us",
+      "rationale": "3 run(s) on 60e91151: p50 5440.000, range 5422.000-5464.000 (0.8% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "cog.tile.rgb.p95_us": {
+      "baseline": 6880.0,
+      "tolerance": 1.15,
+      "unit": "us",
+      "rationale": "3 run(s) on 60e91151: p50 6880.000, range 6863.000-6963.000 (1.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "cog.view.coalesced.range_requests": {
+      "baseline": 28.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 60e91151: p50 28.000, range 28.000-28.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "cog.view.http_1.ms": {
+      "baseline": 127.0,
+      "tolerance": 1.17,
+      "unit": "ms",
+      "rationale": "3 run(s) on 60e91151: p50 127.000, range 126.000-130.000 (3.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "cog.view.http_8.ms": {
+      "baseline": 46.0,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 60e91151: p50 46.000, range 46.000-47.000 (2.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "cog.view.map_tiles": {
+      "baseline": 15.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 60e91151: p50 15.000, range 15.000-15.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "cog.view.tiles_decoded": {
+      "baseline": 56.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 60e91151: p50 56.000, range 56.000-56.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "cog.view.uncoalesced.range_requests": {
+      "baseline": 56.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 60e91151: p50 56.000, range 56.000-56.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.nesting_violations": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "dots.pan.cpu_max_ms": {
+      "baseline": 50.498,
+      "tolerance": 1.44,
+      "unit": "ms",
+      "rationale": "3 run(s) on b0e87af: p50 50.498, range 45.536-53.929 (16.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "dots.pan.cpu_p95_ms": {
+      "baseline": 33.249,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on b0e87af: p50 33.249, range 33.143-33.313 (0.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "dots.pan.dot_gpu_max_mb": {
+      "baseline": 9.837,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on b0e87af: p50 9.837, range 9.738-9.869 (1.3% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "dots.pan.frames_over_33ms": {
+      "baseline": 65.0,
+      "tolerance": 1.0,
+      "unit": "frames",
+      "rationale": "3 run(s) on b0e87af: p50 65.000, range 61.000-71.000 (15.4% spread). Rule: rare-event count: slack max(3, 2 x worst run) over the p50.",
+      "slack": 142.0
+    },
+    "dots.pan.gpu_pass_p95_ms": {
+      "baseline": 30.83,
+      "tolerance": 1.16,
+      "unit": "ms",
+      "rationale": "3 run(s) on b0e87af: p50 30.830, range 30.314-31.103 (2.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "dots.pan.rss_max_mb": {
+      "baseline": 546.505,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on b0e87af: p50 546.505, range 545.473-547.062 (0.3% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "dots.peak_rss_mb": {
+      "baseline": 182.0,
+      "tolerance": 1.06,
+      "unit": "MB",
+      "rationale": "Re-taken deliberately on 3353735..b6ecfc6: the people-in-view counter (lazy per-edge-tile cell index, 6 B/cell) is a real, accepted cost; measured 178.21, 185.16, 179.55, 189.42 MB across four headless runs at load 7-11 (median ~182). Tolerance unchanged. Previous: 175.505 (before the counter existed)."
+    },
+    "dots.relocate.cpu_mirror_ms": {
+      "baseline": 3.495,
+      "tolerance": 1.2,
+      "unit": "ms",
+      "rationale": "3 run(s) on 85dd2d1: p50 3.495, range 3.326-3.500 (5.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.302
+    },
+    "dots.relocate.dhaka_z10.count_diff": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 85dd2d1: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "dots.relocate.dhaka_z14.count_diff": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 85dd2d1: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "dots.relocate.dhaka_z15.count_diff": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 85dd2d1: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "dots.relocate.india_z5.count_diff": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 85dd2d1: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "dots.relocate.world_z1.count_diff": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 85dd2d1: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "dots.tile_build_ms_max": {
+      "baseline": 6.543,
+      "tolerance": 1.18,
+      "unit": "ms",
+      "rationale": "3 run(s) on 1fb80eb: p50 6.543, range 6.516-6.750 (3.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "dots.tile_build_ms_p50": {
+      "baseline": 2.748,
+      "tolerance": 1.16,
+      "unit": "ms",
+      "rationale": "3 run(s) on 1fb80eb: p50 2.748, range 2.734-2.804 (2.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "dots.view.dhaka_z10.blocks": {
+      "baseline": 130233.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 130233.000, range 130233.000-130233.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.dhaka_z10.cells": {
+      "baseline": 93678.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 93678.000, range 93678.000-93678.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.dhaka_z10.dots": {
+      "baseline": 1499970.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 1499970.000, range 1499970.000-1499970.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.dhaka_z10.upload_mb": {
+      "baseline": 2.084,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 1fb80eb: p50 2.084, range 2.084-2.084 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "dots.view.dhaka_z15.blocks": {
+      "baseline": 95860.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 95860.000, range 95860.000-95860.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.dhaka_z15.cells": {
+      "baseline": 49764.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 49764.000, range 49764.000-49764.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.dhaka_z15.dots": {
+      "baseline": 1500128.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 1500128.000, range 1500128.000-1500128.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.dhaka_z15.upload_mb": {
+      "baseline": 1.534,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 1fb80eb: p50 1.534, range 1.534-1.534 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "dots.view.india_z5.blocks": {
+      "baseline": 456744.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 456744.000, range 456744.000-456744.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.india_z5.cells": {
+      "baseline": 1154438.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 1154438.000, range 1154438.000-1154438.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.india_z5.dots": {
+      "baseline": 1499848.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 1499848.000, range 1499848.000-1499848.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.india_z5.upload_mb": {
+      "baseline": 7.308,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 1fb80eb: p50 7.308, range 7.308-7.308 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "dots.view.world_z1.blocks": {
+      "baseline": 488865.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 488865.000, range 488865.000-488865.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.world_z1.cells": {
+      "baseline": 183872.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 183872.000, range 183872.000-183872.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.world_z1.dots": {
+      "baseline": 1499906.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 1fb80eb: p50 1499906.000, range 1499906.000-1499906.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.view.world_z1.upload_mb": {
+      "baseline": 7.822,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 1fb80eb: p50 7.822, range 7.822-7.822 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "dots.world_total_dots": {
+      "baseline": 363845998.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "Re-baselined 2026-09-28 on feat/race-dots (cd6b245 gate run): 363845998, +20 over the 1fb80eb value 363845978. The +20 is intended: race-dots ruling C2 made the alive test integer-exact (i < floor(q) || i == floor(q) && h_t < fract(q)), so the last dot of a block whose people-per-dot quotient is an exact integer now lives. Was: 3 run(s) on 1fb80eb: p50 363845978.000, range 363845978.000-363845978.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "dots.world_total_err_pct": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "pct",
+      "rationale": "3 run(s) on 1fb80eb: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: absolute cap: the ceiling is fixed regardless of the baseline's own drift (see the rationale for what was measured).",
+      "slack": 0.1
+    },
+    "dots.zoom_change_worst_ms": {
+      "baseline": 78.496,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 1fb80eb: p50 78.496, range 77.943-79.023 (1.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "explorer.cpu_filter_index_ms_p50": {
+      "baseline": 95.867,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 7c4a4e67: p50 95.867, range 95.126-95.881 (0.8% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "explorer.cpu_filter_release_ms_p50": {
+      "baseline": 27.183,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 7c4a4e67: p50 27.183, range 27.031-27.695 (2.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10), the ceiling capped at the spec budget."
+    },
+    "explorer.filter_drag.count_ms_p50": {
+      "baseline": 1.977,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 7c4a4e67: p50 1.977, range 1.977-1.981 (0.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.704
+    },
+    "explorer.filter_drag.uploads": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 7c4a4e67: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "explorer.load_ms": {
+      "baseline": 331.589,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 7c4a4e67: p50 331.589, range 325.905-332.490 (2.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "explorer.points_1m.pan_frame_ms_p50": {
+      "baseline": 1.082,
+      "tolerance": 1.16,
+      "unit": "ms",
+      "rationale": "3 run(s) on 7c4a4e67: p50 1.082, range 1.058-1.087 (2.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.827
+    },
+    "explorer.push_ms": {
+      "baseline": 30.35,
+      "tolerance": 1.16,
+      "unit": "ms",
+      "rationale": "3 run(s) on 7c4a4e67: p50 30.350, range 29.661-30.477 (2.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "explorer.rows_loaded": {
+      "baseline": 998077.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 7c4a4e67: p50 998077.000, range 998077.000-998077.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.classify_ms": {
+      "baseline": 15.375,
+      "tolerance": 1.17,
+      "unit": "ms",
+      "rationale": "5 run(s) on cfdcf41: p50 15.375, range 15.178-15.665 (3.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "headless.cover.dc_z8.bake_wall_ms": {
+      "baseline": 11.547,
+      "tolerance": 1.18,
+      "unit": "ms",
+      "rationale": "5 run(s) on cfdcf41: p50 11.547, range 11.368-11.795 (3.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "headless.cover.dc_z8.indices": {
+      "baseline": 909846.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on cfdcf41: p50 909846.000, range 909846.000-909846.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.cover.dc_z8.outline_indices": {
+      "baseline": 703102.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on cfdcf41: p50 703102.000, range 703102.000-703102.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.cover.dc_z8.vertices": {
+      "baseline": 358259.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on cfdcf41: p50 358259.000, range 358259.000-358259.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.cover.la_z11.bake_wall_ms": {
+      "baseline": 2.881,
+      "tolerance": 1.21,
+      "unit": "ms",
+      "rationale": "5 run(s) on cfdcf41: p50 2.881, range 2.784-2.936 (5.3% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "headless.cover.la_z11.indices": {
+      "baseline": 246771.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on cfdcf41: p50 246771.000, range 246771.000-246771.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.cover.la_z11.outline_indices": {
+      "baseline": 205596.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on cfdcf41: p50 205596.000, range 205596.000-205596.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.cover.la_z11.vertices": {
+      "baseline": 102837.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on cfdcf41: p50 102837.000, range 102837.000-102837.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.cover.national.bake_wall_ms": {
+      "baseline": 56.5,
+      "tolerance": 1.17,
+      "unit": "ms",
+      "rationale": "Re-taken deliberately on ccfcd41..3353735: the census tiny-polygon reduction (white-cities fix, accepted at +13 %) adds squares to the national cover; interleaved A/B vs 91a48dc at load ~9 gave 56.9/56.8/55.1 ms (round 2) and median 56.7 ms (round 3). Tolerance kept at x1.17. Previous: 5 runs on cfdcf41, p50 48.760."
+    },
+    "headless.cover.national.indices": {
+      "baseline": 1460478.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "Exact count at f3278aa (1460502 at cf257ea, 1177662 at cfdcf41; f3278aa: true-rectangle check and full-ring point check): tiny-polygon reduction squares, the white-cities fix, +24% indices by design; bake +13% A/B'd vs 91a48dc and accepted. Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.cover.national.outline_indices": {
+      "baseline": 561136.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on cfdcf41: p50 561136.000, range 561136.000-561136.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.cover.national.vertices": {
+      "baseline": 882360.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "Exact count at f3278aa (882366 at cf257ea, 695231 at cfdcf41; f3278aa: true-rectangle check and full-ring point check): tiny-polygon reduction squares, the white-cities fix, +27% vertices by design; bake +13% A/B'd vs 91a48dc and accepted. Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.heap_at_rest_mb": {
+      "baseline": 1495.39,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "5 run(s) on cfdcf41: p50 1495.390, range 1494.130-1496.651 (0.2% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "headless.heap_peak_mb": {
+      "baseline": 1511.646,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "5 run(s) on cfdcf41: p50 1511.646, range 1510.573-1512.878 (0.2% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "headless.hit_hits": {
+      "baseline": 1229.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on 7520c6f: p50 1229.000, range 1229.000-1229.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact. Re-baselined from 1456 (cfdcf41) by the globe hover fix: the probe camera (z3.7) is a pure globe frame, and the old count picked on the flat plane. Audit of the 64x48 grid: of the 1456 old hits only 126 named the block group drawn under the pixel, 1048 named a different one, 282 named one the globe draws 8-128 px away (median 65) while the pixel shows ocean or Canada; the globe pick adds 55 real hits and round-trips the drawn projection to 0.000 px.",
+      "floor": 1.0
+    },
+    "headless.hit_mean_us": {
+      "baseline": 346.088,
+      "tolerance": 1.15,
+      "unit": "us",
+      "rationale": "5 run(s) on cfdcf41: p50 346.088, range 345.912-347.137 (0.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "headless.index_build_ms": {
+      "baseline": 497.084,
+      "tolerance": 1.21,
+      "unit": "ms",
+      "rationale": "5 run(s) on cfdcf41: p50 497.084, range 487.235-513.957 (5.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "headless.index_mb": {
+      "baseline": 662.602,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "5 run(s) on cfdcf41: p50 662.602, range 662.602-662.602 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "headless.path.unbaked_with_content": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on cfdcf41: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "headless.path.wanted_tiles": {
+      "baseline": 175.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on cfdcf41: p50 175.000, range 175.000-175.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "headless.peak_rss_mb": {
+      "baseline": 4461.036,
+      "tolerance": 1.36,
+      "unit": "MB",
+      "rationale": "5 run(s) on cfdcf41: p50 4461.036, range 3730.391-4468.277 (16.5% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "headless.property_mb": {
+      "baseline": 1.975,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "5 run(s) on cfdcf41: p50 1.975, range 1.975-1.975 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "headless.push_ms": {
+      "baseline": 292.57,
+      "tolerance": 1.36,
+      "unit": "ms",
+      "rationale": "5 run(s) on cfdcf41: p50 292.570, range 260.760-297.407 (12.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "headless.rss_at_rest_mb": {
+      "baseline": 4461.036,
+      "tolerance": 1.36,
+      "unit": "MB",
+      "rationale": "5 run(s) on cfdcf41: p50 4461.036, range 3730.391-4468.277 (16.5% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "headless.store_features_mb": {
+      "baseline": 83.505,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "5 run(s) on cfdcf41: p50 83.505, range 83.505-83.505 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "headless.table_only.max_ms": {
+      "baseline": 3.987,
+      "tolerance": 1.19,
+      "unit": "ms",
+      "rationale": "5 run(s) on cfdcf41: p50 3.987, range 3.858-4.026 (4.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "headless.table_only.other_path": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "5 run(s) on cfdcf41: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "headless.table_only.p50_ms": {
+      "baseline": 3.318,
+      "tolerance": 1.17,
+      "unit": "ms",
+      "rationale": "5 run(s) on cfdcf41: p50 3.318, range 3.272-3.385 (3.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "headless_states.table_only.max_ms": {
+      "baseline": 0.404,
+      "tolerance": 1.32,
+      "unit": "ms",
+      "rationale": "3 run(s) on ba308c2: p50 0.404, range 0.376-0.420 (11.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.871
+    },
+    "headless_states.table_only.other_path": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on ba308c2: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "headless_states.table_only.p50_ms": {
+      "baseline": 0.244,
+      "tolerance": 1.26,
+      "unit": "ms",
+      "rationale": "3 run(s) on ba308c2: p50 0.244, range 0.233-0.252 (7.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.937
+    },
+    "hexbin.grid1m.bin_ms": {
+      "baseline": 21.18,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 01614057: p50 21.180, range 21.100-21.190 (0.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms."
+    },
+    "hexbin.grid1m.cells": {
+      "baseline": 3225.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 01614057: p50 3225.000, range 3225.000-3225.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "hexbin.hex1m.bin_ms": {
+      "baseline": 33.74,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 01614057: p50 33.740, range 33.520-33.750 (0.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms."
+    },
+    "hexbin.hex1m.cells": {
+      "baseline": 1372.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 01614057: p50 1372.000, range 1372.000-1372.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "hexbin.hex1m.median_ms": {
+      "baseline": 40.48,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 01614057: p50 40.480, range 40.450-40.560 (0.3% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms."
+    },
+    "hexbin.sftrees.bin_ms": {
+      "baseline": 3.26,
+      "tolerance": 1.23,
+      "unit": "ms",
+      "rationale": "3 run(s) on e2e1e665: p50 3.260, range 3.230-3.430 (6.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.251
+    },
+    "hexbin.sftrees.cells": {
+      "baseline": 9772.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on e2e1e665: p50 9772.000, range 9772.000-9772.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "hexbin.sftrees.extrude_ms": {
+      "baseline": 13.36,
+      "tolerance": 1.61,
+      "unit": "ms",
+      "rationale": "3 run(s) on e2e1e665: p50 13.360, range 13.080-16.450 (25.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "hexbin.sftrees.frame_ms": {
+      "baseline": 8.26,
+      "tolerance": 1.49,
+      "unit": "ms",
+      "rationale": "3 run(s) on e2e1e665: p50 8.260, range 6.660-8.260 (19.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "hexbin.sftrees.push_ms": {
+      "baseline": 3.46,
+      "tolerance": 1.35,
+      "unit": "ms",
+      "rationale": "3 run(s) on e2e1e665: p50 3.460, range 3.290-3.710 (12.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "hexbin.sftrees.rows": {
+      "baseline": 62974.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on e2e1e665: p50 62974.000, range 62974.000-62974.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "hexbin.sftrees.upload_kb": {
+      "baseline": 4546.0,
+      "tolerance": 1.0,
+      "unit": "KB",
+      "rationale": "3 run(s) on e2e1e665: p50 4546.000, range 4546.000-4546.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "hexbin.sftrees.vertices": {
+      "baseline": 272252.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on e2e1e665: p50 272252.000, range 272252.000-272252.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "live.apply_p50_ms": {
+      "baseline": 0.478,
+      "tolerance": 2.23,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 0.477, range 0.477-0.747 (56.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.basemap_holes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tile-frames",
+      "rationale": "2 run(s) on 876cdfb: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "live.class_latency_p50_ms": {
+      "baseline": 1.397,
+      "tolerance": 2.13,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 1.397, range 1.397-2.116 (51.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.class_latency_p99_ms": {
+      "baseline": 6.904,
+      "tolerance": 1.21,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 6.904, range 6.904-7.275 (5.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.cpu_max_ms": {
+      "baseline": 20.407,
+      "tolerance": 1.51,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 20.407, range 20.407-24.538 (20.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.cpu_p50_ms": {
+      "baseline": 0.708,
+      "tolerance": 3.32,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 0.708, range 0.708-1.490 (110.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.cpu_p99_ms": {
+      "baseline": 16.322,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 16.322, range 16.322-16.413 (0.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.dirty_latency_p50_ms": {
+      "baseline": 130.409,
+      "tolerance": 1.24,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 130.409, range 130.409-138.952 (6.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.dirty_latency_p99_ms": {
+      "baseline": 156.1,
+      "tolerance": 1.62,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 156.100, range 156.100-196.406 (25.8% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.frame_interval_ms": {
+      "baseline": 60.645,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 60.645, range 60.645-60.680 (0.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.frames_over_16_7ms": {
+      "baseline": 10.0,
+      "tolerance": 1.0,
+      "unit": "frames",
+      "rationale": "2 run(s) on 876cdfb: p50 10.000, range 10.000-18.000 (80.0% spread). Rule: rare-event count: slack max(3, 2 x worst run) over the p50.",
+      "slack": 36.0
+    },
+    "live.gpu_pass_max_ms": {
+      "baseline": 9.413,
+      "tolerance": 1.49,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 9.413, range 9.413-11.224 (19.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.gpu_pass_p50_ms": {
+      "baseline": 1.869,
+      "tolerance": 5.43,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 1.869, range 1.869-5.911 (216.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.latency_max_ms": {
+      "baseline": 156.308,
+      "tolerance": 2.02,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 156.308, range 156.308-227.574 (45.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.latency_p50_ms": {
+      "baseline": 1.409,
+      "tolerance": 2.58,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 1.409, range 1.409-2.447 (73.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.latency_p99_ms": {
+      "baseline": 144.617,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 144.617, range 144.617-147.587 (2.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "live.overlay_holes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tile-frames",
+      "rationale": "2 run(s) on 876cdfb: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "live.rebaked_fraction_p50": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "ratio",
+      "rationale": "2 run(s) on 876cdfb: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10).",
+      "slack": 1.0
+    },
+    "live.rebaked_tiles_p50": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tiles",
+      "rationale": "2 run(s) on 876cdfb: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10).",
+      "slack": 1.0
+    },
+    "live.rss_end_mb": {
+      "baseline": 3213.902,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "2 run(s) on 876cdfb: p50 3213.902, range 3213.902-3230.237 (0.5% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "live.rss_start_mb": {
+      "baseline": 3185.656,
+      "tolerance": 1.1,
+      "unit": "MB",
+      "rationale": "2 run(s) on 876cdfb: p50 3185.656, range 3185.656-3300.344 (3.6% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "live.update_call_max_ms": {
+      "baseline": 12.287,
+      "tolerance": 2.83,
+      "unit": "ms",
+      "rationale": "2 run(s) on 876cdfb: p50 12.287, range 12.287-22.866 (86.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "night_race.in_car.frame_p50_ms": {
+      "baseline": 0.354,
+      "tolerance": 2.14,
+      "unit": "ms",
+      "rationale": "3 run(s) on 96711f21: p50 0.354, range 0.354-0.537 (51.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.597
+    },
+    "night_race.in_car.frame_p95_ms": {
+      "baseline": 2.289,
+      "tolerance": 1.17,
+      "unit": "ms",
+      "rationale": "3 run(s) on 96711f21: p50 2.289, range 2.227-2.307 (3.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.611
+    },
+    "night_race.in_car.model_pass_gpu_p50_us": {
+      "baseline": 109.8,
+      "tolerance": 1.51,
+      "unit": "us",
+      "rationale": "3 run(s) on 96711f21: p50 109.800, range 109.000-131.300 (20.3% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "night_race.in_car.model_pass_gpu_p95_us": {
+      "baseline": 1591.7,
+      "tolerance": 1.46,
+      "unit": "us",
+      "rationale": "3 run(s) on 96711f21: p50 1591.700, range 1351.300-1637.300 (18.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "night_race.in_car.parts_upload_bytes": {
+      "baseline": 3072.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 96711f21: p50 3072.000, range 3072.000-3072.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "night_race.in_car.triangles": {
+      "baseline": 5250.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "exact: the own car and the cockpit layer (round wheel, no driver) since 3ea4ead8; was 9342 with the driver.",
+      "floor": 1.0
+    },
+    "pan.basemap_holes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tile-frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "pan.cpu_max_ms": {
+      "baseline": 6.777,
+      "tolerance": 1.47,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 6.777, range 5.980-7.221 (18.3% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "pan.cpu_p50_ms": {
+      "baseline": 2.848,
+      "tolerance": 1.62,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 2.848, range 2.303-3.043 (26.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "pan.cpu_p99_ms": {
+      "baseline": 4.743,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 4.743, range 4.720-4.779 (1.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "pan.frame_interval_ms": {
+      "baseline": 20.405,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 20.405, range 20.227-20.509 (1.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "pan.frames_over_16_7ms": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: rare-event count: slack max(3, 2 x worst run) over the p50.",
+      "slack": 3.0
+    },
+    "pan.gpu_pass_max_ms": {
+      "baseline": 7.823,
+      "tolerance": 1.29,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 7.823, range 7.280-7.990 (9.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "pan.gpu_pass_mean_ms": {
+      "baseline": 2.864,
+      "tolerance": 1.32,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 2.864, range 2.826-3.128 (10.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "pan.gpu_pass_p50_ms": {
+      "baseline": 2.603,
+      "tolerance": 1.2,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 2.603, range 2.497-2.625 (4.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "pan.overlay_holes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tile-frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "pan.rss_mb": {
+      "baseline": 2754.593,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 8dfd03b: p50 2754.593, range 2748.563-2769.846 (0.8% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.data_mb": {
+      "baseline": 64.525,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 700c1a2: p50 64.525, range 64.525-64.525 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.grid_index_build_ms": {
+      "baseline": 161.438,
+      "tolerance": 1.16,
+      "unit": "ms",
+      "rationale": "3 run(s) on 700c1a2: p50 161.438, range 157.748-162.455 (2.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "points.grid_index_mb": {
+      "baseline": 178.375,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 700c1a2: p50 178.375, range 178.375-178.375 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.index_build_ms": {
+      "baseline": 426.648,
+      "tolerance": 1.19,
+      "unit": "ms",
+      "rationale": "3 run(s) on 700c1a2: p50 426.648, range 424.162-441.937 (4.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "points.index_levels_ms": {
+      "baseline": 352.577,
+      "tolerance": 1.19,
+      "unit": "ms",
+      "rationale": "3 run(s) on 700c1a2: p50 352.577, range 350.445-366.105 (4.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "points.index_mb": {
+      "baseline": 206.003,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 700c1a2: p50 206.003, range 206.003-206.003 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.index_project_ms": {
+      "baseline": 11.45,
+      "tolerance": 1.21,
+      "unit": "ms",
+      "rationale": "3 run(s) on 700c1a2: p50 11.450, range 11.142-11.745 (5.3% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "points.index_sort_ms": {
+      "baseline": 51.434,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 700c1a2: p50 51.434, range 51.255-52.524 (2.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "points.lod_index_build_ms": {
+      "baseline": 266.963,
+      "tolerance": 1.2,
+      "unit": "ms",
+      "rationale": "3 run(s) on 700c1a2: p50 266.963, range 257.784-270.230 (4.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "points.lod_index_mb": {
+      "baseline": 209.827,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 700c1a2: p50 209.827, range 209.827-209.827 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.peak_rss_mb": {
+      "baseline": 756.072,
+      "tolerance": 1.11,
+      "unit": "MB",
+      "rationale": "3 run(s) on 700c1a2: p50 756.072, range 742.736-774.586 (4.2% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.push_ms": {
+      "baseline": 29.161,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 700c1a2: p50 29.161, range 28.902-29.616 (2.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "points.rss_at_rest_mb": {
+      "baseline": 453.82,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 700c1a2: p50 453.820, range 451.052-454.935 (0.9% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.store_resident_mb": {
+      "baseline": 270.528,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 700c1a2: p50 270.528, range 270.528-270.528 (0.0% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.view.city_z11.features": {
+      "baseline": 1678.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 700c1a2: p50 1678.000, range 1678.000-1678.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "points.view.city_z11.instances": {
+      "baseline": 1678.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 700c1a2: p50 1678.000, range 1678.000-1678.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "points.view.city_z11.upload_mb": {
+      "baseline": 0.0418,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "Re-baselined 2026-10-05 from 0.035 (700c1a2): P2 738d0573 grew render::circles::CircleInstance from 16 B to 20 B for the GPU filter value; instances unchanged (the .instances rows are exact). Measured 0.0418 on master 500cd8e2 and on feat/kepler-samples-p3 e500cdfc, 5 runs each, 0.0% spread. Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.view.city_z14.features": {
+      "baseline": 2051.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 700c1a2: p50 2051.000, range 2051.000-2051.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "points.view.city_z14.instances": {
+      "baseline": 2051.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 700c1a2: p50 2051.000, range 2051.000-2051.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "points.view.city_z14.upload_mb": {
+      "baseline": 0.0492,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "Re-baselined 2026-10-05 from 0.041 (700c1a2): P2 738d0573 grew render::circles::CircleInstance from 16 B to 20 B for the GPU filter value; instances unchanged (the .instances rows are exact). Measured 0.0492 on master 500cd8e2 and on feat/kepler-samples-p3 e500cdfc, 5 runs each, 0.0% spread. Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.view.city_z17.features": {
+      "baseline": 793.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 700c1a2: p50 793.000, range 793.000-793.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "points.view.city_z17.instances": {
+      "baseline": 793.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 700c1a2: p50 793.000, range 793.000-793.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "points.view.city_z17.upload_mb": {
+      "baseline": 0.0241,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "Re-baselined 2026-10-05 from 0.021 (700c1a2): P2 738d0573 grew render::circles::CircleInstance from 16 B to 20 B for the GPU filter value; instances unchanged (the .instances rows are exact). Measured 0.0241 on master 500cd8e2 and on feat/kepler-samples-p3 e500cdfc, 5 runs each, 0.0% spread. Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.view.city_z8.features": {
+      "baseline": 1372.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 700c1a2: p50 1372.000, range 1372.000-1372.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "points.view.city_z8.instances": {
+      "baseline": 1372.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 700c1a2: p50 1372.000, range 1372.000-1372.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "points.view.city_z8.upload_mb": {
+      "baseline": 0.0356,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "Re-baselined 2026-10-05 from 0.03 (700c1a2): P2 738d0573 grew render::circles::CircleInstance from 16 B to 20 B for the GPU filter value; instances unchanged (the .instances rows are exact). Measured 0.0356 on master 500cd8e2 and on feat/kepler-samples-p3 e500cdfc, 5 runs each, 0.0% spread. Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.view.national_z3.features": {
+      "baseline": 63.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 700c1a2: p50 63.000, range 63.000-63.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "points.view.national_z3.instances": {
+      "baseline": 63.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 700c1a2: p50 63.000, range 63.000-63.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "points.view.national_z3.upload_mb": {
+      "baseline": 0.00945,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "Re-baselined 2026-10-05 from 0.009 (700c1a2): P2 738d0573 grew render::circles::CircleInstance from 16 B to 20 B for the GPU filter value; instances unchanged (the .instances rows are exact). Measured 0.00945 on master 500cd8e2 and on feat/kepler-samples-p3 e500cdfc, 5 runs each, 0.0% spread. Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "points.zoom_change_worst_ms": {
+      "baseline": 2.26,
+      "tolerance": 1.17,
+      "unit": "ms",
+      "rationale": "3 run(s) on 700c1a2: p50 2.260, range 2.211-2.284 (3.2% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "sats.dots_px_s.z-1_lat0": {
+      "baseline": 0.139,
+      "tolerance": 1.05,
+      "unit": "px/s",
+      "rationale": "Deterministic (seeded catalogue, fixed camera, 2x display): the fastest on-screen dot's speed bound, AltitudeFrame::dot_motion. Graded +-5% both ways by hand: an under-estimate means late frames, an over-estimate wasted ones.",
+      "floor": 0.95
+    },
+    "sats.dots_px_s.z-1_lat60": {
+      "baseline": 0.34,
+      "tolerance": 1.05,
+      "unit": "px/s",
+      "rationale": "Deterministic (seeded catalogue, fixed camera, 2x display): the fastest on-screen dot's speed bound, AltitudeFrame::dot_motion. Graded +-5% both ways by hand: an under-estimate means late frames, an over-estimate wasted ones.",
+      "floor": 0.95
+    },
+    "sats.dots_px_s.z3_lat0": {
+      "baseline": 3.679,
+      "tolerance": 1.05,
+      "unit": "px/s",
+      "rationale": "Deterministic (seeded catalogue, fixed camera, 2x display): the fastest on-screen dot's speed bound, AltitudeFrame::dot_motion. Graded +-5% both ways by hand: an under-estimate means late frames, an over-estimate wasted ones.",
+      "floor": 0.95
+    },
+    "sats.dots_redraw_hz.z-1_lat0": {
+      "baseline": 2.0,
+      "tolerance": 1.0,
+      "unit": "hz",
+      "rationale": "Deterministic (seeded catalogue, fixed cameras, rate 1, 2x display): frames a second the moving dots ask for, each a whole-window gpui redraw; before perf/sats-idle-cpu they asked for every display refresh (120 Hz). Rule: may not rise above the baseline."
+    },
+    "sats.dots_redraw_hz.z-1_lat60": {
+      "baseline": 2.0,
+      "tolerance": 1.0,
+      "unit": "hz",
+      "rationale": "Deterministic (seeded catalogue, fixed cameras, rate 1, 2x display): frames a second the moving dots ask for, each a whole-window gpui redraw; before perf/sats-idle-cpu they asked for every display refresh (120 Hz). Rule: may not rise above the baseline."
+    },
+    "sats.dots_redraw_hz.z3_lat0": {
+      "baseline": 14.7,
+      "tolerance": 1.0,
+      "unit": "hz",
+      "rationale": "Deterministic (seeded catalogue, fixed cameras, rate 1, 2x display): frames a second the moving dots ask for, each a whole-window gpui redraw; before perf/sats-idle-cpu they asked for every display refresh (120 Hz). Rule: may not rise above the baseline."
+    },
+    "sats.dots_speed_us": {
+      "baseline": 104.5,
+      "tolerance": 1.3,
+      "unit": "us",
+      "rationale": "3 run(s) on perf/sats-idle-cpu (review fixes: entry and event bounds) under load: p50 104.5, range 104.1-108.1 (3.8% spread): AltitudeFrame::dot_motion over 10k objects, per paint. Rule: time: max(x1.15, 1 + 2 x spread + 0.10), widened to x1.3 for the shared machine."
+    },
+    "sats.hit_us": {
+      "baseline": 72.8,
+      "tolerance": 1.15,
+      "unit": "us",
+      "rationale": "3 run(s) on a3bb511: p50 72.800, range 72.200-73.400 (1.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "sats.keyframe_ms": {
+      "baseline": 1.455,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on a3bb511: p50 1.455, range 1.432-1.462 (2.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.782
+    },
+    "sats.parse_ms": {
+      "baseline": 12.03,
+      "tolerance": 1.24,
+      "unit": "ms",
+      "rationale": "3 run(s) on a3bb511: p50 12.030, range 11.470-12.270 (6.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "sats.propagate_ns": {
+      "baseline": 145.5,
+      "tolerance": 1.15,
+      "unit": "ns",
+      "rationale": "3 run(s) on a3bb511: p50 145.500, range 143.200-146.200 (2.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "sats.upload_kb": {
+      "baseline": 586.0,
+      "tolerance": 1.0,
+      "unit": "KB",
+      "rationale": "3 run(s) on a3bb511: p50 586.000, range 586.000-586.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "sats.visible.z-1_lat0": {
+      "baseline": 7123.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on a3bb511: p50 7123.000, range 7123.000-7123.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "sats.visible.z-1_lat60": {
+      "baseline": 6931.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on a3bb511: p50 6931.000, range 6931.000-6931.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "sats.visible.z3_lat0": {
+      "baseline": 4888.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on a3bb511: p50 4888.000, range 4888.000-4888.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "slider.basemap_holes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tile-frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "slider.cpu_max_ms": {
+      "baseline": 21.264,
+      "tolerance": 1.38,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 21.264, range 19.532-22.507 (14.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "slider.cpu_p50_ms": {
+      "baseline": 0.982,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.982, range 0.971-0.989 (1.8% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "slider.cpu_p99_ms": {
+      "baseline": 8.943,
+      "tolerance": 1.18,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 8.943, range 8.783-9.111 (3.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "slider.drag_frame_interval_ms": {
+      "baseline": 23.868,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 23.868, range 23.867-23.871 (0.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "slider.drag_max_ms": {
+      "baseline": 8.721,
+      "tolerance": 1.83,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 8.721, range 6.026-9.203 (36.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "slider.drag_other_path": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "slider.drag_p50_ms": {
+      "baseline": 3.481,
+      "tolerance": 1.19,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 3.481, range 3.413-3.556 (4.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "slider.frames_over_16_7ms": {
+      "baseline": 1.0,
+      "tolerance": 1.0,
+      "unit": "frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 1.000, range 1.000-1.000 (0.0% spread). Rule: rare-event count: slack max(3, 2 x worst run) over the p50.",
+      "slack": 3.0
+    },
+    "slider.gpu_pass_max_ms": {
+      "baseline": 7.672,
+      "tolerance": 1.24,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 7.672, range 7.498-8.004 (6.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "slider.gpu_pass_p50_ms": {
+      "baseline": 2.687,
+      "tolerance": 1.38,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 2.687, range 2.645-3.014 (13.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "slider.overlay_holes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tile-frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "slider.rebake_settle_max_ms": {
+      "baseline": 183.558,
+      "tolerance": 1.18,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 183.558, range 176.994-183.581 (3.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "slider.rebake_settle_p50_ms": {
+      "baseline": 74.955,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 74.955, range 73.472-75.012 (2.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "story.card.frame_ms_p50": {
+      "baseline": 3.097,
+      "tolerance": 1.22,
+      "unit": "ms",
+      "rationale": "3 run(s) on 9f9ef53a: p50 3.097, range 3.016-3.197 (5.8% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10), the ceiling capped at the spec budget; ceiling at least baseline + 1 ms; cut to the 4 ms budget.",
+      "slack": 0.221
+    },
+    "story.card.layout_us_p50": {
+      "baseline": 26.5,
+      "tolerance": 1.15,
+      "unit": "us",
+      "rationale": "3 run(s) on 9f9ef53a: p50 26.500, range 26.400-26.500 (0.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10), the ceiling capped at the spec budget."
+    },
+    "story.card.reshapes_after_first": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 9f9ef53a: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "story.draw.frame_ms_p50": {
+      "baseline": 3.097,
+      "tolerance": 1.31,
+      "unit": "ms",
+      "rationale": "3 run(s) on 9f9ef53a: p50 3.097, range 3.012-3.332 (10.3% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.04
+    },
+    "story.draw.retessellations_after_first": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 9f9ef53a: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "story.uhd.frame_ms_p50": {
+      "baseline": 10.375,
+      "tolerance": 1.24,
+      "unit": "ms",
+      "rationale": "3 run(s) on 9f9ef53a: p50 10.375, range 9.806-10.500 (6.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "trips.build_ms": {
+      "baseline": 28.8,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 0e19d3a6: p50 28.800, range 28.400-29.100 (2.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "trips.flights.trips": {
+      "baseline": 20000.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 0e19d3a6: p50 20000.000, range 20000.000-20000.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "trips.flights.vertices": {
+      "baseline": 1133291.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 0e19d3a6: p50 1133291.000, range 1133291.000-1133291.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "trips.globe.draws": {
+      "baseline": 2.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 0e19d3a6: p50 2.000, range 2.000-2.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "trips.globe.frame_ms": {
+      "baseline": 4.84,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 0e19d3a6: p50 4.840, range 4.820-4.850 (0.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10); ceiling at least baseline + 1 ms.",
+      "slack": 0.275
+    },
+    "trips.push_ms": {
+      "baseline": 26.83,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 0e19d3a6: p50 26.830, range 26.350-26.860 (1.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "trips.tick_cpu_us": {
+      "baseline": 35.6,
+      "tolerance": 1.36,
+      "unit": "us",
+      "rationale": "3 run(s) on 0e19d3a6: p50 35.600, range 31.900-36.500 (12.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "trips.tick_upload_bytes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 0e19d3a6: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "trips.upload_kb": {
+      "baseline": 26561.0,
+      "tolerance": 1.0,
+      "unit": "KB",
+      "rationale": "3 run(s) on 0e19d3a6: p50 26561.000, range 26561.000-26561.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "vtoverlay.places.decode_ms": {
+      "baseline": 39.5,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 22c61c5c: p50 39.500, range 38.900-39.700 (2.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "vtoverlay.places.features": {
+      "baseline": 72000.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 22c61c5c: p50 72000.000, range 72000.000-72000.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "vtoverlay.places.frame_ms": {
+      "baseline": 117.8,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 22c61c5c: p50 117.800, range 115.900-117.900 (1.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "vtoverlay.places.push_ms": {
+      "baseline": 59.4,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 22c61c5c: p50 59.400, range 58.900-60.000 (1.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "vtoverlay.population.decode_ms": {
+      "baseline": 7.1,
+      "tolerance": 1.16,
+      "unit": "ms",
+      "rationale": "3 run(s) on 22c61c5c: p50 7.100, range 7.100-7.300 (2.8% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "vtoverlay.population.features": {
+      "baseline": 12000.0,
+      "tolerance": 1.0,
+      "unit": "count",
+      "rationale": "3 run(s) on 22c61c5c: p50 12000.000, range 12000.000-12000.000 (0.0% spread). Rule: exact across runs, so graded two-sided and exact.",
+      "floor": 1.0
+    },
+    "vtoverlay.population.frame_ms": {
+      "baseline": 32.3,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 22c61c5c: p50 32.300, range 32.000-32.600 (1.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "vtoverlay.population.push_ms": {
+      "baseline": 12.9,
+      "tolerance": 1.21,
+      "unit": "ms",
+      "rationale": "3 run(s) on 22c61c5c: p50 12.900, range 12.800-13.500 (5.4% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_dc.basemap_holes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tile-frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "zoom_dc.cpu_max_ms": {
+      "baseline": 20.046,
+      "tolerance": 1.42,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 20.046, range 18.362-21.553 (15.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_dc.cpu_p50_ms": {
+      "baseline": 4.271,
+      "tolerance": 1.57,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 4.271, range 3.787-4.776 (23.1% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_dc.cpu_p99_ms": {
+      "baseline": 9.379,
+      "tolerance": 1.18,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 9.379, range 9.161-9.510 (3.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_dc.detail_after_settle_max_ms": {
+      "baseline": 18.365,
+      "tolerance": 1.44,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 18.365, range 15.272-18.368 (16.9% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_dc.frames_over_16_7ms": {
+      "baseline": 2.0,
+      "tolerance": 1.0,
+      "unit": "frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 2.000, range 1.000-2.000 (50.0% spread). Rule: rare-event count: slack max(3, 2 x worst run) over the p50.",
+      "slack": 4.0
+    },
+    "zoom_dc.gpu_pass_max_ms": {
+      "baseline": 7.677,
+      "tolerance": 1.58,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 7.677, range 7.206-9.027 (23.7% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_dc.gpu_pass_p50_ms": {
+      "baseline": 3.009,
+      "tolerance": 1.32,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 3.009, range 2.723-3.040 (10.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_dc.overlay_holes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tile-frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "zoom_dc.rss_at_rest_mb": {
+      "baseline": 2819.801,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 8dfd03b: p50 2819.801, range 2803.483-2826.945 (0.8% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "zoom_dc.rss_leg_max_mb": {
+      "baseline": 3634.07,
+      "tolerance": 1.08,
+      "unit": "MB",
+      "rationale": "3 run(s) on 8dfd03b: p50 3634.070, range 3595.190-3689.791 (2.6% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "zoom_la.basemap_holes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tile-frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "zoom_la.cpu_max_ms": {
+      "baseline": 20.518,
+      "tolerance": 1.46,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 20.518, range 20.199-23.802 (17.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_la.cpu_p50_ms": {
+      "baseline": 2.457,
+      "tolerance": 1.66,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 2.457, range 2.062-2.741 (27.6% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_la.cpu_p99_ms": {
+      "baseline": 9.213,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 9.213, range 9.063-9.289 (2.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_la.detail_after_settle_max_ms": {
+      "baseline": 13.296,
+      "tolerance": 1.15,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 13.296, range 13.179-13.315 (1.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_la.frames_over_16_7ms": {
+      "baseline": 3.0,
+      "tolerance": 1.0,
+      "unit": "frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 3.000, range 2.000-4.000 (66.7% spread). Rule: rare-event count: slack max(3, 2 x worst run) over the p50.",
+      "slack": 8.0
+    },
+    "zoom_la.gpu_pass_max_ms": {
+      "baseline": 7.818,
+      "tolerance": 1.55,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 7.818, range 7.232-8.956 (22.0% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_la.gpu_pass_p50_ms": {
+      "baseline": 2.711,
+      "tolerance": 1.34,
+      "unit": "ms",
+      "rationale": "3 run(s) on 8dfd03b: p50 2.711, range 2.694-3.006 (11.5% spread). Rule: time: max(x1.15, 1 + 2 x spread + 0.10)."
+    },
+    "zoom_la.overlay_holes": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tile-frames",
+      "rationale": "3 run(s) on 8dfd03b: p50 0.000, range 0.000-0.000 (0.0% spread). Rule: may not rise above the baseline."
+    },
+    "zoom_la.rss_at_rest_mb": {
+      "baseline": 2762.457,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 8dfd03b: p50 2762.457, range 2762.162-2767.569 (0.2% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    },
+    "zoom_la.rss_leg_max_mb": {
+      "baseline": 3338.961,
+      "tolerance": 1.05,
+      "unit": "MB",
+      "rationale": "3 run(s) on 8dfd03b: p50 3338.961, range 3296.723-3343.581 (1.4% spread). Rule: bytes: max(x1.05, 1 + 2 x spread + 0.02)."
+    }
+  }
+}

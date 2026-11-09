@@ -1,0 +1,31 @@
+# The Studio Explorer's pure half: the map document, the actions that edit
+# it and the effects they ask a host for, the in-memory table, field-type
+# detection and the default layers. No gpui and no engine dependency, so it
+# is unit-tested on its own and checked for wasm
+# (`scripts/check-wasm.sh`). See
+# `docs/superpowers/specs/2026-10-07-studio-explorer-design.md` §9.2.
+#
+# `[workspace]` is present and empty so cargo treats this directory as its
+# own workspace root, as `web/`, `ios/` and `studio-app/` do.
+[workspace]
+
+[package]
+# Published as swat-maps-doc; the library keeps its `swat_maps_doc` path.
+name = "swat-maps-doc"
+version = "0.0.0"
+edition = "2021"
+description = "The map document format of gpui-maps: layers, filters, scales and the actions that edit them. Pure Rust, no GPU, wasm-ready."
+repository = "https://github.com/swatmobility/gpui-maps"
+readme = "README.md"
+keywords = ["map", "gis", "document", "kepler", "gpui"]
+categories = ["science::geo", "data-structures", "encoding"]
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "swat_maps_doc"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+thiserror = "2"

@@ -1,0 +1,15 @@
+[package]
+name = "gpui-agentic-http"
+version = "0.1.0"
+edition = "2021"
+description = "A local-only, self-describing HTTP surface for driving and inspecting a gpui app without a human at the keyboard: an action registry, the transport, GET / discovery, and an MCP server for coding agents."
+repository = "https://github.com/swatmobility/gpui-maps"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+keywords = ["gpui", "agent", "automation", "http", "testing"]
+categories = ["development-tools::testing", "gui"]
+
+[dependencies]
+tiny_http = "0.12"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

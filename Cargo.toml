@@ -1,0 +1,732 @@
+[package]
+name = "gpui-maps"
+version = "0.7.0"
+edition = "2021"
+description = "A GPU vector-map engine for GPUI: MVT/PMTiles/MBTiles tiles, MapLibre-style JSON styling, globe, 3D buildings and data overlays."
+repository = "https://github.com/swatmobility/gpui-maps"
+readme = "README.md"
+keywords = ["map", "gpui", "vector-tiles", "gis", "wgpu"]
+categories = ["science::geo", "rendering", "gui", "visualization"]
+# What `cargo package` ships: the library and the files it embeds
+# (`include_bytes!` of the bundled styles and the subset fonts), plus the
+# licence and notice files. Examples, demos, tests, benches and their
+# fixtures stay in the repository (crates.io caps a crate at 10 MB).
+include = [
+    "/src/**",
+    "/build.rs",
+    "/Cargo.toml",
+    "/README.md",
+    "/CHANGELOG.md",
+    "/LICENSE-MIT",
+    "/LICENSE-APACHE",
+    "/NOTICE",
+    "/ATTRIBUTION.md",
+    "/TRADEMARK.md",
+    "/examples/liberty-style.json",
+    "/examples/styles-open/*-style.json",
+    "/demos/positron-style.json",
+    "/demos/openfreemap-dark-style.json",
+    # `story::fixture::FIXTURE_TILE` embeds it (public, for the integration
+    # tests and examples), so the published library cannot build without it.
+    "/benches/fixtures/singapore_z14.pbf",
+    "/assets/fonts/*.ttf",
+    "/assets/fonts/*.otf",
+    "/assets/fonts/README.md",
+]
+license = "MIT OR Apache-2.0"
+
+[features]
+default = ["sprite_http_fetch", "mbtiles", "geoparquet"]
+# Whether `sprite::fetch_sprite_atlas`/`fetch_bytes` (the `reqwest`-based
+# sprite-sheet fetch) exist at all. On by default so this crate's own
+# behaviour is unchanged; declared -- and left OUT of `default` -- in
+# `ios/Cargo.toml` too, because that crate reaches `sprite.rs` by `#[path]`
+# (see `ios/src/lib.rs`) for `glyph_atlas`/`icon_pipeline`/`symbol_pass`,
+# none of which need these two functions, and does not depend on `reqwest`
+# (see `ios/src/net.rs`).
+#
+# A `cfg(target_os = "ios")` on the two functions would say the same thing
+# for a REAL `--target aarch64-apple-ios` build, but a plain `cargo build
+# --manifest-path ios/Cargo.toml` (no `--target`) compiles for the HOST
+# instead -- `target_os` there is `"macos"`, not `"ios"` -- and that command
+# is one of this repo's own iOS smoke checks (see `ios/Cargo.toml`'s doc
+# comment). A feature, unlike `target_os`, reads the same whichever target
+# compiles it, which is what makes both checks agree. Same technique as
+# `probe` above, declared in every crate that reaches this source by path
+# (`ios/Cargo.toml`, `web/Cargo.toml`) so a `cfg(feature = "...")` never
+# names an undeclared feature.
+sprite_http_fetch = []
+# `tile_source::cog`'s reads through `ureq` (`cog/fetch_ureq.rs`) instead of
+# `reqwest` + tokio: the iOS crate's backend. Declared here and in `web/` only
+# so the `cfg` names a known feature; this crate leaves it off (it has no
+# `ureq`), and `ios/Cargo.toml` turns it on.
+cog_ureq = []
+# Declared and left off here: `demos/satellites/fetch.rs` requests on `ureq`
+# under it, in the iOS Studio app (`studio-mobile`), which includes it.
+celestrak_ureq = []
+# `tile_source::mbtiles::MbtilesSource`: MBTiles (an SQLite file of tiles)
+# as a `TileSource`, a sibling of `PmtilesSource`. On by default. Native
+# only in effect: the module is also `cfg(not(target_arch = "wasm32"))` and
+# `rusqlite` is a target-specific dependency (below), so a wasm build that
+# leaves this on still compiles -- an MBTiles file is a local file, and the
+# browser has no file system to open one from. Neither shell includes
+# `src/tile_source/mod.rs`, so `web/` and `ios/` never see the module (nor
+# need the feature name). Turn it off
+# with `default-features = false` to drop the bundled SQLite from a binary
+# that never opens an MBTiles file.
+mbtiles = ["dep:rusqlite", "swat-maps-kit/mbtiles"]
+# `overlay::geoparquet`: GeoParquet files (Parquet with `geo` metadata) as an
+# overlay source -- local, in memory, or over HTTP range requests with
+# row-group pushdown. On by default. Pulls the Apache Arrow `parquet` reader
+# (and `arrow-array`/`arrow-schema` under it); turn it off with
+# `default-features = false` to drop them from a binary that never reads one.
+# `web/` turns it on too (the browser reads over `fetch`); `ios/` declares
+# the name and leaves it off.
+geoparquet = ["dep:parquet", "dep:arrow-array", "dep:arrow-schema", "dep:arrow-ipc", "swat-maps-kit/geoparquet"]
+# `overlay::dotgrid::clickhouse`: the dot-density layer reading population
+# count tiles live from a ClickHouse server (`gpui_map_dots`, loaded by
+# `tools/dotgrid-build --load-clickhouse`) instead of a PMTiles file -- the
+# `world_dots` demo's `--clickhouse [URL]` mode and its MG-14 latency
+# measure (`--measure-clickhouse`). A demo data path, like the generic
+# demos' optional inputs (`docs/superpowers/specs/2026-09-25-generic-demos-design.md`):
+# off by default, adds no dependency (the POST goes through the same
+# `reqwest` client as `sprite_http_fetch`), and both shells declare it and
+# leave it off (a known name keeps their `-D warnings` quiet).
+# `cargo run --release --features clickhouse-demo --example world_dots -- --clickhouse`.
+clickhouse-demo = ["swat-maps-kit/clickhouse-demo"]
+# `src/orbit`: CelesTrak OMM parsing and SGP4 propagation for the
+# satellites demo (spec 2026-09-29-satellites-design.md). Off by default;
+# the shells declare it and leave it off, like `clickhouse-demo`.
+# `cargo run --release --features orbits --example satellites`.
+orbits = ["dep:sgp4", "swat-maps-kit/orbits"]
+# `model_gltf`: glTF 2.0 / GLB files as `render::model::ModelMesh`es for
+# `MapView::set_model_layer`. Off by default (the model layer itself needs
+# nothing: a procedural mesh draws without it); the shells never see the
+# module (it hangs off `lib.rs`, which they do not include). Pulls the
+# `gltf` crate (MIT/Apache-2.0) with no default features: no image
+# decoding, no file-system import -- a GLB's own binary chunk only.
+models = ["dep:gltf"]
+# Probe-only instrumentation that is NOT safe to leave reachable in a
+# shipped binary: `mvt::DecodedTile::strip` and
+# `MapView::strip_decoded_for_measurement` free one half of every cached
+# decoded tile in place, which leaves entries in `decoded_cache` that still
+# look like tiles and would rebake into a silently wrong map. Off by
+# default and named by nothing in `default`, so the code does not exist
+# unless a measurement asks for it:
+# `cargo run --release --features probe --example memory_probe`.
+probe = ["swat-maps-kit/probe"]
+# `ClusterMode::H3`: H3 cells for point clustering (`src/overlay/cluster.rs`).
+# Off by default, so the iOS and web shells build without `h3o`.
+h3 = [
+    "dep:h3o",
+    "swat-maps-kit/h3",
+]
+# Address -> coordinate resolution. RESERVED, and deliberately wired to
+# nothing: the `geocode` crate has moved OUT of this repository and this
+# feature is the name held open for it.
+#
+# # Why the name survives the crate
+#
+# It was `geocode = ["dep:geocode"]` over `geocode = { path = "geocode",
+# optional = true }`. The crate now lives in its own repository, and cargo
+# cannot declare an optional dependency with no source -- an optional
+# dependency IS a source plus a flag, so there is no spelling of "optional,
+# default off, and absent" for the dependency itself. What CAN survive is the
+# feature name, so it does: a consumer that already writes
+# `features = ["geocode"]` gets a sentence explaining the move rather than
+# `unknown feature`, which says nothing and sends them to the changelog.
+#
+# # Turning it on is a compile error, on purpose
+#
+# An empty feature would be worse than either alternative: `--features
+# geocode` would succeed, link nothing, and leave a consumer believing they
+# had address resolution. `src/lib.rs` therefore carries a `compile_error!`
+# behind this feature whose text is the wiring instruction. Off by default,
+# so a default build never sees it.
+#
+# # Wiring it back
+#
+# Restore the dependency line and drop the `compile_error!`:
+#
+#     geocode = ["dep:geocode"]                            # here
+#     geocode = { git = "<the geocode repository>", optional = true }
+#
+# or `{ path = "../gpui-geocode", optional = true }` for a local checkout.
+# Nothing in `src/` references the crate, so that is the whole change on this
+# side; the consumer of it was `examples/common/search.rs`, which left with
+# the demo.
+geocode = []
+
+
+[lints.clippy]
+# The few clippy defaults that are wrong for this code, set once here and
+# repeated verbatim in `web/Cargo.toml` and `ios/Cargo.toml`, which compile
+# the same `src/` files by `#[path]`. Everything else is enforced at
+# `-D warnings` by `scripts/clippy.sh` (and the pre-commit hook).
+#
+# `!(a < b)` is how this code says "fail on NaN as well": it is the test a
+# NaN cannot pass, and `a >= b` (or a `partial_cmp` match) would silently
+# let one through.
+neg_cmp_op_on_partial_ord = "allow"
+# Renderer plumbing threads a device, a pass, the camera and per-frame
+# state through one call; bundling them into one-use structs hides what a
+# draw reads. 45 item-level allows said so before this line did.
+too_many_arguments = "allow"
+# Inline tuple and closure types in tests and one-off plumbing read better
+# where they are used than behind an alias defined somewhere else.
+type_complexity = "allow"
+
+[dependencies]
+# H3 cell indexing for `ClusterMode::H3`, behind the `h3` feature. BSD-3.
+h3o = { version = "0.11", optional = true }
+# glTF 2.0 / GLB parsing for `model_gltf`, behind `models`. MIT/Apache-2.0.
+gltf = { version = "1.4", default-features = false, features = ["utils", "names"], optional = true }
+# gpui-pre: the weekly crates.io snapshot of Zed's gpui, renamed so every
+# `gpui::` path reads as before. Pinned exactly because the snapshots break
+# API from week to week; a consumer must pin the same version (0.7.0 of this
+# crate is the move from gpui 0.2.2, see CHANGELOG.md).
+gpui = { package = "gpui-pre", version = "=0.3.12" }
+anyhow = "1"
+geo-types = "0.7"
+glyphon = "0.12"
+lru = "0.12"
+reqwest = { version = "0.12", features = ["rustls-tls", "gzip"] }
+async-trait = "0.1"
+# `tile_source::wms` reads GetCapabilities. Already in the graph (usvg).
+roxmltree = "0.21"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "time"] }
+# `http-async` is what lets an archive be read where it lies, over HTTP range
+# requests, instead of having to be downloaded first -- see
+# `tile_source::pmtiles`. It brings its own reqwest (0.13; ours is 0.12), so
+# the binary carries two reqwest facades. That is a real cost and it was
+# weighed: the alternative is to hand-write an `AsyncBackend` over our own
+# client, which means owning the Range header, the 206-vs-200 check and the
+# ETag staleness check ourselves, forever, to save one thin wrapper over the
+# hyper/rustls stack both versions already share.
+#
+# `reqwest-rustls` is not an optional extra: pmtiles takes reqwest with
+# `default-features = false`, so without it that client has no TLS at all and
+# every `https://` archive fails at connect. It is the same rustls choice our
+# own `reqwest` line makes, so the two facades resolve to one rustls.
+#
+# `default-features = false` is the load-bearing part of this line. pmtiles'
+# default is `__all_non_conflicting`, which is every backend it has -- so
+# until this was written, a consumer linking this crate for a map got
+# `aws-sdk-s3`, `rust-s3`, `object_store` and `moka` compiled into their
+# binary to read a file off disk. Naming the two backends this crate actually
+# constructs (`MmapBackend`, `HttpBackend`) drops all four.
+#
+# `brotli` and `zstd` are kept although nothing here asks for them: they are
+# read-side capabilities, not backends. The v3 header names the compression
+# an archive was written with, and an archive that used one of those without
+# the feature does not fail at compile time -- it fails at run time, on the
+# consumer's machine, with `UnsupportedCompression`. gzip is what every
+# writer in practice emits, but that is a statement about today's tools, and
+# the wrong way to be wrong about it is expensive.
+pmtiles = { version = "0.23", default-features = false, features = [
+    "mmap-async-tokio",
+    "http-async",
+    "reqwest-rustls",
+    "brotli",
+    "zstd",
+] }
+bytes = "1"
+glam = { version = "0.33", features = ["bytemuck", "f64"] }
+bytemuck = { version = "1.25", features = ["derive"] }
+lyon = "1.0"
+wgpu = "=30.0.1"
+pollster = "1.0"
+serde_json = "1"
+sha2 = "0.10"
+image = "0.25"
+# The story image cache writes through a uniquely named temp file
+# (`image_cache::write`). Already in the lockfile (a dev-dependency and a
+# transitive one); named here for that one use.
+tempfile = "3"
+# A story's `scene.basemap.wordmark` may be an SVG (`story::validate`
+# rasterises it once, at load). Already in the graph underneath gpui at this
+# version; `default-features = false` because a wordmark is outlined artwork
+# (no `<text>`, no embedded bitmaps), so no font database is needed. Native
+# only in effect: web/ and ios/ reach `src/story` by `#[path]` and do not
+# include `validate.rs`.
+resvg = { version = "0.45", default-features = false }
+# `color-theme`'s LUT arrives as a base64 PNG inside the style document
+# (`style_spec::lut`). Already in the dependency graph transitively; naming
+# it here only makes it directly usable.
+base64 = "0.22"
+serde = { version = "1", features = ["derive"] }
+# `ZoomValue::stops`: a constant (1 stop) or a from/to pair (2 stops) covers
+# ~85% of every stop list this crate builds from the vendored styles (see
+# the OMIM optimization plan, Task 1) -- inline storage for those keeps
+# `ZoomValue::constant` from heap-allocating at all.
+smallvec = "1"
+# `overlay::dotgrid::codec`: gzip for count tiles. Default features, which
+# means the pure-Rust `miniz_oxide` backend, not a C `zlib`. Web and iOS
+# both include the whole `src/overlay` module (so `dotgrid` compiles there,
+# though neither draws dots yet), the design calls for count tiles to decode
+# on all three shells (`docs/superpowers/plans/2026-09-26-world-dot-density.md`),
+# and neither shell links a C toolchain for its target. `pmtiles`'s `zstd`
+# feature above is a *reader* for archives that used C zstd; this is a
+# writer/reader pair this crate controls both ends of, so it gets to insist
+# on pure Rust from the start rather than retrofit it later.
+flate2 = "1"
+# `tile_source::cog`: LZW, one of the four compressions a GeoTIFF tile
+# commonly uses (deflate is `flate2` above; JPEG and WebP are `image`'s).
+# MIT/Apache-2.0, pure Rust, no dependencies of its own, and already in the
+# graph (`image`'s TIFF and GIF decoders use it) at this version -- naming
+# it makes it directly usable. The `tiff` crate was weighed and not used:
+# its decoder wants `Read + Seek` over the whole file, which a range reader
+# in a browser cannot be, so the IFDs are read by `cog::tiff` instead.
+weezl = "0.1.12"
+# `font_fallback`: implementing cosmic-text's `Fallback` trait means naming
+# the `unicode_script::Script` in its signature, and replacing
+# `FontSystem::new()` means reading the system locale it would have read.
+# Both are already in the graph underneath cosmic-text, at these versions --
+# naming them here only makes them directly usable, and the `unicode-script`
+# version has to keep matching cosmic-text's or the trait signature stops
+# lining up.
+unicode-script = "0.5.8"
+sys-locale = "0.3"
+# `story::panel::fit_text`'s truncation falls back to grapheme-cluster
+# boundaries for text with no word breaks (continuous CJK/Thai, or one
+# pathological token), so an emoji with a ZWJ or a combining mark is never
+# split mid-cluster. Already in the graph (under several of the font/text
+# crates above); naming it directly pins the version this crate builds
+# against. Locked at the version already in `Cargo.lock`.
+unicode-segmentation = "1.13.3"
+# Turn-by-turn navigation's route model, snapping, step advance, deviation
+# detection and location simulation (`src/nav/`). BSD-3. Pinned EXACTLY:
+# Ferrostar releases weekly before 1.0, and `src/nav/route_source.rs` is the
+# one place its OSRM adapter is touched. `default-features = false` drops
+# `uniffi` (the Swift/Kotlin bindings); `std` is all the Rust core needs.
+ferrostar = { version = "=0.57.0", default-features = false, features = ["std"] }
+# The ETA is read in local time, and std cannot say what that is: `nav`
+# takes the offset as `format::WallClock::utc_offset_min`, and native reads
+# it from `chrono::Local`. chrono is already in the graph (Ferrostar's).
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+# SGP4/SDP4 propagation for `src/orbit` (behind `orbits`). MIT/Apache-2.0.
+sgp4 = { version = "2.4", optional = true, default-features = false, features = ["alloc", "std"] }
+# GeoParquet (`overlay::geoparquet`, behind `geoparquet`). Apache-2.0. The
+# sans-IO push decoder (`parquet::arrow::push_decoder`) is driven by this
+# crate's own HTTP client and file reads, so no `async`/`object_store`
+# feature (and no second tokio or reqwest). Codecs: snappy, lz4 and gzip
+# are pure Rust (`flate2-rust_backend` is miniz_oxide); zstd is the C
+# library pmtiles' `zstd` already links. Brotli is left out (no GeoParquet
+# writer in practice emits it; a brotli file is refused by codec name).
+parquet = { version = "60", optional = true, default-features = false, features = ["arrow", "snap", "lz4", "flate2-rust_backend", "zstd"] }
+arrow-array = { version = "60", optional = true }
+arrow-schema = { version = "60", optional = true }
+# Arrow IPC (Feather v2) files with a GeoArrow geometry column, converted to
+# GeoParquet by `overlay::geoparquet::convert`. Already in the graph under
+# `parquet`'s `arrow` feature. No IPC codecs: a file with compressed
+# buffers is refused with the reader's own error.
+arrow-ipc = { version = "60", optional = true }
+
+# MBTiles reader (`tile_source::mbtiles`, behind the `mbtiles` feature).
+# MIT. `bundled` compiles SQLite's own amalgamation (public domain) with
+# `cc` instead of linking the OS's libsqlite3: one SQLite version on macOS,
+# Linux and iOS alike, and no system package for a Linux consumer to
+# install. Pure-Rust readers were weighed and rejected: none is a complete,
+# maintained reader of the on-disk format (overflow pages, WAL, every page
+# size a writer may have used), and an MBTiles reader that fails on a real
+# file costs more than the C. Not reachable on wasm32 (see the feature).
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rusqlite = { version = "0.32", features = ["bundled"], optional = true }
+
+# Turn-by-turn voice: `src/speech.rs`'s one `AVSpeechSynthesizer`, shared
+# with the iOS shell. `AVAudioSession*` is for the phone's ducking session;
+# the class does not exist on macOS and is only named under
+# `cfg(target_os = "ios")`. `default-features = false`: the framework's
+# defaults switch on every audio-engine class. Same objc2 0.3 line the rest
+# of the graph uses.
+[target.'cfg(target_vendor = "apple")'.dependencies]
+objc2 = "0.6"
+objc2-avf-audio = { version = "0.3.2", default-features = false, features = ["std", "AVSpeechSynthesis", "AVAudioSession", "AVAudioSessionTypes"] }
+objc2-foundation = { version = "0.3.2", default-features = false, features = ["std", "NSString"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+raw-window-handle = "0.6"
+objc2 = "0.6"
+# `NSColor` and `objc2-core-graphics` are for the backdrop behind a
+# chrome-above map -- see `MapLayer::set_backdrop_color`. `NSColor` is the
+# shortest route to a `CGColor` with the frameworks already linked here.
+# `NSEvent`/`NSWindow`/`NSResponder`/`NSGraphicsContext` are for the
+# EXAMPLES, not the library: `examples/common/agentic.rs` synthesises a
+# drag and hands it to the window so "is dragging broken" can be answered
+# over the debug port instead of by taking over the user's pointer.
+# `gpui::Window::dispatch_event` -- the obvious route -- is unusable from
+# outside gpui: it is `pub`, but its return type `DispatchEventResult` is
+# not, and rustc rejects the call at the call site. An example in this
+# package can use the package's own dependencies, so the features live
+# here; nothing in `src/` names them.
+objc2-app-kit = { version = "0.3.2", features = ["std", "NSView", "NSColor", "NSEvent", "NSWindow", "NSResponder", "NSGraphicsContext", "NSScreen", "NSApplication", "objc2-quartz-core", "objc2-core-graphics"] }
+objc2-quartz-core = { version = "0.3.2", features = ["std", "CALayer", "CAMetalLayer", "CATransaction", "objc2-core-foundation"] }
+objc2-core-foundation = { version = "0.3.2", features = ["CFCGTypes"] }
+
+[[example]]
+name = "smoke"
+
+# A map story (JSON script) to an MP4, PNGs, a contact sheet or a still.
+[[example]]
+name = "story"
+# Its CLI tests (exit codes, refusal, cancel) run under `cargo test`.
+test = true
+
+[[example]]
+name = "overlay_features"
+
+[dev-dependencies]
+# Polygon union (`geo::unary_union`, i_overlay) for the Digital twin's
+# baked ground shadows (`examples/panels/digital_twin_ground.rs`). Already
+# in the build through ferrostar; examples only, the library never names it.
+geo = { version = "=0.33.1", default-features = false }
+# The demo kit (`kit/`): the window shell, cards and demo panels the
+# examples and Studio share. The features above turn its own on.
+swat-maps-kit = { path = "kit" }
+# The Studio Explorer's pure document model (`examples/studio/explorer/`);
+# examples only, so library consumers never see it.
+swat-maps-doc = { package = "swat-maps-doc", path = "swat-maps-doc" }
+# `TestAppContext`/`VisualTestContext`, for the headless input tests in
+# `src/map_view.rs` (`headless_input_tests`): they drive a gpui window on
+# gpui's test platform, so a key or click goes through gpui's own dispatch
+# tree -- focus included -- rather than a hand-called handler. A
+# dev-dependency, so a consumer linking `gpui-maps` never gains it; the cost
+# is that cargo unifies the feature into this package's example builds too.
+gpui = { package = "gpui-pre", version = "=0.3.12", features = ["test-support"] }
+# gpui-pre's `Application` has no platform of its own: the examples get one
+# from `gpui_platform::application()` / `gpui_platform::headless()`. The
+# library never opens an application, so this is a dev-dependency.
+# `font-kit` is load-bearing: gpui-pre-platform's default features are
+# empty, and without it gpui_macos installs `NoopTextSystem`, so every gpui
+# label, button caption and number draws NOTHING in a real window (the test
+# platform never rasterises glyphs, so no unit test notices). The only sign
+# is one `log::warn!` that nothing in the gallery prints.
+gpui-platform = { package = "gpui-pre-platform", version = "=0.3.12", features = ["font-kit"] }
+# Kept ONLY so `agrees_with_mvt_reader_coordinate_for_coordinate` can hold
+# this crate's own decoder against the one it replaced. `src/mvt.rs` parses
+# MVT itself now: `mvt-reader` sizes every ring for the WHOLE feature, which
+# is a peak of `parts x varints` and reaches 3.36 GB on a single z12 tile --
+# survivable on 64-bit, fatal in a browser's 4 GiB of address space. See
+# `mvt::decode`.
+mvt-reader = "2.4"
+# The dev-harness HTTP endpoint in `examples/mapbox_standard_dark.rs`, and
+# NOTHING ELSE. It is here, not in `[dependencies]`, because a consumer
+# linking this crate must not gain an inbound listener -- a hard constraint
+# agreed with the consumer, pinned by
+# `the_http_server_never_reaches_a_consumers_dependency_tree`.
+#
+# `tiny_http` rather than axum: the harness serves three routes with no
+# routing, no middleware and no async runtime of its own, and axum in
+# dev-dependencies would pull tower/hyper into every `cargo test`.
+tiny_http = "0.12"
+# `demos/us_block_groups.rs` reads the Census TIGER/Line shapefiles as
+# published, rather than a multi-GB GeoJSON conversion of them (the national
+# file would not fit the disk it is measured on with 8 GB to spare). A
+# dev-dependency: the engine never reads shapefiles.
+shapefile = { version = "0.7", default-features = false }
+# The examples' agentic HTTP surface (`examples/common/agentic.rs`) --
+# registry, transport and `GET /` discovery, shared with a downstream app so
+# the two apps answer the same shape on the same 7330-7339 port range. Here for
+# exactly the same reason `tiny_http` is (it depends on `tiny_http`, so a
+# consumer that gained this would gain a listener), and pinned by the same
+# test.
+#
+# In this repository (`gpui-agentic-http/`, MIT OR Apache-2.0), vendored from
+# its first home at revision 4350349: this is a debug surface whose action
+# registry is a contract the bootstrap skill reads, so it moves with this
+# repository and not with anyone else's.
+gpui-agentic-http = { path = "gpui-agentic-http" }
+# The gallery's sidebar, title bar and theme (`examples/studio/` ONLY). Pinned
+# exactly: 0.9.1 is built on gpui-pre 0.3.12, the same gpui this crate links.
+# A downstream desktop app links this same pair with gpui-maps. Default features
+# are empty; never enable `webview`/`inspector` (they pull in lb-wry).
+gpui-component = "=0.9.1"
+# gpui-kit-assets is what 0.7 renamed gpui-component-assets to (kept in 0.8).
+gpui-kit-assets = "=0.9.1"
+
+# `render::dots`' `the_dot_shader_is_valid_glsl_es_300` (Task 6 review
+# F-1): translates `shader.wgsl`'s dot entry points with the GLSL backend
+# the WebGL2 shell runs, since `check-wasm.sh` only type-checks Rust. The
+# version wgpu itself uses, with the two features that test needs.
+naga = { version = "=30.0.1", features = ["wgsl-in", "glsl-out"] }
+
+# The library's own tests, on every platform -- not only macOS, where they
+# used to sit: `scripts/check-linux.sh` runs `cargo test --lib` on Linux.
+# `PmTilesWriter`, used by `tile_source::pmtiles`'s tests to build the
+# archives they read back. Here rather than in `[dependencies]` for the same
+# reason `tiny_http` is: a consumer linking this crate to DRAW a map has no
+# business also linking the code that WRITES a tile archive, and cargo only
+# unifies dev-dependency features into builds that actually build the tests.
+pmtiles = { version = "0.23", default-features = false, features = ["write"] }
+mvt = "0.15"
+wiremock = "0.6"
+tempfile = "3"
+geojson = "0.24"
+
+[target.'cfg(target_os = "macos")'.dev-dependencies]
+# `getrusage` for `demos/us_block_groups.rs --measure`'s peak RSS. Already
+# in the tree transitively; named here so the demo can call it.
+libc = "0.2"
+# The synthetic-input half of that surface, and nothing else. `CGEvent`
+# because AppKit publishes no constructor for a scroll-wheel `NSEvent`, so
+# one is built as a Core Graphics event and converted; `NSString` because a
+# synthetic key event carries its characters as one. See `play_gesture` in
+# `examples/common/agentic.rs`.
+#
+# `dev-dependencies`, for the same reason `tiny_http` is: an example may use
+# them and a consumer linking `gpui-maps` must not gain them. The EXTRA
+# FEATURES this harness needs from `objc2-app-kit` (`NSEvent`, `NSWindow`,
+# `NSResponder`, `NSGraphicsContext`, `NSScreen`, `NSApplication`) cannot
+# live here -- Cargo unifies features across both tables, so they are on the
+# `[dependencies]` entry above and reach a consumer's build. That is
+# additive API surface on a crate they already link, which is a different
+# thing from linking two more crates.
+objc2-core-graphics = { version = "0.3.2", features = ["std", "CGEvent", "CGEventTypes", "CGEventSource", "libc"] }
+# NSArray..NSValue: Studio's screencast recorder (`examples/studio/recorder/`).
+objc2-foundation = { version = "0.3.2", features = ["std", "NSArray", "NSBundle", "NSDictionary", "NSError", "NSString", "NSURL", "NSValue"] }
+# The Studio's GTFS import (`examples/studio/gtfs/`): a feed's zip members
+# streamed through a CSV reader, never read whole. Examples only. zip
+# without its default codecs: GTFS zips are stored or deflated, and
+# `deflate-flate2` reuses the flate2 already in the graph.
+zip = { version = "8.6", default-features = false, features = ["deflate-flate2"] }
+csv = "1.4"
+# Planning → Datasets (`examples/studio/planning/datasets/`): a CSV saved
+# as Shift_JIS (a Japanese Excel's default "CSV") read as text. Already in
+# the lock (through reqwest's encoding stack); examples only.
+encoding_rs = "0.8"
+# The Studio GTFS core's error enums (`examples/studio/gtfs/core/`, synced
+# verbatim by a sync script). thiserror 2 is already in the lock.
+thiserror = "2"
+# The same core's playback (`gtfs/core/{graph,shape_distance,vehicle_animation}.rs`):
+# its stop graph keys edges on uuids and cuts shapes at stops on the
+# geodesic. Both crates, at these versions, are already in the lock.
+uuid = { version = "1.24", features = ["v4"] }
+geographiclib-rs = "0.2.7"
+# The Studio's GTFS-Realtime decoder (`examples/studio/gtfs/rt/`): the
+# official gtfs-realtime.proto as hand-written prost messages (no protoc,
+# no build script), and the feed's time zone for the delay against the
+# timetable. Both are already in the lock (prost through `mvt`, jiff
+# through `serde_with`). Examples only.
+prost = "0.14"
+jiff = "0.2"
+# Task 0's bench harness (`benches/perf.rs`) only. `harness = false` below
+# hands `cargo bench` straight to `benches/perf.rs`'s own hand-written
+# `main` (not the `criterion_main!` macro -- see that file's module doc
+# comment for why), which runs the allocation report before handing off to
+# `criterion::Criterion` for timing.
+criterion = "0.5"
+
+[[example]]
+name = "simulation_overlay"
+
+# `test = true` (examples default to false) so `cargo test` actually RUNS
+# this example's unit tests. The settle detector decides when every memory
+# sample is taken; an untested one would put a silent bias under every
+# number the harness reports, and its whole behaviour is about elapsed time,
+# which is only testable against the synthetic clock those tests drive.
+[[example]]
+name = "memory_probe"
+test = true
+
+# Re-push rate vs tiling (see the file). Reaches `overlay::repush_bench`,
+# which exists only under `probe`.
+[[example]]
+name = "repush_bench"
+required-features = ["probe"]
+
+# `test = true` for the second time, and the second time it was needed and
+# absent. This example had no `[[example]]` block at all, so it was
+# auto-discovered with the default `test = false`, and the five tests in
+# `examples/common/shell.rs` -- which only this example includes -- had
+# never been RUN. They cover the demo shell's terminator toggle and its
+# `GPUI_MAP_NIGHT` parsing, including that an out-of-range value is read the
+# way the SHADER reads it rather than rejected. `cargo clippy
+# --all-targets` compiles them, which is why they looked healthy: green,
+# and never executed.
+#
+# Found by reconciling the count of `#[test]` attributes in the tree against
+# the set of tests the runner actually reported, which is the only thing
+# that distinguishes a passing test from one nobody ran.
+#
+# Pure, like the one above: no window, no GPU, no style document.
+[[example]]
+name = "mapbox_standard_dark"
+test = true
+
+# `test = true` so `cargo test` runs `the_title_carries_the_tile_origin_suffix`
+# (this file's own restored `tile_source_label` title suffix, fix round 1).
+# Pure, no window, no GPU.
+[[example]]
+name = "mapbox_tokyo"
+test = true
+
+# `test = true` so `cargo test` runs `the_headless_flag_is_only_set_or_not`
+# (this file's own restored `SWAT_ROUTES_DARK_HEADLESS` check, fix round 1).
+# Pure, no window, no GPU.
+[[example]]
+name = "swat_routes_dark"
+test = true
+
+# Task 0's allocation-pooling baseline: `mvt::decode`, `match_tile_static`,
+# `resolve_plan`, and `tessellate_plan_with_ranges`, timed separately
+# against one real z14 Singapore tile plus allocation counts from a
+# `#[global_allocator]` shim. `harness = false` because `benches/perf.rs`
+# defines its own `main` (not the default `libtest` harness, and not
+# `criterion_main!` either -- it runs the allocation report first, then
+# hands off to criterion for timing). That `#[global_allocator]` only takes
+# effect inside THIS bench binary's own process (a separate crate from the
+# library), never in the lib, an example, or `cargo test`. See the module
+# doc comment in `benches/perf.rs`.
+[[bench]]
+name = "perf"
+harness = false
+
+
+# The census regression gate (`scripts/perf-gate.sh`, `docs/perf-gate.md`):
+# runs `us_block_groups` per mode and grades its `gate:` lines against
+# `stress/us_block_groups_baseline.json` with the stress suite's grader.
+# `test = true` so `cargo test` runs its parsing, validity and band rules.
+[[example]]
+name = "perf_gate"
+test = true
+
+# The first of the `demos/` showcases (see
+# `docs/superpowers/specs/2026-09-25-generic-demos-design.md`): every US
+# Census block group as one overlay, with a headless `--measure` mode.
+[[example]]
+name = "us_block_groups"
+path = "demos/us_block_groups.rs"
+# `test = true` so `cargo test` runs the slider's income mapping, the
+# engine-class check behind its snapping, and the legend layout.
+test = true
+
+# Millions of synthetic points as one overlay source: the point path's
+# clustering and level of detail, with a headless `--measure` mode (the perf
+# gate's `points.*` section). See
+# `docs/superpowers/specs/2026-09-26-big-point-sources-design.md`.
+[[example]]
+name = "big_points"
+path = "demos/big_points.rs"
+
+# A million-row CSV through `overlay::csv` onto the point path, headless
+# (`--measure`: the perf gate's `csv.*` section), or `--write` the same
+# synthetic file for a windowed check.
+[[example]]
+name = "csv_points"
+path = "demos/csv_points.rs"
+
+# The Studio Explorer's filter path at a million rows, headless
+# (`--measure`): the perf gate's `explorer.*` section.
+[[example]]
+name = "explorer_gate"
+path = "demos/explorer_gate.rs"
+
+# A million-feature FlatGeobuf through `overlay::fgb`: the whole-file read,
+# the push and bbox queries through its index, headless (`--measure`: the
+# perf gate's `fgb.*` section), or `--write` the same synthetic file.
+[[example]]
+name = "fgb"
+path = "demos/fgb.rs"
+
+# A million-row GeoParquet through `overlay::geoparquet` (`--measure`: the
+# perf gate's `geoparquet.*` section -- the whole-file read, the push, and
+# bbox queries that skip row groups by their covering statistics), or the
+# Studio's "GeoParquet" panel in a window.
+[[example]]
+name = "geoparquet"
+path = "demos/geoparquet.rs"
+required-features = ["geoparquet"]
+
+# MBTiles tile reads through `tile_source::mbtiles` (`--measure`: the perf
+# gate's `mbtiles.*` section, on a seeded synthetic file), or the Studio's
+# "MBTiles" panel in a window.
+[[example]]
+name = "mbtiles"
+path = "demos/mbtiles.rs"
+required-features = ["mbtiles"]
+
+# Cloud-Optimised GeoTIFF through `tile_source::cog` (`--measure`: the perf
+# gate's `cog.*` section -- the header open, one map tile's decode and
+# resample, the range requests one view costs, and that view over a slow
+# HTTP server with one and eight requests in flight), the Studio's "Cloud
+# GeoTIFF" panel in a window, and `--info`/`--png`/`--make-fixture` tools.
+[[example]]
+name = "cog"
+path = "demos/cog.rs"
+
+# Origin-destination arcs through `render::arcs` (`--measure`: the perf
+# gate's `arcs.*` section -- 680k seeded synthetic commute arcs and 98k
+# taxi arcs at Kepler's cameras, GPU and frame time; `--measure-real CSV`
+# runs Kepler's own ukcommute rows).
+[[example]]
+name = "arcs"
+path = "demos/arcs.rs"
+
+# Animated trips through `render::trips` (`--measure`: the perf gate's
+# `trips.*` section -- 20k seeded synthetic flights on the globe at the
+# world-flights sample's camera: build, push, frame, and the per-tick CPU
+# cost of a clock move).
+[[example]]
+name = "trips"
+path = "demos/trips.rs"
+
+# The vector-tile overlay (`overlay::vector_tiles`) on seeded synthetic
+# tiles shaped like Kepler's population and FSQ samples, headless: the perf
+# gate's `vtoverlay.*` section (`--measure`: decode, push, frame).
+[[example]]
+name = "vtoverlay"
+path = "demos/vtoverlay.rs"
+
+# The night race's in-car view through the model layer's first-person near
+# pass, headless: the perf gate's `night_race.*` section (`--measure`: the
+# frame's p50/p95, the near pass's GPU time from timestamp queries, its
+# triangles and part-table bytes).
+[[example]]
+name = "night_race_gate"
+path = "demos/night_race_gate.rs"
+
+# Runtime hexagon binning and overlay extrusion (`overlay::hexbin`,
+# `overlay::extrude`) on Kepler's SF street trees, headless: the perf gate's
+# `hexbin.*` section (`--measure`).
+[[example]]
+name = "hexbin"
+path = "demos/hexbin.rs"
+
+# Every person on Earth as a dot: the GHSL 30″ world through
+# `MapView::set_dot_density_source`, with a headless `--measure` mode (the
+# perf gate's `dots.*` lines) and MG-9's level-switch capture A/B. See
+# `docs/superpowers/specs/2026-09-26-world-dot-density-design.md`.
+[[example]]
+name = "world_dots"
+path = "demos/world_dots.rs"
+# `test = true` so `cargo test` runs the synthetic world's determinism,
+# pyramid and size checks, and the gate-line format.
+test = true
+
+
+# All 331,449,281 people of the 2020 Census as dots, coloured by Kyle
+# Walker's 8 race and ethnicity groups, over Mapbox Light: legend toggles,
+# an About panel and the view switcher (dots, H3 hexagons and donut
+# clusters). See `docs/superpowers/specs/2026-09-27-us-race-dot-map-design.md`.
+[[example]]
+name = "race_dots"
+path = "demos/race_dots.rs"
+# `test = true` so `cargo test` runs the status line, legend mask and About
+# checks.
+test = true
+
+# Every tracked satellite over the globe (spec
+# docs/superpowers/specs/2026-09-29-satellites-design.md): the window, its
+# headless `--capture` presets and the CelesTrak fetch policy's one-shot
+# flags. Also the gallery's `satellites` panel (`--features orbits`).
+[[example]]
+name = "satellites"
+path = "demos/satellites.rs"
+# `test = true` so `cargo test` runs the fetch policy, model and panel tests.
+test = true
+required-features = ["orbits"]
+
+# The ISS through the GPU Hermite (satellites Task 5): needs `src/orbit`.
+[[test]]
+name = "altitude_orbit_capture"
+required-features = ["orbits"]

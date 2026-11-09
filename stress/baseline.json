@@ -1,0 +1,348 @@
+{
+  "taken_on": "2026-09-12, macOS 25.3.0, 14 cores, 48 GiB, 120 Hz display, load 4.2-6.6 with a 5.6 GB virtual machine resident throughout. Two full suite runs plus four extra runs of scenario 1; the per-metric spread across them is what set every tolerance below. See docs/superpowers/specs/2026-09-12-performance-stress-suite.md.",
+  "notes": "Tolerances are multiplicative ceilings. They are NOT the observed spread plus a margin: a peer measured 6.7x run-to-run variance from system contention alone, so contention is handled by DETECTING it (stress::Env::quiet downgrades a failure on a busy machine to advisory) rather than by widening every band until contention fits inside it. That is what lets the CPU bands be 1.5x instead of defensive. Every band's reason is in its own rationale field, and a rationale shorter than 20 characters fails the suite's own test. The memory_ceiling.accounted_* metrics were added when the per-tile caches moved from entry bounds to byte budgets: they grade the footprint MODEL those budgets are denominated in against the allocator's own figure, in both directions, so a bound expressed in bytes cannot quietly stop describing bytes.",
+  "metrics": {
+    "dense_tile.decode.cold_ms": {
+      "baseline": 7.4,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "One sample by construction -- a cold arm has n=1 and no percentile. Observed 7.339-7.607 ms. 2.0x reflects that a single sample cannot be separated from a single scheduling accident."
+    },
+    "dense_tile.decode.p50_ms": {
+      "baseline": 6.61,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "Six runs spanned 6.593-7.099 ms, a 7.7% spread, on a machine at load 4.2-6.6 of 14 cores. 1.5x is about 6x that spread, so it will not flap, and a 50% regression on decode is 3.3 ms -- 40% of a whole frame -- which is worth failing over."
+    },
+    "dense_tile.decode.p99_ms": {
+      "baseline": 6.81,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "A tail metric over n=30, so one descheduled iteration moves it. Observed spread 1.3% between full runs, but the band is 2.0x rather than 1.5x because a 30-sample p99 IS the worst of 30 and inherits the whole tail."
+    },
+    "dense_tile.features": {
+      "baseline": 25264,
+      "tolerance": 1.25,
+      "unit": "features",
+      "rationale": "Exact across every observed run. Same 1.25x reasoning as the wire bytes: this is a tripwire for a reimported tileset, not a performance metric, and a tighter band would fail on data churn rather than on a regression."
+    },
+    "dense_tile.match_tile_static.cold_ms": {
+      "baseline": 8.88,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "One sample by construction. Observed 8.821-8.988 ms, which is remarkably tight for n=1, but the band stays at 2.0x because nothing about n=1 guarantees that."
+    },
+    "dense_tile.match_tile_static.p50_ms": {
+      "baseline": 8.18,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "Observed 8.060-8.588 ms across six runs, 6.6% spread. This stage sits ON the 8.33 ms budget line and crosses it on some runs, which is the finding; the band exists to catch a regression, not to certify the budget."
+    },
+    "dense_tile.match_tile_static.p99_ms": {
+      "baseline": 8.4,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "Tail over n=30; observed 8.195-8.843 ms. Same reasoning as the decode p99 -- a 30-sample p99 is the worst of 30."
+    },
+    "dense_tile.pipeline_sum_p50_ms": {
+      "baseline": 35.5,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "The sum of four p50s, so its spread is smaller than any component's: 35.496-37.642 ms. Reported and graded as the cost of ONE CACHE-COLD TILE, never as a frame time -- a real frame does not run all four stages per tile, which is what the caches are for."
+    },
+    "dense_tile.resolve_plan.cold_ms": {
+      "baseline": 4.0,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "One sample, and the widest cold/warm gap of the four stages (4.0 ms cold against 2.9 ms warm) because this is the stage that builds the plan cache. Observed 3.786-4.954 ms."
+    },
+    "dense_tile.resolve_plan.p50_ms": {
+      "baseline": 2.88,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "The noisiest CPU p50 in the suite: 2.697-3.160 ms across six runs, a 17% spread, because it is the shortest stage and so the most sensitive to a scheduling slice. 1.5x is still 3x that spread."
+    },
+    "dense_tile.resolve_plan.p99_ms": {
+      "baseline": 2.88,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "Tail of the noisiest stage. Observed 2.760-3.102 ms."
+    },
+    "dense_tile.tessellate.cold_ms": {
+      "baseline": 21.2,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "One sample. Observed 21.046-26.316 ms: the 26.3 ms outlier was the very first run of the session, on a completely unwarmed allocator arena, which is exactly what a cold arm is for and why the band is 2.0x."
+    },
+    "dense_tile.tessellate.p50_ms": {
+      "baseline": 17.94,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "The most reproducible figure in scenario 1: 17.859-18.794 ms across six runs, a 5.2% spread, because lyon's work is dominated by polygon count and not by anything the OS does. Already 2.15x the 120 Hz budget on EVERY sample, which is the finding this band protects."
+    },
+    "dense_tile.tessellate.p99_ms": {
+      "baseline": 18.9,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "Observed 18.206-19.432 ms, 6.0% spread -- the largest p99 spread in scenario 1, so this is the metric that would flap first at a tighter band."
+    },
+    "dense_tile.wire_bytes": {
+      "baseline": 713612,
+      "tolerance": 1.25,
+      "unit": "bytes",
+      "rationale": "Exact across every observed fetch of 14/14550/6455, but the band is 1.25x rather than 1.01x because the tile proxy's output is NOT byte-stable: the feature order out of ClickHouse is unpinned, and a neighbouring tile moved by 13 bytes between two fetches. A change beyond 25% means the tileset was reimported, and then no timing in this scenario is comparable."
+    },
+    "memory_ceiling.accounted_decoded_per_tile_mb": {
+      "baseline": 3.018,
+      "tolerance": 1.5,
+      "unit": "MB",
+      "rationale": "DecodedTile::footprint_bytes averaged over the 48-tile Tokyo spiral -- 3.018 MB on two runs, identical to three decimals, since it reads capacities rather than the allocator. The dense tile at the centre of the tour is 11.81 MB on its own; this is the tour average, which is the figure decoded_cache's 256 MB budget divides into 85 tiles. The 1.5x band is the size of a per-tile regression worth failing over, not a noise allowance: there is no noise in this number, and it is what a cache budget is divided by."
+    },
+    "memory_ceiling.accounted_mesh_per_tile_mb": {
+      "baseline": 20.889,
+      "tolerance": 1.5,
+      "unit": "MB",
+      "rationale": "TileMesh::footprint_bytes averaged over the same tour -- 20.889 MB on two runs, 6.9x the decoded half, and the largest per-tile cost in the renderer. The real dense Tokyo z14 tile alone is 64.97 MB of triangulation. Worth grading tightly because MESH_CACHE_CAPACITY's doc comment justified a 128-entry bound against a ~1.03 MB per-entry figure measured on a synthetic tile, and was therefore describing 132 MB while permitting 8.3 GB; a per-entry cost that is never re-measured is exactly how that happened. 1.5x fails on a 50% regression in vertices per tile."
+    },
+    "memory_ceiling.accounted_ratio": {
+      "baseline": 0.974,
+      "tolerance": 1.13,
+      "unit": "x",
+      "rationale": "Accounted bytes (render::heap_block_bytes' unit, what every per-tile cache budget is denominated in) divided by the allocator's own in-use delta, p50 over six DISJOINT eight-tile windows. 0.974 on a full suite run and 0.991 running scenario 3 alone; the per-window spread is 0.884-0.994, with the low end being the first window, which carries allocator arena growth on top of its tiles for the same reason heap_per_tile_p99_mb is 1.7x the p50. Taken per window and not cumulatively because the cumulative form read 0.991 alone and 0.948 in a full run -- off by 4.3% for no reason but which scenarios had allocated first, which is not a gradeable number. This is the anti-drift guard the whole byte-bound scheme rests on: the budgets are ceilings on THIS unit and only bound real memory while this stays near 1. The x1.13 band fails at 1.10, i.e. the model over-accounting by 10%, which would mean every cache evicting a tenth early for nothing. The other direction is memory_ceiling.accounted_shortfall, because this grader is a one-sided ceiling and could not catch it here."
+    },
+    "memory_ceiling.accounted_shortfall": {
+      "baseline": 1.027,
+      "tolerance": 1.07,
+      "unit": "x",
+      "rationale": "The reciprocal of memory_ceiling.accounted_ratio's p50: 1.027 on a full suite run, 1.009 running scenario 3 alone. Graded as its own metric because the grader is a one-sided ceiling and this is the direction that actually matters -- a model that drifts BELOW the real heap makes every cache budget permit more memory than its constant claims, which is the defect this whole change exists to fix, reintroduced one layer down. Fails at 1.099, i.e. the accounting missing a tenth of the heap. The residual few percent is size-class rounding above 128 bytes, where this platform's allocator jumps in coarser steps than the model's 16 (513 bytes is served from a 640-byte block); render::heap_block_bytes documents why that is deliberately not modelled, and its own test asserts the model is exact for every size up to 128 and never overstates one up to 4096."
+    },
+    "memory_ceiling.budgeted_cache_ceiling_gb": {
+      "baseline": 0.768,
+      "tolerance": 1.01,
+      "unit": "GB",
+      "rationale": "decoded_cache's 256 MB byte budget plus mesh_cache's 512 MB, the two caches this scenario retains the contents of -- against the 13.09 GB the same tour's 512-ENTRY bound permitted, a 17x reduction. Unlike memory_ceiling.projected_cache_ceiling_gb this figure does not move with tile density, which is the entire point of denominating a bound in bytes; it is a constant read out of the source, so the x1.01 band is tight on purpose. It failing means a budget was raised, which is a decision somebody should have to make in a diff."
+    },
+    "memory_ceiling.heap_per_tile_p50_mb": {
+      "baseline": 26.78,
+      "tolerance": 1.5,
+      "unit": "MB",
+      "rationale": "The most reproducible number in the whole suite: 26.775 and 26.776 MB on two independent runs, a 0.004% spread, because a deterministic tile tour decoded into a deterministic retention pattern is deterministic. The 1.5x band is therefore not about noise at all -- it is the size of per-tile regression worth failing over, since this figure is multiplied by 512."
+    },
+    "memory_ceiling.heap_per_tile_p99_mb": {
+      "baseline": 44.74,
+      "tolerance": 1.5,
+      "unit": "MB",
+      "rationale": "44.742 and 44.744 MB on two runs. The p99 window is the FIRST window, which carries allocator arena growth on top of its tiles -- that is why it is 1.7x the p50, and why the p50 is the figure the projection uses."
+    },
+    "memory_ceiling.projected_cache_ceiling_gb": {
+      "baseline": 13.71,
+      "tolerance": 1.5,
+      "unit": "GB",
+      "rationale": "heap-per-tile p50 times MAX_VISIBLE_TILES (512, src/map_view.rs:38), identical to three decimals across two runs. This is the 3.4 GB OS-kill explained: 3.4 GB is reached at about 130 distinct Japan tiles. It is a BOUND times a per-tile cost, not a leak, and it is the CPU half only -- this scenario is headless and gpu_buffer_bytes_live is 0 by construction."
+    },
+    "memory_ceiling.tour_mesh_peak_mb": {
+      "baseline": 511.199,
+      "tolerance": 1.002,
+      "unit": "MB",
+      "rationale": "Peak accounted bytes held by a mesh_cache built with the renderer's own bounds while the 48-tile Tokyo pan is pushed through it in tour order -- 511.199 MB against a 512 MB budget, exactly reproducible because the weights are read from Vec capacities. The x1.002 band puts the ceiling at 512.2 MB, i.e. this metric fails the moment the peak crosses the budget. That is the whole assertion: the old bound was 128 ENTRIES, which this same tour would have let reach 1.0 GB and a denser one 8.3 GB, and the point of a byte bound is that the peak stops at the number in the source."
+    },
+    "memory_ceiling.tour_recent_tiles_evicted": {
+      "baseline": 0.0,
+      "tolerance": 1.0,
+      "unit": "tiles",
+      "rationale": "How many of the last 20 tiles the pan reached -- roughly one cover at 1024x768 and z14 -- the byte budget had evicted from mesh_cache by the end of the tour. Zero: the budget gives up 20 of 48 tiles over that pan and every one of them is a tile the camera has left, because LRU order IS recency order. A baseline of 0 with any tolerance passes only at exactly 0, which is what makes this a guard rather than a reading: it fails the first time the budget costs the working set instead of the history. Graded as the evicted count and not the kept count because this grader is a one-sided ceiling and 'kept' would have passed a run that kept none."
+    },
+    "overlay_scale.shared.push_p99_ms": {
+      "baseline": 24.7,
+      "tolerance": 3.0,
+      "unit": "ms",
+      "rationale": "19.947-29.299 ms, a 47% spread between runs of the identical binary, because the synchronous push competes with the blocking tessellation workers for the same cores. The vertex and op counters did not move at all across those runs; the counters are the finding and this is context."
+    },
+    "overlay_scale.shared.vertices_per_bake": {
+      "baseline": 394464,
+      "tolerance": 1.05,
+      "unit": "vertices",
+      "rationale": "Identical to the unit on every run and every window: 3,150 vehicles plus 5,376 stops tessellated together. This is the BEFORE number the sources design is measured against, and it is a count, so the band is nominal."
+    },
+    "overlay_scale.sources+stops.push_p99_ms": {
+      "baseline": 21.8,
+      "tolerance": 3.0,
+      "unit": "ms",
+      "rationale": "20.862-23.354 ms. Consistently BELOW the shared arm despite carrying an extra resident source, which is the sources design working: the stop source is baked once and never touched again by a vehicle push."
+    },
+    "overlay_scale.sources+stops.vertices_per_bake": {
+      "baseline": 50400,
+      "tolerance": 1.05,
+      "unit": "vertices",
+      "rationale": "Identical to the unit on every run and window, and IDENTICAL to the sources-only arm, which is the acceptance condition stated as an absolute rather than as a ratio. A 5,376-feature static source present must not add one vertex to the moving source's bake."
+    },
+    "overlay_scale.sources_only.push_p99_ms": {
+      "baseline": 23.2,
+      "tolerance": 3.0,
+      "unit": "ms",
+      "rationale": "The widest CPU band in the file, and the metric to distrust: the push p50 moved from 4.0 ms to 20.1 ms between two runs of the identical binary on identical data, a 5x swing, because the synchronous push competes with the blocking tessellation workers for the same cores. The vertex and op counters did not move at all across those runs, so the counters are the finding and this timing is context."
+    },
+    "overlay_scale.sources_only.vertices_per_bake": {
+      "baseline": 50400,
+      "tolerance": 1.05,
+      "unit": "vertices",
+      "rationale": "3,150 vehicles at 16 vertices each, identical on every run and window. The denominator of the acceptance ratio below."
+    },
+    "overlay_scale.static_source_overhead": {
+      "baseline": 1.0,
+      "tolerance": 1.05,
+      "unit": "x",
+      "rationale": "THE acceptance condition: vertices per bake with a 5,376-feature static source present, over the same figure without it. Must be 1.00x, and is, on every run. Above it, pushing the vehicles re-tessellates content that did not move -- the defect a consumer reported as 'hiding the bus stops made the buses move faster'. A stopwatch around the push cannot see this, because the tessellation happens on a blocking worker after the call returns; only the counters can."
+    },
+    "pmtiles_cold.cold_fetch_p99_ms": {
+      "baseline": 1978,
+      "tolerance": 4.0,
+      "unit": "ms",
+      "rationale": "Same 38% network spread as the time to first tile, and the same reasoning. A failure here is a statement about the link, not about this crate, which is why it is graded at 4.0x and why Env::quiet cannot help: a slow bucket does not raise the load average."
+    },
+    "pmtiles_cold.cold_requests": {
+      "baseline": 21,
+      "tolerance": 1.05,
+      "unit": "requests",
+      "rationale": "21 range requests for a 20-tile screenful on a FRESH PmtilesSource, on every run, matching the crate's own in-repo figure for the leaf-cache-enabled case exactly (its uncached case is 40). This is the number scenario 6 exists for and it is exact, so the band is nominal -- 22 would mean the leaf cache stopped sharing a leaf."
+    },
+    "pmtiles_cold.open_requests": {
+      "baseline": 2,
+      "tolerance": 1.05,
+      "unit": "requests",
+      "rationale": "Exactly 2 on every run: one for the header and root directory, one for the metadata block that carries the attribution and the zoom ceiling. Out of a 123,545,745,644-byte file. Counts through the counting proxy are exact, so the band is nominal."
+    },
+    "pmtiles_cold.time_to_first_tile_ms": {
+      "baseline": 1978,
+      "tolerance": 4.0,
+      "unit": "ms",
+      "rationale": "1,660-2,298 ms, a 38% spread between two runs minutes apart. This is Berlin fetched from a US bucket over a domestic connection, so it says as much about the network as about the renderer -- the widest band in the file, and the counts beside it at 1.05x are what to actually grade. The proxy's own upstream timing shows 99.9% of this is the bucket and 0.1% is the extra localhost hop."
+    },
+    "pmtiles_cold.warm_fetch_p99_ms": {
+      "baseline": 1300.0,
+      "tolerance": 4.0,
+      "unit": "ms",
+      "rationale": "1,193-1,513 ms across runs, a 27% spread, and consistently below the cold arm's 1,660-2,342 ms. Network-dominated like every latency in scenario 6, so 4.0x; the request counts beside it are the figures to grade."
+    },
+    "pmtiles_cold.warm_requests": {
+      "baseline": 20,
+      "tolerance": 1.05,
+      "unit": "requests",
+      "rationale": "Exactly one request per tile on a second screenful through the same source: every leaf is already resident. Exact on every run."
+    },
+    "symbol_collision.z14.candidates": {
+      "baseline": 314,
+      "tolerance": 1.25,
+      "unit": "candidates",
+      "rationale": "314, was 300. Rose by EXACTLY 14, the fall in z14 line-label refusals (24 -> 10). A viewport-aligned line-placed label -- every shield layer -- was being distributed glyph-by-glyph ALONG the polyline while each glyph stayed upright, which stacked \"BKE\" vertically down a near-vertical expressway. def5e6f gates the per-glyph path on `text-rotation-alignment: map`; `viewport` takes the single-block path, as MapLibre does. Counts ROSE because those shields were also being refused for \"does not fit along the polyline\" -- a test meaningless for a label not laid along it. The exact match between the candidate rise and the refusal fall is what proves the change is scoped to viewport-aligned labels and nothing else."
+    },
+    "symbol_collision.z14.census_p50_ms": {
+      "baseline": 4.25,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "4.243-4.591 ms across runs, under 1% between the two full ones. Pure CPU once the tiles are pinned. Inside the 8.33 ms budget, unlike the z16 arm."
+    },
+    "symbol_collision.z14.census_p99_ms": {
+      "baseline": 4.35,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "4.286-4.434 ms across three runs. Tail over n=10, since each census call rebuilds a LabelShapeCache and a CollisionIndex from scratch and the arm is deliberately short."
+    },
+    "symbol_collision.z14.placed": {
+      "baseline": 216,
+      "tolerance": 1.2,
+      "unit": "placed",
+      "rationale": "216, was 208. A viewport-aligned line-placed label -- every shield layer -- was being distributed glyph-by-glyph ALONG the polyline while each glyph stayed upright, which stacked \"BKE\" vertically down a near-vertical expressway. def5e6f gates the per-glyph path on `text-rotation-alignment: map`; `viewport` takes the single-block path, as MapLibre does. Counts ROSE because those shields were also being refused for \"does not fit along the polyline\" -- a test meaningless for a label not laid along it. Eight of the fourteen freed shields place. Still NOT the metric to gate label work on -- see labels_with_text."
+    },
+    "symbol_collision.z14.labels_with_text": {
+      "baseline": 216,
+      "tolerance": 1.2,
+      "unit": "labels",
+      "rationale": "216, was 208. A viewport-aligned line-placed label -- every shield layer -- was being distributed glyph-by-glyph ALONG the polyline while each glyph stayed upright, which stacked \"BKE\" vertically down a near-vertical expressway. def5e6f gates the per-glyph path on `text-rotation-alignment: map`; `viewport` takes the single-block path, as MapLibre does. Counts ROSE because those shields were also being refused for \"does not fit along the polyline\" -- a test meaningless for a label not laid along it. label_parity over Tokyo gains exactly two labels (the refs `1` and `406`) and loses none, so nothing that drew before stopped drawing."
+    },
+    "symbol_collision.z16.candidates": {
+      "baseline": 542,
+      "tolerance": 1.25,
+      "unit": "candidates",
+      "rationale": "542, was 538. Rose by EXACTLY 4, the fall in z16 refusals (12 -> 8). Same cause as the z14 figure."
+    },
+    "symbol_collision.z16.census_p50_ms": {
+      "baseline": 15.82,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "15.788-17.185 ms, 0.5% between the two full runs. This is scenario 5's finding: 2,063 POI candidates at z16 cost 1.9x the 120 Hz budget on EVERY sample, and the POI layer in this tileset is gated to z16 rather than to low zoom as the brief assumed."
+    },
+    "symbol_collision.z16.census_p99_ms": {
+      "baseline": 16.15,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "Tail over n=10 (the census arm uses fewer reps because each call rebuilds a CollisionIndex). Observed 16.057-17.378 ms."
+    },
+    "symbol_collision.z16.placed": {
+      "baseline": 191,
+      "tolerance": 1.2,
+      "unit": "placed",
+      "rationale": "191, was 186. Same cause as the z14 figure."
+    },
+    "symbol_collision.z16.labels_with_text": {
+      "baseline": 191,
+      "tolerance": 1.2,
+      "unit": "labels",
+      "rationale": "191, was 186. Same cause as the z14 figure."
+    },
+    "zoom_sweep.0.20s_per_level.working_p50_ms": {
+      "baseline": 14.3,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "The p50 over frames that actually built a tile -- 14.142-14.527 ms, 2.7% spread. Reported beside the all-frames p50, which is 0.000 ms at every speed because most frames of a sweep build nothing; grading the all-frames p50 would grade the idle gaps."
+    },
+    "zoom_sweep.0.20s_per_level.worst_ms": {
+      "baseline": 90.2,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "THE number scenario 2 exists for: 89.2-103.1 ms across four measured sweeps, and invariant across gesture speed, which is what makes the cost per-crossing rather than burst-driven. It is a single worst frame out of ~97, so 2.0x rather than 1.5x; it is also already 11x the 8.33 ms budget, so a band that let it double would let it reach a fifth of a second."
+    },
+    "zoom_sweep.0.35s_per_level.working_p50_ms": {
+      "baseline": 13.7,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "13.594-13.863 ms, 2.0% spread. The p50 over frames that actually built a tile; the all-frames p50 is 0.000 ms at every speed and grading it would grade the idle gaps."
+    },
+    "zoom_sweep.0.35s_per_level.worst_ms": {
+      "baseline": 91.4,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "91.264-91.499 ms across three sweeps, a 0.3% spread -- the tightest worst-frame arm. Graded beside the 0.20 and 2.00 arms so that the INVARIANCE across gesture speed is what regresses, not any one arm."
+    },
+    "zoom_sweep.0.50s_per_level.working_p50_ms": {
+      "baseline": 15.3,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "14.720-16.295 ms, 10.7% spread -- the widest of the working p50s, because this arm has the fewest working frames of the three fast arms and so the smallest sample to take a median from."
+    },
+    "zoom_sweep.0.50s_per_level.worst_ms": {
+      "baseline": 90.5,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "89.268-92.949 ms across three sweeps, 4.1% spread. The middle of the realistic gesture band, and the arm whose all-frames p99 (14.7-16.3 ms) is closest to its working p50, because at this speed the crossing work and the frame cadence nearly coincide."
+    },
+    "zoom_sweep.2.00s_per_level.working_p50_ms": {
+      "baseline": 15.0,
+      "tolerance": 1.5,
+      "unit": "ms",
+      "rationale": "14.664-15.612 ms, 6.5% spread. Essentially equal to the fast arms' working p50, which is the per-crossing finding seen from the other side: a working frame costs the same whatever the gesture speed, there are just fewer of them per second."
+    },
+    "zoom_sweep.2.00s_per_level.worst_ms": {
+      "baseline": 89.9,
+      "tolerance": 2.0,
+      "unit": "ms",
+      "rationale": "The smoothed control arm, and the one that matters most to keep: it is 89.917-99.687 ms, essentially IDENTICAL to the 0.20 s/level arm, while its p99 over all frames is 0.001 ms. If this ever diverges from the fast arm the cost has stopped being per-crossing and scenario 2's verdict has changed."
+    },
+    "zoom_sweep.speed_scaling_ratio": {
+      "baseline": 1.01,
+      "tolerance": 1.5,
+      "unit": "x",
+      "rationale": "worst(0.20 s/level) / worst(2.00 s/level). Observed 0.992-1.025 across four sweeps. Above 1.5 the verdict flips to BURST-DRIVEN and rationing per-frame work becomes the fix instead of making the crossing cheaper, so this is a claim about the DIAGNOSIS and not about speed."
+    }
+  }
+}

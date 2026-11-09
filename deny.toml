@@ -1,0 +1,65 @@
+# cargo-deny (https://embarkstudios.github.io/cargo-deny/): the licence and
+# supply-chain gate of the open library. CI runs `cargo deny check` on the
+# root crate and on each published crate (.github/workflows/ci.yml).
+#
+# The allow-list is permissive licences only, plus MPL-2.0 (file-level
+# copyleft: it applies to the MPL files themselves, never to the combined
+# work). No GPL/LGPL/AGPL: a crate offering one of those *alongside* a
+# permissive arm (e.g. `Apache-2.0 OR GPL-2.0-only`) passes on that arm.
+
+[graph]
+all-features = false
+# The targets the library ships for: desktop macOS, iOS, the browser.
+targets = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "aarch64-apple-ios",
+    "wasm32-unknown-unknown",
+]
+
+[licenses]
+version = 2
+confidence-threshold = 0.9
+allow = [
+    "0BSD",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BSL-1.0",
+    # libbz2-rs-sys (via zip/parquet): the bzip2 licence, BSD-style permissive.
+    "bzip2-1.0.6",
+    "CC0-1.0",
+    "CDLA-Permissive-2.0",
+    "ISC",
+    "MIT",
+    "MIT-0",
+    "MPL-2.0",
+    "OFL-1.1",
+    "Unicode-3.0",
+    "Unicode-DFS-2016",
+    "Unlicense",
+    "Zlib",
+]
+# This repository's own crates are `MIT OR Apache-2.0` (both allowed above);
+# unpublished ones (kit, the shells, tools) need no licence check.
+[licenses.private]
+ignore = true
+
+[bans]
+multiple-versions = "allow"
+wildcards = "deny"
+# Path dependencies inside this repository have no version.
+allow-wildcard-paths = true
+
+[advisories]
+version = 2
+yanked = "warn"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+# No git dependencies: the examples' agentic HTTP surface lives in this
+# repository (`gpui-agentic-http/`).
+allow-git = []

@@ -1,0 +1,20 @@
+{
+  "story": 1,
+  "title": "Layers over time",
+  "output": { "preset": "1080p30" },
+  "scene": {
+    "style": "../mapbox-streets-style.json",
+    "basemap": { "source": "mapbox" }
+  },
+  "camera": [
+    { "type": "jump", "label": "start", "to": { "lon": 103.8400, "lat": 1.3000, "zoom": 13, "pitch": 0, "bearing": 0 } },
+    { "type": "hold", "duration": 1, "settle": true },
+    { "type": "orbit", "degrees": 20, "duration": 8, "easing": "ease-in-out" }
+  ],
+  "events": [
+    { "at": 2.0, "set_layer_visibility": { "layer": "poi-label", "visible": false } },
+    { "at": 4.0, "set_filter": { "layer": "road-primary", "filter": ["==", ["get", "class"], "motorway"] } },
+    { "at": 5.0, "until": 8.0, "tween_paint_property": { "layer": "water", "name": "fill-color", "to": "#0b3d91", "easing": "ease-in-out" } },
+    { "at": 1.0, "until": 8.5, "caption": { "text": "POIs off at 2 s, primary roads filtered at 4 s, water darkens from 5 s to 8 s", "anchor": "top-left", "size_px": 26, "fade_s": 0.4 } }
+  ]
+}

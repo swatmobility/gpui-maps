@@ -1,0 +1,121 @@
+{
+  "story": 1,
+  "title": "Marina Bay, reclaimed",
+  "summary": "How much of Singapore's Marina Bay waterfront stands on land made from the sea, shown as hand-drawn outlines of the reclaimed areas coloured by the approximate decade they were made, ending at the Marina Barrage.",
+  "lang": "en",
+  "output": {
+    "aspect": "9:16",
+    "tier": "fullhd",
+    "fps": 30,
+    "safe_area": "reels"
+  },
+  "scene": {
+    "style": "../liberty-style.json",
+    "basemap": {
+      "source": "openfreemap"
+    },
+    "labels": true,
+    "overlays": [
+      {
+        "id": "land",
+        "data": "data/marina-reclaimed.geojson",
+        "attribution": "Illustrative outlines over © OpenStreetMap contributors",
+        "layers": [
+          {
+            "id": "reclaimed",
+            "type": "fill",
+            "role": "area",
+            "legend": {
+              "type": "categorical",
+              "ramp": "sequential",
+              "stops": ["#FCC419", "#F76707", "#C92A2A", "#5C1A1B"],
+              "property": "period",
+              "title": "Made from the sea, approximate decade",
+              "items": [
+                { "label": "Before 1970" },
+                { "label": "1970s" },
+                { "label": "1980s" },
+                { "label": "1990s" }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "barrage",
+        "data": {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "properties": {},
+              "geometry": { "type": "LineString", "coordinates": [[103.8716, 1.2808], [103.8734, 1.2821]] }
+            },
+            {
+              "type": "Feature",
+              "properties": { "name": "Marina Barrage, 2008" },
+              "geometry": { "type": "Point", "coordinates": [103.8725, 1.28145] }
+            }
+          ]
+        },
+        "layers": [
+          { "id": "dam", "type": "line", "role": "highlight" },
+          { "id": "dam-opened", "type": "circle", "role": "event" }
+        ]
+      }
+    ]
+  },
+  "furniture": {
+    "sources": [
+      { "key": "Map data", "text": "OpenStreetMap" }
+    ]
+  },
+  "camera": [
+    { "type": "jump", "label": "open", "to": { "lon": 103.8655, "lat": 1.2845, "zoom": 13.9, "pitch": 0, "bearing": 0 } },
+    { "type": "hold", "label": "overview", "duration": 4.5, "settle": true },
+    { "type": "ease", "label": "to-centre", "to": { "lon": 103.8590, "lat": 1.2925, "zoom": 14.6, "pitch": 0, "bearing": 0 }, "duration": 2.5, "easing": "ease-in-out" },
+    { "type": "hold", "label": "centre", "duration": 4.5 },
+    { "type": "ease", "label": "to-barrage", "to": { "lon": 103.8725, "lat": 1.2818, "zoom": 15.2, "pitch": 0, "bearing": 0 }, "duration": 2.5, "easing": "ease-in-out" },
+    { "type": "hold", "label": "barrage", "duration": 5.0 }
+  ],
+  "chapters": [
+    {
+      "id": "land",
+      "title": "Land from the sea",
+      "from": "open",
+      "to": "overview",
+      "alt": "Marina Bay from above, with four hand-drawn areas of reclaimed land coloured by the approximate decade they were made.",
+      "card": {
+        "headline": "Land from the sea",
+        "body": "Much of Marina Bay's waterfront stands on land Singapore made in the last sixty years.",
+        "legend": { "layers": ["reclaimed"] }
+      }
+    },
+    {
+      "id": "centre",
+      "title": "Marina Centre",
+      "from": "to-centre",
+      "to": "centre",
+      "alt": "The camera moves in on Marina Centre, the area made in the 1970s, beside the older shore at Telok Ayer.",
+      "card": {
+        "headline": "Marina Centre",
+        "body": "Filled in the 1970s, beside a shore that had already moved out once.",
+        "legend": { "layers": ["reclaimed"] }
+      }
+    },
+    {
+      "id": "barrage",
+      "title": "The barrage",
+      "from": "to-barrage",
+      "to": "barrage",
+      "alt": "The camera settles on the mouth of the Marina Channel, where a highlighted line marks the Marina Barrage between Marina South and Marina East.",
+      "card": {
+        "headline": "Closing the bay",
+        "body": "In 2008 a dam across the channel turned the bay into a freshwater reservoir.",
+        "legend": { "layers": ["reclaimed"] }
+      }
+    }
+  ],
+  "events": [],
+  "design": {}
+}

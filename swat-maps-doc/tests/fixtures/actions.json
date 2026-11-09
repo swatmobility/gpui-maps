@@ -1,0 +1,197 @@
+[
+  {
+    "op": "add_source",
+    "id": "stations",
+    "source": {
+      "kind": "csv",
+      "data": {
+        "ref": "dataset",
+        "dataset": "ds_1",
+        "version": 3
+      },
+      "label": "stations"
+    }
+  },
+  {
+    "op": "add_layer",
+    "id": "l1",
+    "type": "points",
+    "source": "stations",
+    "label": "Stations",
+    "visible": true,
+    "vis": {
+      "radius": 10.0,
+      "opacity": 0.8,
+      "filled": true,
+      "outline": false,
+      "thickness": 1.0,
+      "color": [
+        46,
+        134,
+        171
+      ]
+    },
+    "hover": {
+      "card": [],
+      "highlight": false
+    }
+  },
+  {
+    "op": "remove_layer",
+    "layer": "l1"
+  },
+  {
+    "op": "set_layer_visible",
+    "layer": "l1",
+    "visible": false
+  },
+  {
+    "op": "set_vis",
+    "layer": "l1",
+    "patch": {
+      "opacity": 0.5,
+      "color": [
+        255,
+        0,
+        0
+      ],
+      "strokeColor": null
+    }
+  },
+  {
+    "op": "set_label",
+    "layer": "l1",
+    "label": "Bikes"
+  },
+  {
+    "op": "move_layer",
+    "layer": "l1",
+    "to": 0
+  },
+  {
+    "op": "set_view",
+    "lon": 139.76,
+    "lat": 35.68,
+    "zoom": 11.0,
+    "pitch": 0.0,
+    "bearing": 0.0,
+    "basemap": "streets",
+    "projection": "flat",
+    "angles": "degrees"
+  },
+  {
+    "op": "set_channel",
+    "layer": "l1",
+    "channel": "color",
+    "binding": {
+      "field": "capacity",
+      "scale": "quantile",
+      "palette": "Viridis",
+      "steps": 6
+    }
+  },
+  {
+    "op": "clear_channel",
+    "layer": "l1",
+    "channel": "size"
+  },
+  {
+    "op": "add_filter",
+    "id": "f1",
+    "dataId": "stations",
+    "name": "capacity",
+    "type": "range",
+    "value": [
+      1.0,
+      20.0
+    ],
+    "enabled": true
+  },
+  {
+    "op": "remove_filter",
+    "id": "f1"
+  },
+  {
+    "op": "set_filter_value",
+    "id": "f1",
+    "value": [
+      "a"
+    ],
+    "live": false
+  },
+  {
+    "op": "set_filter_enabled",
+    "id": "f1",
+    "enabled": true
+  },
+  {
+    "op": "set_filter_speed",
+    "id": "f1",
+    "speed": 2.0
+  },
+  {
+    "op": "set_hover",
+    "layer": "l1",
+    "hover": {
+      "card": [
+        {
+          "field": "name"
+        }
+      ],
+      "highlight": false
+    }
+  },
+  {
+    "op": "set_field_type",
+    "source": "stations",
+    "field": "capacity",
+    "ty": "real"
+  },
+  {
+    "op": "replace_layer",
+    "id": "l1",
+    "type": "heatmap",
+    "source": "stations",
+    "label": "Stations",
+    "visible": true,
+    "vis": {
+      "radius": 10.0,
+      "opacity": 0.8,
+      "filled": true,
+      "outline": false,
+      "thickness": 1.0,
+      "color": [
+        46,
+        134,
+        171
+      ]
+    },
+    "hover": {
+      "card": [],
+      "highlight": false
+    }
+  },
+  {
+    "op": "add_chart",
+    "id": "c1",
+    "source": "stations",
+    "kind": "histogram",
+    "field": "capacity",
+    "brush_filters": true
+  },
+  {
+    "op": "remove_chart",
+    "id": "c1"
+  },
+  {
+    "op": "set_source_sql",
+    "source": "trips",
+    "spec": {
+      "connection": "analytics",
+      "database": "trips",
+      "kind": "clickhouse",
+      "max_rows": 1000,
+      "sql": "SELECT 1"
+    }
+  }
+]

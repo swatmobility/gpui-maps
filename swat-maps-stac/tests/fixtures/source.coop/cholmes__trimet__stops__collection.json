@@ -1,0 +1,337 @@
+{
+  "type": "Collection",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://schemas.portolan-sdi.org/portolan/v0.1.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json",
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/web-map-links/v1.3.0/schema.json",
+    "https://stac-extensions.github.io/alternate-assets/v1.2.0/schema.json"
+  ],
+  "id": "stops",
+  "title": "TriMet Stops",
+  "description": "Active transit stops. 6,316 Point features covering [TriMet](https://developer.trimet.org/gis/)'s service district in the Portland, Oregon metropolitan area, published by TriMet as [`tm_stops`](https://developer.trimet.org/gis/data/tm_stops.zip) and last updated at the source on July 30, 2026.\n\nThis is a cloud-native mirror: the same data as GeoParquet and PMTiles. The GeoParquet keeps TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)), so lengths and areas are in feet; only the PMTiles are reprojected to WGS84. The original [Shapefile](https://developer.trimet.org/gis/data/tm_stops.zip), [KML](https://developer.trimet.org/gis/data/tm_stops.kml) and [metadata page](https://developer.trimet.org/gis/meta_tm_stops.shtml) are linked as assets, and column descriptions and code lists are TriMet's own, taken from that page.\n\nThe [collection README](https://source.coop/cholmes/trimet/stops/README.md) covers suggested uses, limitations and the full schema.\n\n**Agents:** [`AGENTS.md`](https://source.coop/cholmes/trimet/stops/AGENTS.md) is the guide written for you \u2014 what joins to what and on which column, the quirks that produce silently wrong answers (documented codes that do not appear in the data, columns TriMet's metadata omits, counts that mean different things in different collections), what the coordinate system implies for measurement, and query recipes that have each been run against these files.",
+  "license": "other",
+  "keywords": [
+    "transit",
+    "public transport",
+    "TriMet",
+    "Portland",
+    "Oregon",
+    "point"
+  ],
+  "providers": [
+    {
+      "name": "TriMet",
+      "description": "Tri-County Metropolitan Transportation District of Oregon, the transit agency for the Portland metropolitan area and the originator of this data.",
+      "roles": [
+        "producer",
+        "licensor"
+      ],
+      "url": "https://developer.trimet.org/gis/",
+      "email": "gis@trimet.org"
+    },
+    {
+      "name": "Chris Holmes",
+      "description": "Maintains this cloud-native mirror. Not affiliated with TriMet.",
+      "roles": [
+        "host"
+      ],
+      "url": "https://github.com/cholmes/portolan-catalog-trimet",
+      "email": "cholmes@9eo.org"
+    }
+  ],
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -123.115462,
+          45.285222,
+          -122.333062,
+          45.637731
+        ]
+      ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "2026-07-30T00:00:00Z",
+          null
+        ]
+      ]
+    }
+  },
+  "updated": "2026-08-02T18:02:50Z",
+  "table:columns": [
+    {
+      "name": "stop_id",
+      "type": "int32",
+      "description": "Unique identifier."
+    },
+    {
+      "name": "stop_name",
+      "type": "string",
+      "description": "Intersection or street address of stop."
+    },
+    {
+      "name": "jurisdic",
+      "type": "string",
+      "description": "Jurisdiction (City or County) in which stop is located."
+    },
+    {
+      "name": "zipcode",
+      "type": "string",
+      "description": "Zipcode in which stop is located."
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "description": "Type of service. Values: AT = Aerial Tram; BUS = Bus; CR = Commuter rail; MAX = Light rail; SC = Streetcar; BSC = Shared Bus and Streetcar."
+    },
+    {
+      "name": "geometry",
+      "type": "binary",
+      "description": "Feature geometry in TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)). Coordinates are feet, not degrees."
+    },
+    {
+      "name": "geometry_bbox",
+      "type": "struct<xmin: float not null, ymin: float not null, xmax: float not null, ymax: float not null>",
+      "description": "Per-feature bounding box struct, the GeoParquet covering column. Same projected feet as the geometry."
+    }
+  ],
+  "table:primary_geometry": "geometry",
+  "table:row_count": 6316,
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "describedby",
+      "href": "./README.md",
+      "type": "text/markdown",
+      "title": "TriMet Stops README"
+    },
+    {
+      "rel": "agents",
+      "href": "./AGENTS.md",
+      "type": "text/markdown",
+      "title": "TriMet Stops agent guide"
+    },
+    {
+      "rel": "license",
+      "href": "https://developer.trimet.org/terms_of_use.shtml",
+      "type": "text/html",
+      "title": "TriMet Terms of Use"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://source.coop/cholmes/trimet/stops/",
+      "type": "text/html",
+      "title": "TriMet Stops on Source Cooperative"
+    },
+    {
+      "rel": "via",
+      "href": "https://developer.trimet.org/gis/meta_tm_stops.shtml",
+      "type": "text/html",
+      "title": "TriMet metadata for tm_stops"
+    },
+    {
+      "rel": "via",
+      "href": "https://developer.trimet.org/gis/",
+      "type": "text/html",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "icon",
+      "href": "../_assets/trimet-logo.png",
+      "type": "image/png",
+      "title": "TriMet"
+    },
+    {
+      "rel": "pmtiles",
+      "href": "./stops.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "title": "TriMet Stops vector tiles",
+      "pmtiles:layers": [
+        "stops"
+      ]
+    }
+  ],
+  "assets": {
+    "data": {
+      "href": "./stops.parquet",
+      "type": "application/vnd.apache.parquet",
+      "title": "TriMet Stops (GeoParquet)",
+      "description": "Active transit stops. In TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)), not reprojected, so lengths and areas are in feet. Hilbert-ordered, zstd-compressed, with a GeoParquet 1.1 bbox covering column for row-group pruning.",
+      "roles": [
+        "data"
+      ],
+      "file:size": 294824,
+      "file:checksum": "1220487a2ebf774a0c2e20c849af1361f370123de375f61ca6e87e7d6b7fc05f0ad4",
+      "table:columns": [
+        {
+          "name": "stop_id",
+          "type": "int32",
+          "description": "Unique identifier."
+        },
+        {
+          "name": "stop_name",
+          "type": "string",
+          "description": "Intersection or street address of stop."
+        },
+        {
+          "name": "jurisdic",
+          "type": "string",
+          "description": "Jurisdiction (City or County) in which stop is located."
+        },
+        {
+          "name": "zipcode",
+          "type": "string",
+          "description": "Zipcode in which stop is located."
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "Type of service. Values: AT = Aerial Tram; BUS = Bus; CR = Commuter rail; MAX = Light rail; SC = Streetcar; BSC = Shared Bus and Streetcar."
+        },
+        {
+          "name": "geometry",
+          "type": "binary",
+          "description": "Feature geometry in TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)). Coordinates are feet, not degrees."
+        },
+        {
+          "name": "geometry_bbox",
+          "type": "struct<xmin: float not null, ymin: float not null, xmax: float not null, ymax: float not null>",
+          "description": "Per-feature bounding box struct, the GeoParquet covering column. Same projected feet as the geometry."
+        }
+      ],
+      "table:primary_geometry": "geometry",
+      "table:row_count": 6316,
+      "proj:code": "EPSG:2913",
+      "alternate": {
+        "s3": {
+          "href": "s3://us-west-2.opendata.source.coop/cholmes/trimet/stops/stops.parquet",
+          "title": "S3 URI"
+        }
+      }
+    },
+    "visual": {
+      "href": "./stops.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "title": "TriMet Stops (PMTiles)",
+      "description": "Vector tiles for web display, layer name `stops`, reprojected to WGS84 as tiles require. Built with tippecanoe keeping every feature at every zoom, so what a map draws matches the GeoParquet exactly.",
+      "roles": [
+        "visual",
+        "data"
+      ],
+      "file:size": 1561493,
+      "file:checksum": "1220cca5a0c8760fd24f5b882f219c23aab47283d8757a8004b2bb3e7d7a33a961a4",
+      "alternate": {
+        "s3": {
+          "href": "s3://us-west-2.opendata.source.coop/cholmes/trimet/stops/stops.pmtiles",
+          "title": "S3 URI"
+        }
+      }
+    },
+    "thumbnail": {
+      "href": "./thumbnail.webp",
+      "type": "image/webp",
+      "title": "TriMet Stops preview",
+      "description": "Rendered from this collection's styles/default.json with MapLibre GL Native, over a light basemap. WebP is allowed for thumbnails by spec PR portolan-sdi/portolan-spec#121, which this catalog targets; Portolan 0.1 alone permits only PNG and JPEG.",
+      "roles": [
+        "thumbnail"
+      ],
+      "file:size": 49604,
+      "file:checksum": "1220109f0e5f9ec5c20a7bf8d2a12d0602a30c429bec67719bab13a05a2f96d64f35"
+    },
+    "style": {
+      "href": "./styles/default.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Stops",
+      "description": "TriMet's own stop symbol, taken from the GeoServer style `ott:stops`: a white circle with a dark stroke. Radius grows with zoom so all 6,316 stops stay separable in dense corridors.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 879,
+      "file:checksum": "1220690bb2172aec3ecb9c9e0f6e29dd738800f71fd8bd49602630419d99d079907e"
+    },
+    "style-by-type": {
+      "href": "./styles/by-type.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Stops by service type",
+      "description": "The same mark filled by TYPE, so the 6,075 bus stops read apart from the 161 MAX platforms, 58 streetcar stops, 14 shared bus/streetcar stops, 6 WES platforms and 2 aerial tram terminals. Colors are TriMet's GTFS route_color values for each mode.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 1902,
+      "file:checksum": "1220c7236b6b94a986f1b087a097a7212d458914d6695636cb969e7d3d6e1c3e52df"
+    },
+    "style-density": {
+      "href": "./styles/density.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Stops \u2014 density",
+      "description": "A heatmap of stop density that fades into individual marks past zoom 13. Useful for seeing where the network is dense without drawing thousands of overlapping circles at metro-wide zooms.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 2521,
+      "file:checksum": "122088c0d4fda34659f03f22e79e64c6e00175191ac1a0cd1005914ddf157b33f029"
+    },
+    "style-labeled": {
+      "href": "./styles/labeled.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Stops with names",
+      "description": "Stops colored by mode with STOP_NAME shown from zoom 14. Stop names are intersections or street addresses, so they read as cross-streets rather than as station names.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 2423,
+      "file:checksum": "12206fc89e0a0f3dda1fa2d63fabf0c20de662c1839be766bd3b83f4648f86f2a272"
+    },
+    "source_shapefile": {
+      "href": "https://developer.trimet.org/gis/data/tm_stops.zip",
+      "type": "application/zip",
+      "title": "TriMet Stops \u2014 original TriMet Shapefile",
+      "description": "TriMet's own distribution of `tm_stops`, in NAD83(HARN) / Oregon North (ft). This is the file this collection was built from. Size and checksum are of what TriMet served at the sync time recorded in `updated`.",
+      "roles": [
+        "data",
+        "source"
+      ],
+      "file:size": 197720,
+      "file:checksum": "122027ea0b13a7d74aa0aea65063ae2124344fb72e1d8d4c311837067b307c86a867"
+    },
+    "source_kml": {
+      "href": "https://developer.trimet.org/gis/data/tm_stops.kml",
+      "type": "application/vnd.google-earth.kml+xml",
+      "title": "TriMet Stops \u2014 original TriMet KML",
+      "description": "TriMet's KML distribution of the same layer.",
+      "roles": [
+        "data",
+        "source"
+      ],
+      "file:size": 5280261,
+      "file:checksum": "12200744fd7385f8b895b2de2df2f2e4184f5b91af548e039c432cc7a6b6612481aa"
+    },
+    "source_sld": {
+      "href": "./styles/trimet-stops.sld.xml",
+      "type": "application/vnd.ogc.sld+xml",
+      "title": "TriMet GeoServer style ott:stops (SLD)",
+      "description": "TriMet's own stop symbology: a white circle with a dark 2px stroke at size 6, which styles/default.json reproduces.",
+      "roles": [
+        "metadata"
+      ],
+      "file:size": 1551,
+      "file:checksum": "1220937efc897573873afe2a886f1ff3176298ab2fd01e911612766af6c22dc6f479"
+    }
+  }
+}

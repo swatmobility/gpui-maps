@@ -1,0 +1,47 @@
+{
+  "type": "Catalog",
+  "id": "tudelft",
+  "stac_version": "1.1.0",
+  "title": "TU Delft — 3D Geoinformation Research Group",
+  "description": "Open geodatasets from the [3D Geoinformation Research Group](https://3d.bk.tudelft.nl/) at Delft University of Technology (TU Delft). The group specializes in 3D modelling of the built environment, combining authoritative Dutch government registrations with nation-wide elevation surveys to produce detailed 3D building models and urban datasets.",
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Portolan NL — Cloud-Native Dutch Geodata"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "icon",
+      "href": "./logo.png",
+      "type": "image/png",
+      "title": "3D Geoinformation Research Group logo"
+    },
+    {
+      "rel": "describedby",
+      "href": "./README.md",
+      "type": "text/markdown",
+      "title": "3D Geoinformation Research Group homepage"
+    },
+    {
+      "rel": "child",
+      "href": "./3dbag/collection.json",
+      "type": "application/json",
+      "title": "3D BAG"
+    },
+    {
+      "rel": "agents",
+      "href": "./AGENTS.md",
+      "type": "text/markdown"
+    }
+  ],
+  "stac_extensions": [
+    "https://schemas.portolan-sdi.org/portolan/v0.1.0/schema.json"
+  ],
+  "updated": "2026-07-31T23:32:40Z"
+}

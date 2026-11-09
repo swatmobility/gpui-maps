@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gpui-maps：Rust と GPUI のためのネイティブ GPU 地図</title>
+<meta name="description" content="gpui-maps は Rust と GPUI のためのオープンソースのベクター地図エンジンです。MapLibre スタイル、PMTiles、地球儀、3D 建物、データオーバーレイを GPU で描画します。エージェントはローカル HTTP ポートから操作できます。">
+<meta property="og:title" content="gpui-maps：Rust と GPUI のためのネイティブ GPU 地図">
+<meta property="og:description" content="Rust のためのオープンソースのベクター地図エンジン。MIT または Apache-2.0 で無料。">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:image" content="https://gpui-maps.swatmobility.com/img/og.jpg">
+<meta property="og:url" content="https://gpui-maps.swatmobility.com/ja/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#000000">
+<link rel="alternate" hreflang="en" href="https://gpui-maps.swatmobility.com/">
+<link rel="alternate" hreflang="ja" href="https://gpui-maps.swatmobility.com/ja/">
+<link rel="alternate" hreflang="x-default" href="https://gpui-maps.swatmobility.com/">
+<script src="../lang.js?v=15"></script>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../style.css?v=16">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="flag-gb" viewBox="0 0 60 30"><clipPath id="flag-gb-t"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path d="M0,0v30h60v-30z" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" clip-path="url(#flag-gb-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></symbol>
+  <symbol id="flag-jp" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#BC002D"/></symbol>
+</svg>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="gpui-maps ホーム">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9.25" fill="none" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="4.2" ry="9.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.5"/></svg>
+      gpui-maps
+    </a>
+    <a class="by" href="https://www.swatmobility.com" aria-label="gpui-maps の提供元：SWAT Mobility"><span>提供</span><img src="../img/swat@2x.png" width="68" height="14" alt=""></a>
+    <nav aria-label="セクション">
+      <a href="#start">はじめに</a>
+      <a href="#try">試す</a>
+      <a href="#features">機能</a>
+      <a href="#agents">エージェント</a>
+      <a href="#platforms">プラットフォーム</a>
+      <a href="#studio">Studio</a>
+      <a href="#support">サポート</a>
+    </nav>
+    <a class="nav-gh" href="https://github.com/swatmobility/gpui-maps">GitHub</a>
+    <div class="lang">
+      <button class="lang-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu" aria-label="言語：日本語">
+        <svg class="flag" aria-hidden="true"><use href="#flag-jp"/></svg>JP
+        <svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <ul class="lang-menu" id="lang-menu" hidden>
+        <li><a href="../" data-lang="en" hreflang="en" lang="en"><svg class="flag" aria-hidden="true"><use href="#flag-gb"/></svg>English</a></li>
+        <li><a href="./" data-lang="ja" hreflang="ja" lang="ja" aria-current="page"><svg class="flag" aria-hidden="true"><use href="#flag-jp"/></svg>日本語</a></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="hero-copy">
+    <h1 aria-label="エージェント、Rust、デスクトップアプリ、gpui-kit、物流、配送計画、車両管理、最適化、公共交通、モバイル、オフライン、閉域網のための地図 SDK"><span aria-hidden="true"><span class="rot" data-words="エージェント|Rust|デスクトップアプリ|gpui-kit|物流|配送計画|車両管理|最適化|公共交通|モバイル|オフライン|閉域網">エージェント</span><br>のための地図 SDK</span></h1>
+    <p class="hero-sub">gpui-maps は Rust で書かれたベクター地図エンジンです。GPUI のウィンドウの中で GPU を使って描画し、同じコードが iOS でも、WebAssembly としてブラウザでも動きます。Web ビューも JavaScript も、アクセストークンも不要です。</p>
+    <div class="hero-actions">
+      <button class="install" type="button" data-copy="cargo add gpui-maps" data-copied="コピー済み" data-failed="選択してコピー" aria-label="インストールコマンドをコピー：cargo add gpui-maps">
+        <code>cargo add gpui-maps</code>
+        <span class="install-state" aria-live="polite">コピー</span>
+      </button>
+      <a class="btn-light" href="https://github.com/swatmobility/gpui-maps">ソースを見る</a>
+    </div>
+  </div>
+  <div class="player" id="try">
+    <div class="player-bar">
+      <div class="try-tabs" role="tablist" aria-label="ライブデモ">
+        <button class="try-tab" type="button" role="tab" aria-selected="true" aria-controls="try-stage" data-key="globe" data-cam="108,14,globe,0,0" data-credit="© OpenStreetMap contributors · OpenFreeMap · Sentinel-2 cloudless by EOX · NASA" data-q="../demo/?embed&amp;lang=ja&amp;lon=108&amp;lat=14&amp;look=space&amp;look_time=1762462800&amp;imagery=https%3A%2F%2Ftiles.maps.eox.at%2Fwmts%2F1.0.0%2Fs2cloudless_3857%2Fdefault%2Fg%2F%7Bz%7D%2F%7By%7D%2F%7Bx%7D.jpg" data-style="satellite" data-poster="../img/play-globe.webp" data-desc="雲と夜と星のある地球全体から、通りの一本までズームできます。ドラッグで回転、ピンチ、または ⌘ か Ctrl を押しながらスクロールでズーム。">地球儀</button>
+        <button class="try-tab" type="button" role="tab" aria-selected="false" aria-controls="try-stage" data-key="nav" data-route="singapore-bugis-marina-bay" data-credit="© OpenStreetMap contributors · OpenFreeMap" data-q="../demo/?embed&amp;lang=ja&amp;nav=sim&amp;route=singapore-bugis-marina-bay&amp;speed=2" data-style="./liberty-style.json" data-poster="../img/play-nav.webp" data-desc="Ferrostar の Rust コアによる、シンガポール・ブギスのシミュレーション走行。一時停止、速度の変更、音声案内のオンができます。">ターンバイターン</button>
+        <button class="try-tab" type="button" role="tab" aria-selected="false" aria-controls="try-stage" data-key="census" data-credit="© OpenStreetMap contributors · OpenFreeMap · US Census Bureau" data-page="census=us_bg_2023" data-q="../demo/?embed&amp;lang=ja&amp;census=us_bg_2023" data-style="./positron-style.json" data-poster="../img/play-census.webp" data-desc="全米のブロックグループごとの世帯所得の中央値（ACS 2023）。ヒストグラム、所得フィルター、州ごとのグラフ付き。ブロックグループにポインターを合わせると数値が表示されます。">米国国勢調査</button>
+        <button class="try-tab" type="button" role="tab" aria-selected="false" aria-controls="try-stage" data-key="nyc" data-cam="-73.985,40.754,15.6,60,29" data-credit="© OpenStreetMap contributors · OpenFreeMap" data-q="../demo/?embed&amp;lang=ja&amp;lon=-73.985&amp;lat=40.754&amp;z=15.6&amp;pitch=60&amp;bearing=29" data-style="./liberty-style.json" data-poster="../img/play-nyc.webp" data-desc="ミッドタウン・マンハッタンの建物を 3D で。ドラッグで移動、右ドラッグ、Ctrl+ドラッグ、または 2 本指で傾きと回転。">3D マンハッタン</button>
+        <button class="try-tab" type="button" role="tab" aria-selected="false" aria-controls="try-stage" data-key="shinjuku" data-cam="139.7005,35.6895,16,60,-25" data-credit="© OpenStreetMap contributors · OpenFreeMap" data-q="../demo/?embed&amp;lang=ja&amp;lon=139.7005&amp;lat=35.6895&amp;z=16&amp;pitch=60&amp;bearing=-25" data-style="./open-swat-routes-dark-style.json" data-poster="../img/play-shinjuku.webp" data-desc="ルートやデータのための落ち着いたダークスタイル Graphite で、新宿を 3D 表示。">新宿</button>
+        <button class="try-tab" type="button" role="tab" aria-selected="false" aria-controls="try-stage" data-key="tokyo" data-cam="139.7528,35.6825,14.2,0,0" data-credit="© OpenStreetMap contributors · OpenFreeMap" data-q="../demo/?embed&amp;lang=ja&amp;lon=139.7528&amp;lat=35.6825&amp;z=14.2" data-style="./open-streets-style.json" data-poster="../img/play-tokyo.webp" data-desc="東京都心。日本語とローマ字のラベルをエンジン自身が組みます。">日本語ラベル</button>
+      </div>
+      <div class="styles" role="group" aria-label="スタイル">
+        <button class="style-chip" type="button" aria-pressed="true" data-style="satellite">衛星写真</button>
+        <button class="style-chip" type="button" aria-pressed="false" data-style="./liberty-style.json">リバティ</button>
+        <button class="style-chip" type="button" aria-pressed="false" data-style="./open-streets-style.json">ストリート</button>
+        <button class="style-chip" type="button" aria-pressed="false" data-style="./positron-style.json">ポジトロン</button>
+        <button class="style-chip" type="button" aria-pressed="false" data-style="./open-dark-style.json">ダーク</button>
+        <button class="style-chip" type="button" aria-pressed="false" data-style="./open-swat-routes-dark-style.json">グラファイト</button>
+      </div>
+    </div>
+    <div class="try-stage" id="try-stage" data-boot="../demo/?embed&amp;lang=ja&amp;look=space&amp;look_time=1762462800&amp;imagery=https%3A%2F%2Ftiles.maps.eox.at%2Fwmts%2F1.0.0%2Fs2cloudless_3857%2Fdefault%2Fg%2F%7Bz%7D%2F%7By%7D%2F%7Bx%7D.jpg" role="tabpanel" data-frame-title="ライブ地図：このページの中で WebAssembly として動く gpui-maps">
+      <img src="../img/play-globe.webp" width="2360" height="1476" alt="このデモの静止画。開始するとライブで操作できます。">
+      <div class="try-start">
+        <button class="btn-light" type="button">ライブ地図を開始</button>
+        <span>あなたの GPU で動きます。15&nbsp;MB の WebAssembly モジュールを一度だけ読み込みます。</span>
+      </div>
+      <p class="try-credit">© OpenStreetMap contributors · OpenFreeMap · Sentinel-2 cloudless by EOX · NASA</p>
+    </div>
+    <p class="try-desc" aria-live="polite">雲と夜と星のある地球全体から、通りの一本までズームできます。ドラッグで回転、ピンチ、または ⌘ か Ctrl を押しながらスクロールでズーム。 <a class="try-open" href="../demo/?site&amp;lang=ja&amp;style=./liberty-style.json&amp;lon=108&amp;lat=14&amp;look=space&amp;look_time=1762462800&amp;imagery=https%3A%2F%2Ftiles.maps.eox.at%2Fwmts%2F1.0.0%2Fs2cloudless_3857%2Fdefault%2Fg%2F%7Bz%7D%2F%7By%7D%2F%7Bx%7D.jpg">全画面で開く</a></p>
+  </div>
+</section>
+
+<section class="start" id="start">
+  <div class="wrap">
+    <h2>3 つのコマンドで、最初の地図を。</h2>
+    <p class="lede">リポジトリをクローンして、最初のサンプルを実行します。キー不要のオープンなベースマップで、シンガポールを表示するウィンドウが開きます。</p>
+    <div class="start-grid">
+      <div class="term" role="img" aria-label="ターミナル：リポジトリをクローンして hello_map サンプルを実行">
+        <div class="term-bar"><i></i><i></i><i></i><span>zsh</span></div>
+<pre class="term-body"><span class="p">$</span> git clone https://github.com/swatmobility/gpui-maps
+<span class="p">$</span> cd gpui-maps
+<span class="p">$</span> cargo run --example hello_map
+<span class="dim">   Compiling gpui-maps v0.7.0
+    Finished `dev` profile
+     Running `target/debug/examples/hello_map`</span></pre>
+      </div>
+      <div class="code">
+        <div class="code-bar">src/main.rs</div>
+<pre class="code-body"><span class="k">use</span> gpui_maps::basemaps::{<span class="k">self</span>, Basemap};
+<span class="k">use</span> gpui_maps::map_view::MapView;
+
+<span class="k">let</span> b = basemaps::load(Basemap::Liberty)?;
+<span class="k">let</span> map = cx.new(|_| MapView::new(
+    <span class="n">103.85</span>, <span class="n">1.29</span>, <span class="n">12.0</span>, <span class="n">1024.0</span>, <span class="n">768.0</span>,
+    b.style, b.source, rt.clone(),
+));</pre>
+      </div>
+    </div>
+    <p class="aside">地図は GPUI のビューなので、ほかの要素と同じようにウィンドウに追加できます。<a href="https://github.com/swatmobility/gpui-maps/blob/master/docs/public/getting-started.md">スタートガイドを読む</a>（英語）。</p>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <h2>地図に必要なすべてを、ひとつのエンジンで。</h2>
+    <p class="lede">上のライブ地図はその一部を使っています。ほかはサンプルとドキュメントにあります。</p>
+    <dl class="specs">
+      <div><dt>タイル</dt><dd>HTTP 経由のベクタータイル、PMTiles、MBTiles、ラスタータイル。<code>.pmtiles</code> ファイル 1 つで完全にオフラインで動作します。アカウントもキーも外部サービスも不要なので、閉域網でも使えます。</dd></div>
+      <div><dt>データ</dt><dd>GeoJSON、CSV、FlatGeobuf、GeoParquet、Cloud-Optimised GeoTIFF。ホバーとクリックで地物を選択できます。</dd></div>
+      <div><dt>可視化</dt><dd>アーク、移動のアニメーション、ヒートマップ、六角形・グリッド集計、ドット密度、クラスタリング。</dd></div>
+      <div><dt>3D</dt><dd>大気と空のある地球儀、建物の立体表示、glTF モデル。</dd></div>
+      <div><dt>ナビゲーション</dt><dd><a href="https://github.com/stadiamaps/ferrostar">Ferrostar</a> の Rust コアによるターンバイターン案内。曲がる地点の案内、リルート、追従カメラをエンジンが描画します。</dd></div>
+      <div><dt>キャプチャ</dt><dd>カメラやスクリプト化した地図ストーリーを、ウィンドウなしで PNG や動画に書き出せます。</dd></div>
+      <div><dt>ビッグデータ</dt><dd>ドット密度と H3 六角形のレイヤーが、ClickHouse からタイルをリアルタイムに読み込みます。読み取り専用で、SQL ガードを通します。</dd></div>
+      <div><dt>ダッシュボード</dt><dd>地図と連動するチャートを、SQL を含む 1 つの JSON ファイルで定義。ClickHouse と Postgres に対応（<code>swat-maps-dash</code>）。</dd></div>
+      <div><dt>カタログ</dt><dd>オープン地理データの STAC 1.1 カタログを、ライセンス情報とともに地図レイヤーとして読み込みます（<code>swat-maps-stac</code>）。</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="agents" id="agents">
+  <div class="wrap">
+    <h2>コーディングエージェントが、地図を操作できます。</h2>
+    <p class="lede">gpui-maps で作ったアプリは、自身の機能を説明するローカル HTTP ポートを開けます。エージェントはアクションの一覧を取得して呼び出し、地図の状態を JSON で読み取ります。スクリーンショットなしで、地図の移動、確認、テストができます。</p>
+    <div class="term term-agent" id="agent-term">
+      <div class="term-bar"><i></i><i></i><i></i><span>claude</span></div>
+<pre class="term-body" aria-label="地図を操作するコーディングエージェントのセッション"><span class="line"><span class="p">$</span> GPUI_MAP_AGENTIC_PORT=7334 cargo run --example basic_map &amp;</span>
+<span class="line"><span class="p">$</span> claude</span>
+<span class="line"> </span>
+<span class="line"><span class="you">&gt; 東京駅に移動して、建物が見えるように傾けて。</span></span>
+<span class="line"> </span>
+<span class="line"><span class="dot">●</span> Bash(curl -s localhost:7334/ | jq -c '[.actions[].name]')</span>
+<span class="line dim">  ⎿ ["map.state","map.tiles","map.layers",…,"map.fly_to",…]</span>
+<span class="line"> </span>
+<span class="line"><span class="dot">●</span> Bash(curl -s -X POST localhost:7334/map/fly_to \</span>
+<span class="line">       -d '{"lon":139.7671,"lat":35.6812,"zoom":16,"pitch":60,"ms":1500}')</span>
+<span class="line dim">  ⎿ {"ok":true,"camera":{"lon":139.7671,"lat":35.6812,"zoom":16.0,</span>
+<span class="line dim">     "pitch_degrees":60.0,"bearing_degrees":null},"eased_ms":1500.0}</span>
+<span class="line"> </span>
+<span class="line"><span class="dot">●</span> 東京駅の上空、ズーム 16 で 60° 傾け、建物を立体で表示しました。</span>
+<span class="line">  描画内容は <code>map.state</code> で確認できます。</span></pre>
+    </div>
+    <ul class="points">
+      <li><strong>自己記述型。</strong> <code>GET /</code> がすべてのアクションをメソッド、パス、パラメーター付きで返すので、エージェントが古い一覧に頼ることはありません。</li>
+      <li><strong>ローカル限定。</strong> ポートは 127.0.0.1 にのみバインドされ、アプリが有効にしない限り開きません。</li>
+      <li><strong>再利用できる。</strong> <code>gpui-agentic-http</code> クレートで、どの GPUI アプリにも同じ仕組みを追加できます。Claude Code 用の MCP サーバーとスキルも付属します。</li>
+    </ul>
+    <div class="connect">
+      <h3>Claude Code につなぐ。</h3>
+      <p class="aside">アプリをエージェント用ポートを開いて起動し、どちらか、または両方を使います。<code>gpui-agentic-http</code> を使ったほかの GPUI アプリでも同じです。</p>
+      <div class="connect-grid">
+        <div>
+          <div class="term">
+            <div class="term-bar"><i></i><i></i><i></i><span>MCP サーバー</span></div>
+<pre class="term-body"><span class="p">$</span> cargo install gpui-agentic-http
+<span class="p">$</span> claude mcp add gpui-maps -e AGENTIC_HTTP_PORT=7334 \
+    -- agentic_mcp_server</pre>
+          </div>
+          <p class="note">アプリのアクションがすべて Claude Code のツールになります。アクションを追加すれば、ツールも自動で増えます。</p>
+        </div>
+        <div>
+          <div class="term">
+            <div class="term-bar"><i></i><i></i><i></i><span>スキル</span></div>
+<pre class="term-body"><span class="p">$</span> mkdir -p .claude/skills
+<span class="p">$</span> cp -r gpui-agentic-http/skills/agentic-app \
+    .claude/skills/</pre>
+          </div>
+          <p class="note">Claude Code がアプリのポートを自分で見つけ、HTTP でアクションを呼び出します。設定は不要です。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="platforms" id="platforms">
+  <div class="wrap">
+    <h2>どこでも Rust：デスクトップ、モバイル、WebAssembly。</h2>
+    <p class="lede">Rust と WGSL シェーダーで一度だけ書いたエンジンです。ネイティブの macOS ビュー、iOS アプリ、WebAssembly モジュールにコンパイルされ、どこでも同じ地図を描きます。</p>
+  </div>
+  <div class="devices">
+    <figure class="dev dev-mac">
+      <div class="dev-frame">
+        <div class="dev-chrome"><i></i><i></i><i></i><span>あなたの GPUI アプリ</span></div>
+        <img src="../img/nyc-dark.webp" width="1600" height="1000" loading="lazy" alt="macOS のウィンドウ内に、ダークスタイルで 3D 表示したミッドタウン・マンハッタン。">
+      </div>
+      <figcaption><strong>macOS。</strong> Metal 上で動く GPUI ビュー。アプリのどのウィンドウにも追加できます。</figcaption>
+    </figure>
+    <figure class="dev dev-web">
+      <div class="dev-frame">
+        <div class="dev-chrome dev-chrome-web"><i></i><i></i><i></i><span>gpui-maps.swatmobility.com/demo</span></div>
+        <img src="../img/web-demo.webp" width="1400" height="875" loading="lazy" alt="Web デモ：WebAssembly 版がブラウザで描いた東京都心。">
+      </div>
+      <figcaption><strong>Web。</strong> 同じ Rust を WebAssembly にコンパイルし、WebGPU で描画（WebGL2 にもフォールバック）。実際のブラウザの画面です。</figcaption>
+    </figure>
+    <figure class="dev dev-phone">
+      <div class="phone"><img src="../img/iphone-transit.webp" width="590" height="1279" loading="lazy" alt="iPhone に表示した東京都台東区のめぐりんバスの路線網。暗い地図に凡例と時刻スライダーがある。"></div>
+      <figcaption><strong>iOS。</strong> UIKit シェルの中で、Rust が Metal で描画します。SwiftUI アプリ向けの Swift 埋め込みもあります。画面は iPhone の SWAT Studio で、東京のバス時刻表を再生しています。</figcaption>
+    </figure>
+  </div>
+  <div class="wrap">
+    <p class="demo-row"><a class="btn-dark" href="../demo/?site&amp;lang=ja">ライブ Web デモを開く</a> <span class="note">15&nbsp;MB の WebAssembly モジュールを読み込みます。WebGPU に対応したブラウザをおすすめします。</span></p>
+    <div class="studio-dl" id="studio">
+      <h3>SWAT Studio：すべてのサンプルをひとつのアプリで</h3>
+      <p class="studio-desc">エンジンのデモをまとめて開ける無料の Mac アプリです。スタイル、地球儀、3D 建物と車両、時刻表どおりに走る 25 の公共交通網、データ可視化、ClickHouse ダッシュボード、PMTiles、GeoParquet を収録しています。リポジトリのサンプルからビルドしています。</p>
+      <p class="demo-row"><a class="btn-dark" href="https://github.com/swatmobility/gpui-maps/releases/latest/download/SWAT-Studio-macOS.dmg">Mac 版をダウンロード</a> <a class="btn-line" href="https://github.com/swatmobility/gpui-maps/releases">すべてのリリース</a> <span class="note">無料。署名・公証済み。macOS 13 以降、Apple シリコンと Intel に対応。</span></p>
+    </div>
+    <div class="crates">
+      <h3>リポジトリにはほかにも</h3>
+      <ul>
+        <li><code>swat-maps-doc</code> 地図ドキュメント形式：データセット、レイヤー、フィルター、スケール、ツールチップ。元に戻す・やり直しに対応。</li>
+        <li><code>swat-maps-dash</code> ダッシュボード形式と、安全性を検査する SQL テンプレートコンパイラー。</li>
+        <li><code>swat-maps-stac</code> オープン地理データの STAC カタログを読むリーダー。</li>
+      </ul>
+      <p class="note">GPUI に依存しない純粋な Rust で、WebAssembly 向けにもビルドできます。</p>
+    </div>
+  </div>
+</section>
+
+<section class="support" id="support">
+  <div class="wrap">
+    <h2>誰でも無料。チームにはサポートを。</h2>
+    <div class="plans">
+      <div class="plan">
+        <h3>オープンソース</h3>
+        <p class="price">無料</p>
+        <ul>
+          <li>MIT または Apache-2.0 から選べます</li>
+          <li>商用利用も可能、登録不要</li>
+          <li>質問とバグ報告は GitHub Issues で</li>
+        </ul>
+        <a class="btn-line" href="https://github.com/swatmobility/gpui-maps">ソースを入手</a>
+      </div>
+      <div class="plan plan-main">
+        <h3>商用サポート</h3>
+        <p class="price">ご相談ください</p>
+        <ul>
+          <li>合意した応答時間と専用チャネル</li>
+          <li>長期サポート（LTS）リリース</li>
+          <li>ご希望のスケジュールでの機能開発</li>
+          <li>調達に必要な商用契約</li>
+        </ul>
+        <a class="btn-dark" href="https://www.swatmobility.com/contact-us">SWAT に問い合わせる</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>gpui-maps は <a href="https://www.swatmobility.com/">SWAT Mobility</a> が開発しています。ライセンスは MIT または Apache-2.0 です。SWAT および SWAT ロゴは SWAT Mobility Pte. Ltd. の商標です。詳しくは<a href="https://github.com/swatmobility/gpui-maps/blob/master/TRADEMARK.md">商標ポリシー</a>（英語）をご覧ください。</p>
+    <p>地図データ © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>。<a href="https://openfreemap.org">OpenFreeMap</a> が <a href="https://openmaptiles.org">OpenMapTiles</a> スキーマで配信。地球の画像：Sentinel-2 cloudless 2016（EOX IT Services GmbH、CC BY 4.0、改変した Copernicus Sentinel データ 2016 を含む）。雲：NASA Goddard Space Flight Center, Reto Stöckli。星：NASA/Goddard SVS、Gaia DR2：ESA/Gaia/DPAC。めぐりんバスのデータ：台東区（CC BY 4.0、ODPT カタログ経由）。</p>
+    <ul class="foot-links">
+      <li><a href="https://github.com/swatmobility/gpui-maps">ソース</a></li>
+      <li><a href="https://github.com/swatmobility/gpui-maps/blob/master/SUPPORT.md">サポート</a>（英語）</li>
+      <li><a href="https://github.com/swatmobility/gpui-maps/blob/master/SECURITY.md">セキュリティ問題の報告</a>（英語）</li>
+      <li>© 2026 SWAT Mobility Pte. Ltd.</li>
+    </ul>
+  </div>
+</footer>
+
+<script src="../site.js?v=15" defer></script>
+</body>
+</html>

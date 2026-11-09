@@ -1,0 +1,39 @@
+# The 2020 Census P.L. 94-171 (and DHC, for MG-R1) reader/validator for the
+# US race/ethnicity dot map (Task 1 of docs/superpowers/plans/2026-09-27-us-
+# race-dot-map.md). Its own package and its own lockfile (the empty
+# `[workspace]` below makes it a root), same convention as
+# `tools/dotgrid-build`: this tool has no reason to touch the engine's own
+# dependency set, and the engine has no reason to link `zip`.
+[package]
+name = "race-build"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+anyhow = "1"
+zip = { version = "0.6", default-features = false, features = ["deflate"] }
+# Task 5 (the converter): the engine for the grid geometry, the part
+# allocation/splitting and the v2 tile codec, so the archive and its reader
+# share one definition of each (Task 10: with the engine's `h3` feature, so
+# `export-hex` bakes hexagon boundaries through the same `record_for_cell`
+# the native ClickHouse hex source uses); lyon for the block triangulation; the
+# PMTiles writer; rayon for per-state block batches.
+gpui-maps = { path = "../..", default-features = false, features = ["h3"] }
+lyon = "1.0"
+pmtiles = { version = "0.23", default-features = false, features = ["write"] }
+rayon = "1"
+# Task 12 fix round: the export reads its own peak RSS (getrusage) to
+# enforce MG-R13's 2 GB gate.
+libc = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Task 9 (`load-clickhouse`): the HTTP interface, and H3 to cross-check the
+# server's `geoToH3` bit for bit (same versions as tools/dotgrid-build).
+reqwest = { version = "0.12", features = ["blocking", "rustls-tls"], default-features = false }
+h3o = "0.11"
+
+[profile.release]
+debug = 1

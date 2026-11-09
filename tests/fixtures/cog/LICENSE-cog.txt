@@ -1,0 +1,16 @@
+rainier_dem.tif is derived from the U.S. Geological Survey's 3D Elevation
+Program (3DEP) 1 arc-second DEM, tile n47w122:
+
+    https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1/TIFF/current/n47w122/USGS_1_n47w122.tif
+
+USGS-authored or produced data and information are in the U.S. public
+domain (https://www.usgs.gov/information-policy-and-instructions/copyrights-and-credits).
+Credit requested: "U.S. Geological Survey, 3D Elevation Program".
+
+Changes: the area around Mount Rainier (z11 Web Mercator tiles x 330-331,
+y 721-722) read by range request, bilinearly resampled to EPSG:3857 at
+384 x 384 px, rounded to whole metres (int16), and written as a
+Cloud-Optimised GeoTIFF (deflate, horizontal predictor, 128 px tiles, two
+overviews) by this crate's `tile_source::cog::write`. Rebuild with
+
+    cargo run --release --example cog -- --make-fixture tests/fixtures/cog/rainier_dem.tif

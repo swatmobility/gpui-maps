@@ -1,0 +1,14 @@
+# `uniffi-bindgen`, pinned to the runtime's version: writes the Swift
+# bindings from the built library's metadata (library mode). Host-only.
+[package]
+name = "gpui-maps-embed-bindgen"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "main.rs"
+
+[dependencies]
+uniffi = { version = "=0.31.2", features = ["cli"] }

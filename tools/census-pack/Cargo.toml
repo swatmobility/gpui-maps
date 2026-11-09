@@ -1,0 +1,27 @@
+# The offline TIGER/ACS -> `BGPK` converter for the census demo in a browser
+# (`src/census/pack.rs`). Its own package and lockfile (the empty
+# `[workspace]` makes it a root), so `shapefile` never reaches the engine's
+# dependency set. It links the engine for the pack encoder, so the file it
+# writes and the decoder the page runs share one definition.
+#
+#     CARGO_TARGET_DIR=... RUSTC_WRAPPER="" cargo run --release \
+#       --manifest-path tools/census-pack/Cargo.toml -- --out FILE
+[package]
+name = "census-pack"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+# No default features: no sprite fetch, no MBTiles/GeoParquet.
+gpui-maps = { path = "../..", default-features = false }
+shapefile = { version = "0.7", default-features = false }
+anyhow = "1"
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+debug = 1

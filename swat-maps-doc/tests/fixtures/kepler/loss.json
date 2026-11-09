@@ -1,0 +1,38 @@
+{
+  "version": "v1",
+  "config": {
+    "visState": {
+      "filters": [
+        { "dataId": ["quakes"], "id": "f3", "name": [], "type": "polygon", "value": { "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }, "enabled": true, "layerId": ["quakes-pts"] }
+      ],
+      "layers": [
+        {
+          "id": "quakes-heat",
+          "type": "icon",
+          "config": { "dataId": "quakes", "label": "Density", "color": [255, 153, 31], "columns": { "lat": "Latitude", "lng": "Longitude" }, "isVisible": true, "visConfig": { "opacity": 0.8, "radius": 20, "intensity": 1, "threshold": 0.18, "colorRange": { "name": "Heat 4", "type": "sequential", "category": "Made up", "colors": ["#2B0A3D", "#7A1F5C", "#D6455B", "#FFB347"] } }, "hidden": false },
+          "visualChannels": { "weightField": { "name": "Magnitude", "type": "real" }, "weightScale": "linear" }
+        },
+        {
+          "id": "quakes-pts",
+          "type": "point",
+          "config": {
+            "dataId": "quakes", "label": "Quakes", "color": [30, 150, 190], "columns": { "lat": "Latitude", "lng": "Longitude" }, "isVisible": true,
+            "visConfig": { "radius": 10, "opacity": 0.8, "filled": true, "outline": false, "thickness": 2, "strokeColor": null, "colorRange": { "name": "Sunrise 5", "type": "sequential", "category": "Made up", "colors": ["#203040", "#405060", "#807050", "#C09040", "#F0C030"] } }
+          },
+          "visualChannels": { "colorField": { "name": "Magnitude", "type": "real" }, "colorScale": "jenks", "sizeField": null, "sizeScale": "linear" }
+        }
+      ],
+      "interactionConfig": { "tooltip": { "fieldsToShow": { "quakes": [{ "name": "Magnitude", "format": null }] }, "enabled": true } },
+      "layerBlending": "normal",
+      "splitMaps": [ { "layers": { "quakes-pts": true, "quakes-heat": false } }, { "layers": { "quakes-pts": false, "quakes-heat": true } } ],
+      "effects": [ { "id": "glow-1", "type": "lightAndShadow", "isEnabled": true, "parameters": {} } ]
+    },
+    "mapState": { "latitude": 37, "longitude": -122, "zoom": 6, "isSplit": true },
+    "mapStyle": {
+      "styleType": "night-ops-style",
+      "mapStyles": {
+        "night-ops-style": { "id": "night-ops-style", "label": "Night Ops", "url": "mapbox://styles/example/fakestyleid", "accessToken": "pk.eyFAKEFAKEFAKEFAKEFAKEFAKE.notareal", "custom": true, "icon": "" }
+      }
+    }
+  }
+}

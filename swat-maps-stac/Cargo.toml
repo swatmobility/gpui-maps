@@ -1,0 +1,30 @@
+# A lenient reader for static STAC 1.1 catalogs and their Portolan profile
+# (portolan-sdi.org): catalogs, collections, items, assets by role, links,
+# licences and providers, MapLibre styles for the PMTiles derivative, and
+# an on-disk HTTP cache that revalidates with ETag / Last-Modified.
+#
+# No gpui, no engine and no HTTP client: the host hands in a `Transport`
+# (a desktop host's is reqwest; a test's is a map of fixtures), so the crate builds
+# for wasm and iOS unchanged.
+#
+# `[workspace]` is present and empty so cargo treats this directory as its
+# own workspace root, as `swat-maps-doc/` does.
+[workspace]
+
+[package]
+name = "swat-maps-stac"
+version = "0.0.0"
+edition = "2021"
+description = "A lenient static STAC 1.1 / Portolan catalog reader: lazy link walk, assets by role, licences, publisher styles, ETag disk cache. Pure Rust, no HTTP client of its own."
+repository = "https://github.com/swatmobility/gpui-maps"
+readme = "README.md"
+keywords = ["stac", "portolan", "gis", "catalog", "pmtiles"]
+categories = ["science::geo", "parser-implementations"]
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "swat_maps_stac"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

@@ -1,0 +1,64 @@
+# The launch site, gpui-maps.swatmobility.com, on GitHub Pages: the static page in
+# `site/`, plus the live web demo built from `web/` and served at `/demo/`.
+#
+# One-time setup by a repository admin: Settings > Pages > Source "GitHub
+# Actions", custom domain gpui-maps.swatmobility.com (`site/CNAME`), and a DNS
+# CNAME record gpui-maps -> swatmobility.github.io.
+name: Site
+
+on:
+  push:
+    branches: [master]
+    paths: ["site/**", "web/**", "src/**", "assets/**", "Cargo.lock", ".github/workflows/site.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: web
+      # web/build.sh needs the wasm-bindgen CLI at the exact version
+      # web/Cargo.toml pins.
+      - name: wasm-bindgen CLI
+        run: |
+          v=$(sed -n 's/^wasm-bindgen = "=\(.*\)"$/\1/p' web/Cargo.toml)
+          cargo install --locked wasm-bindgen-cli --version "$v"
+      - name: Build the web demo
+        run: bash web/build.sh
+      - name: Assemble the site
+        run: |
+          mkdir -p _site
+          cp -R site/. _site/
+          cp -R web/dist _site/demo
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

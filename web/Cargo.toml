@@ -1,0 +1,244 @@
+# The wasm spike's own package, deliberately OUTSIDE the `gpui-maps`
+# package: `gpui-maps` links gpui, tokio's multi-threaded runtime, reqwest,
+# pmtiles' mmap and objc2, none of which compile for
+# `wasm32-unknown-unknown`. A `path` dependency would drag every one of them
+# in even behind a feature, so this crate reaches the engine by SOURCE
+# instead -- `#[path]` module includes in `src/lib.rs`, pointing at
+# `../../src/`. Nothing in the shipped crate changes.
+#
+# `[workspace]` is present and empty so cargo treats this directory as its
+# own workspace root rather than trying to attach it to the package above.
+[workspace]
+
+[package]
+name = "swat-maps-web"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "gpui_maps_web"
+crate-type = ["cdylib", "rlib"]
+
+# Only the engine's own dependency set, at the same versions the parent
+# `Cargo.toml` pins -- so what compiles here is what the shipped crate
+# compiles, not a lookalike.
+# `probe` is declared (and left off) only so the engine's own
+# `#[cfg(feature = "probe")]` blocks in `render/alloc.rs` are a known name
+# rather than 60 lines of `unexpected cfg` warnings.
+[features]
+# `overlay::geoparquet` IS built here: the browser reads GeoParquet over
+# `fetch` range requests. Its codecs are the pure-Rust ones only (snappy,
+# lz4, gzip): zstd is a C library and this shell links no C toolchain for
+# wasm32, so a zstd file (Overture's are) is refused by codec name.
+default = ["geoparquet"]
+geoparquet = ["dep:parquet", "dep:arrow-array", "dep:arrow-schema", "dep:bytes"]
+probe = []
+# Declared and left off: `overlay::cluster`'s H3 roll-up (`src/overlay/`,
+# included whole for `overlay::host`) is behind it, and a known-but-off
+# name keeps `-D warnings` quiet about its `cfg`s. The H3 crate is not here.
+h3 = []
+# Declared and left off, the same known-name reason: `overlay::dotgrid::clickhouse`
+# (the demo's live ClickHouse source) is behind it and never built here.
+clickhouse-demo = []
+# Declared and left off, the same known-name reason: `src/orbit` (the
+# satellites demo) is behind it and never built here.
+orbits = []
+# Declared, and left off, for the same "known name" reason as `probe`:
+# `sprite.rs`'s `fetch_sprite_atlas`/`fetch_bytes` already exclude
+# `wasm32-unknown-unknown` on their own `cfg` (this build has no `reqwest`
+# either), so this feature is never read here -- it only has to be a
+# declared name, not a true one. See the parent `Cargo.toml`'s own comment.
+sprite_http_fetch = []
+# Declared (and off) only so `tile_source/cog/mod.rs`'s `cfg(feature =
+# "cog_ureq")` names a known feature: the iOS crate's COG backend.
+cog_ureq = []
+
+[lints.clippy]
+# The few clippy defaults that are wrong for this code, set once here and
+# repeated verbatim in `web/Cargo.toml` and `ios/Cargo.toml`, which compile
+# the same `src/` files by `#[path]`. Everything else is enforced at
+# `-D warnings` by `scripts/clippy.sh` (and the pre-commit hook).
+#
+# `!(a < b)` is how this code says "fail on NaN as well": it is the test a
+# NaN cannot pass, and `a >= b` (or a `partial_cmp` match) would silently
+# let one through.
+neg_cmp_op_on_partial_ord = "allow"
+# Renderer plumbing threads a device, a pass, the camera and per-frame
+# state through one call; bundling them into one-use structs hides what a
+# draw reads. 45 item-level allows said so before this line did.
+too_many_arguments = "allow"
+# Inline tuple and closure types in tests and one-off plumbing read better
+# where they are used than behind an alias defined somewhere else.
+type_complexity = "allow"
+
+[dependencies]
+anyhow = "1"
+base64 = "0.22"
+bytemuck = { version = "1.25", features = ["derive"] }
+geo-types = "0.7"
+# `style_spec::lut` decodes the style's `color-theme` LUT, which arrives as
+# a base64 PNG, and `raster::decode_tile` decodes one imagery tile per
+# `?imagery=` source -- `png` for a PNG relief/terrain source, `jpeg` for
+# Mapbox's own satellite endpoint (`.jpg`, sniffed rather than declared --
+# see `src/raster.rs`'s module doc). Nothing else in `image`'s format list is
+# on either path, so the rest stays out of the bundle -- the parent crate
+# takes `image`'s defaults because its sprite path wants more of them.
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp"] }
+# `tile_source::cog`'s LZW (see the root `Cargo.toml`).
+weezl = "0.1.12"
+glam = { version = "0.33", features = ["bytemuck", "f64"] }
+lyon = "1.0"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# `map_labels_on_data_for_doc`: the shared document rule (pure serde).
+swat-maps-doc = { package = "swat-maps-doc", path = "../swat-maps-doc" }
+# `style.rs` -- in the `#[path]` closure -- stores `ZoomValue::stops` in a
+# `SmallVec`. A `#[path]` include brings NO transitive dependencies with it,
+# so the engine having this in the parent manifest does nothing here; the
+# crate must name it itself. `"1"`, not `"1.16"`, deliberately: the engine's
+# floor was relaxed to `1` for a consumer whose graph carried a `<1.16`
+# ceiling, and pinning tighter here would put that hazard back.
+smallvec = "1"
+# `overlay::host` keeps each tiled overlay source's GPU tiles in the
+# engine's `tile_source::TileCache` (`src/tile_source/cache.rs`, included by
+# `#[path]`), which is an `lru::LruCache` underneath. Same version as the
+# parent manifest.
+lru = "0.12"
+# `overlay::dotgrid::codec`: gzip for count tiles. This crate now includes
+# the WHOLE `src/overlay/mod.rs` verbatim through `overlay::host` (see
+# above), so `dotgrid` comes along with it and needs its own copy of this
+# dependency -- a `#[path]` include carries none. Default features: the
+# pure-Rust `miniz_oxide` backend, which is the only kind that compiles for
+# `wasm32-unknown-unknown`.
+flate2 = "1"
+wgpu = { version = "=30.0.0", features = ["webgl"] }
+# The text half, and the reason this page has labels at all. glyphon is
+# wgpu-based and pure Rust all the way down (cosmic-text -> harfrust,
+# skrifa, swash, fontdb), so it compiles for `wasm32-unknown-unknown`
+# untouched -- what does NOT cross is `fontdb::Database::load_system_fonts`,
+# which on wasm matches no `target_os` arm, returns, and leaves the database
+# EMPTY without erroring. `font_fallback::new_font_system_from_db` is the
+# entry point that takes bytes instead; see `app::load_font`.
+glyphon = "0.12"
+# Named directly, only for its `wasm-web` feature: it turns on
+# `sys-locale/js`, which is what lets the locale come off `navigator` rather
+# than off a system call that a browser cannot make. Feature unification
+# applies it to glyphon's own copy of cosmic-text -- there is one.
+cosmic-text = { version = "0.19", features = ["wasm-web"] }
+# `font_fallback` names both in its own signatures -- `unicode_script::Script`
+# in the `Fallback` trait impl, `sys_locale::get_locale` in the native
+# `new_font_system`. The engine's manifest pins the same two for the same
+# reason; the versions must keep matching cosmic-text's or the trait
+# signature stops lining up.
+unicode-script = "0.5.8"
+sys-locale = "0.3"
+# `story::panel::fit_text` (included by `#[path]` above) falls back to
+# grapheme-cluster boundaries when truncating text with no word breaks, so
+# an emoji with a ZWJ or a combining mark is never split mid-cluster. Same
+# version as the parent manifest.
+unicode-segmentation = "1.13.3"
+# `src/nav/`'s navigation core; see the parent manifest. `wasm_js` rather
+# than `std`: on `wasm32-unknown-unknown` Ferrostar's `uuid` needs a source of
+# randomness (`uuid/js`, `getrandom/wasm_js`), and its simulator stamps
+# `SystemTime::now()`, which aborts in a browser unless `web-time` backs it.
+# Measured: `features = ["std"]` fails to compile `uuid` for this target.
+ferrostar = { version = "=0.57.0", default-features = false, features = ["wasm_js"] }
+# `nav::time` names `web_time::SystemTime` on wasm, because that is the type
+# Ferrostar's `UserLocation::timestamp` is under `wasm_js`.
+web-time = "1.1"
+parquet = { version = "60", optional = true, default-features = false, features = ["arrow", "snap", "lz4", "flate2-rust_backend"] }
+bytes = { version = "1", optional = true }
+arrow-array = { version = "60", optional = true }
+arrow-schema = { version = "60", optional = true }
+
+# The browser half. `wasm-bindgen` is pinned to the exact version of the
+# installed `wasm-bindgen` CLI: the two halves of the generated glue must
+# agree or the CLI refuses the module outright.
+wasm-bindgen = "=0.2.127"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+console_error_panic_hook = "0.1"
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+    "Window", "Document", "Element", "HtmlCanvasElement", "Performance", "Location",
+    # `DomRect` for `app::dom_chrome_obstacles`: the credit card and the SWAT
+    # mark are DOM elements over the canvas, and labels keep clear of them.
+    "DomRect",
+    # `Node` for `append_child` alone: `app::render_attribution` builds the
+    # credit's `<p>` elements rather than assigning `innerHTML`, because the
+    # credit is the one readout on this page whose text is chosen by the tile
+    # source in force. See `app::attribution_for`.
+    "Node",
+    "Request", "RequestInit", "Response", "console",
+    # `AbortController`/`AbortSignal`: a dot archive's range answered with a
+    # 200 (a server that ignores `Range`) is aborted before the whole archive
+    # streams into the tab -- see `app::fetch_grid`.
+    "AbortController", "AbortSignal",
+    # A count tile's body is read chunk by chunk and refused at the chunk
+    # that crosses its bound (`shell_fetch::BodyCap`), never materialised
+    # whole first.
+    "ReadableStream", "ReadableStreamDefaultReader",
+    # `Headers` for a 429's `Retry-After` -- see `app::fetch_tile`.
+    "Headers",
+    # Interaction: drag to pan, wheel to zoom, double-click to zoom in.
+    # `PointerEvent` is the mouse/touch/pen-unifying replacement for the
+    # three mouse listeners (`pointerdown`/`pointermove`/`pointerup`, plus
+    # `pointercancel` for a gesture iOS itself takes over) -- see
+    # `app::install_input_handlers`.
+    "Event", "EventTarget", "MouseEvent", "WheelEvent", "PointerEvent", "KeyboardEvent", "HtmlElement",
+    "CssStyleDeclaration",
+    # Resize: the canvas is a flex child, so its CSS box changes without any
+    # window-level event. (`devicePixelRatio` needs no feature -- it is on
+    # `Window`, and the frame loop polls it.)
+    "ResizeObserver",
+    # Voice guidance: `NavHost::take_utterance` is spoken through
+    # `window.speechSynthesis` -- see `app::speak_utterance`.
+    "SpeechSynthesis", "SpeechSynthesisUtterance", "SpeechSynthesisVoice",
+]
+
+# `opt-level = 3`, and the reason is not the usual one.
+#
+# This said `"s"` -- optimise for SIZE -- on the premise that bundle size is
+# one of the questions this spike exists to answer, and that a size/speed
+# trade would therefore have to be settled in size's favour. Measured, on
+# this crate, there is no trade to settle: `3` is BOTH smaller and faster.
+#
+#                      wasm-bindgen .wasm     bake CPU, 16-tile cover
+#     opt-level = "s"       5,188,055 B       145-157 ms  (7.9-9.2 ms/tile)
+#     opt-level = 3         4,726,884 B       123-132 ms  (6.6-7.8 ms/tile)
+#                            -461 KB, -8.9%    -16%, ranges not overlapping
+#
+# (Five page loads each, Chrome at 1307x784 CSS px, dpr 2, WebGPU. `bake_ms`
+# is the `match_tile` + `tessellate_plan` sum the app logs on its "full cover"
+# line -- the only startup cost that is purely this crate's own CPU, and so
+# the only one an optimiser level moves and the network does not.
+# First-triangle and full-cover wall times are dominated by tile fetch
+# latency, which varied by 141 ms WITHIN one arm; they separate the two arms
+# by less than their own spread and are not the measurement.)
+#
+# Smaller and faster together is not the textbook result, so it is worth
+# naming why it is plausible here rather than filing it as noise: `"s"`
+# suppresses the inlining `3` performs, and in a generic-heavy graph -- lyon's
+# tessellator, `style`'s expression evaluator -- that inlining is what exposes
+# the monomorphised bodies to constant folding and dead-code elimination.
+# `lto = true` then removes what is left of them.
+#
+# LTO, one codegen unit and `panic = "abort"` are unchanged, and are all still
+# here for size.
+[dev-dependencies]
+# Kept ONLY so `agrees_with_mvt_reader_coordinate_for_coordinate` can hold
+# this crate's own decoder against the one it replaced. `src/mvt.rs` parses
+# MVT itself now: `mvt-reader` sizes every ring for the WHOLE feature, which
+# is a peak of `parts x varints` and reaches 3.36 GB on a single z12 tile --
+# survivable on 64-bit, fatal in a browser's 4 GiB of address space. See
+# `mvt::decode`.
+mvt-reader = "2.4"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"

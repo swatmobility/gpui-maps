@@ -1,0 +1,64 @@
+# The dashboard framework's pure half (spec
+# `docs/superpowers/specs/2026-10-03-dashboard-framework-design.md` §2.2):
+# page types, the SQL template compiler and its dialects, the read guard,
+# the mandatory result hook, and the sans-IO connectors. No gpui, no engine,
+# no threads of its own and no blocking IO, so it is unit-tested on its own
+# and checked for wasm (`scripts/check-wasm.sh`).
+#
+# W6: no database engine is linked here, ever. Connectors are sans-IO and
+# speak HTTP through `connect::HttpTransport`; a host that wants a native
+# Postgres client implements `hook::Source` in its own crate.
+# `tests/workspace.rs` (`no_embedded_database_in_the_tree`) enforces it.
+#
+# `[workspace]` is present and empty so cargo treats this directory as its
+# own workspace root, as `swat-maps-doc/` does.
+[workspace]
+
+[package]
+# Published as swat-maps-dash; the library keeps its `swat_maps_dash` path.
+name = "swat-maps-dash"
+version = "0.1.0"
+edition = "2021"
+description = "The dashboard format of gpui-maps: page specs, a guarded SQL template compiler with dialects, and sans-IO ClickHouse connectors."
+repository = "https://github.com/swatmobility/gpui-maps"
+readme = "README.md"
+keywords = ["dashboard", "sql", "clickhouse", "gis", "map"]
+categories = ["science::geo", "database", "visualization"]
+license = "MIT OR Apache-2.0"
+
+[features]
+default = ["fs", "http-native"]
+# File-backed helpers (the JSON-file state store, Task 1.6).
+fs = []
+# The native transport: reqwest, driven by the host's executor (a tokio
+# context, as reqwest needs).
+http-native = ["dep:reqwest"]
+# The browser transport: `fetch`. Its connections carry no credentials (C4).
+http-web = ["dep:web-sys", "dep:wasm-bindgen", "dep:wasm-bindgen-futures", "dep:js-sys"]
+# In-memory fixture data and a SQL-subset evaluator (`fixture::FixtureSource`)
+# for pages that render with no server. Test and demo only; links nothing.
+fixture = []
+
+[lib]
+name = "swat_maps_dash"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+unicode-normalization = "0.1"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"], optional = true }
+web-sys = { version = "0.3", optional = true, features = ["Headers", "Request", "RequestInit", "Response", "Window"] }
+wasm-bindgen = { version = "0.2", optional = true }
+wasm-bindgen-futures = { version = "0.4", optional = true }
+js-sys = { version = "0.3", optional = true }
+
+[dev-dependencies]
+# Integration tests see the fixture module.
+swat-maps-dash = { package = "swat-maps-dash", path = ".", features = ["fixture"] }
+
+[lints.clippy]
+# Repeated from the root Cargo.toml, for the same reasons.
+neg_cmp_op_on_partial_ord = "allow"
+too_many_arguments = "allow"
+type_complexity = "allow"

@@ -1,0 +1,49 @@
+{
+  "datasets": [
+    {
+      "version": "v1",
+      "data": {
+        "id": "cities",
+        "label": "Five cities",
+        "color": [30, 150, 190],
+        "fields": [
+          { "name": "name", "type": "string", "format": "", "analyzerType": "STRING" },
+          { "name": "lat", "type": "real", "format": "", "analyzerType": "FLOAT" },
+          { "name": "lon", "type": "real", "format": "", "analyzerType": "FLOAT" },
+          { "name": "riders", "type": "integer", "format": "", "analyzerType": "INT" },
+          { "name": "opened", "type": "timestamp", "format": "", "analyzerType": "DATETIME" },
+          { "name": "night_service", "type": "boolean", "format": "", "analyzerType": "BOOLEAN" },
+          { "name": "tags", "type": "array", "format": "", "analyzerType": "ARRAY" }
+        ],
+        "allData": [
+          ["Alpha Town", 1.30, 103.85, 1200, "2021-03-01 08:00:00", true, ["a", "b"]],
+          ["Beta, Upper", 35.69, 139.70, 5400, 1617235200000, false, []],
+          ["Gamma \"Old\" Port", 52.37, 4.90, null, "2022-11-15 17:30:00", null, null],
+          ["Delta", -33.87, 151.21, 830, "2020-01-01 00:00:00", true, ["c"]],
+          ["Epsilon", 40.71, -74.01, 9100, "2019-07-04 12:00:00", false, ["d"]]
+        ]
+      }
+    }
+  ],
+  "config": {
+    "version": "v1",
+    "config": {
+      "visState": {
+        "layers": [
+          {
+            "id": "cities-pts",
+            "type": "point",
+            "config": { "dataId": "cities", "label": "Cities", "color": [30, 150, 190], "columns": { "lat": "lat", "lng": "lon" }, "isVisible": true, "visConfig": { "radius": 20, "opacity": 0.8, "filled": true, "outline": false, "thickness": 2, "strokeColor": null } },
+            "visualChannels": { "colorField": null, "colorScale": "quantile", "sizeField": null, "sizeScale": "linear" }
+          }
+        ],
+        "filters": [],
+        "interactionConfig": { "tooltip": { "fieldsToShow": { "cities": [{ "name": "name", "format": null }, { "name": "riders", "format": "," }] }, "enabled": true } },
+        "layerBlending": "normal"
+      },
+      "mapState": { "latitude": 20, "longitude": 60, "zoom": 1.5 },
+      "mapStyle": { "styleType": "voyager" }
+    }
+  },
+  "info": { "app": "kepler.gl", "title": "Five cities", "description": "" }
+}

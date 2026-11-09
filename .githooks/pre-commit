@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# Blocks a commit that adds a clippy warning. Installed by
+# scripts/install-hooks.sh (`git config core.hooksPath .githooks`).
+#
+# Runs scripts/clippy.sh on the working tree: the root crate always (and
+# with it the pure swat-maps-doc and swat-maps-dash crates, which it always
+# lints, plus the Studio crates through scripts/clippy-studio.sh while they
+# live here), and the web/ or ios/ shell too when a staged file is under it. A
+# commit that stages no Rust source or manifest skips the lint entirely.
+#
+# Skip with `git commit --no-verify` only in an emergency -- the next
+# commit's hook will fail on whatever was let through.
+set -euo pipefail
+root="$(git rev-parse --show-toplevel)"
+
+# One warm target dir for every checkout. Unset, scripts/clippy.sh falls back
+# to ./target, so each worktree's first commit built a fresh multi-GB target
+# inside the worktree and filled the disk. An explicit CARGO_TARGET_DIR wins.
+if [ -z "${CARGO_TARGET_DIR:-}" ]; then
+  export CARGO_TARGET_DIR="$HOME/.cache/gpui-map-target"
+fi
+
+staged="$(git diff --cached --name-only --diff-filter=ACMR)"
+if ! grep -qE '\.rs$|(^|/)Cargo\.(toml|lock)$' <<<"$staged"; then
+  exit 0
+fi
+
+args=()
+grep -q '^web/' <<<"$staged" && args+=(--web)
+grep -qE '^(ios|embed-ios)/' <<<"$staged" && args+=(--ios)
+# Studio's phone core. Not part of the library's iOS trigger: it moves to the
+# Studio repo's hook at the split. Until then clippy.sh forwards --ios to
+# scripts/clippy-studio.sh, which lints studio-mobile/ for the phone.
+if grep -q '^studio-mobile/' <<<"$staged" && [ -f "$root/scripts/clippy-studio.sh" ]; then
+  args+=(--ios)
+fi
+
+# Free-disk floor: a cold clippy writes GBs into the shared target, and two
+# disk-full incidents on 2026-10-25 came from builds started near empty.
+# Refuse rather than fill the disk (GPUI_MAP_HOOK_MIN_FREE_GB, default 5).
+min_gb="${GPUI_MAP_HOOK_MIN_FREE_GB:-5}"
+free_gb=$(df -g "$CARGO_TARGET_DIR" 2>/dev/null | awk 'NR==2 {print $4}')
+[ -n "$free_gb" ] || free_gb=$(df -g "$HOME" | awk 'NR==2 {print $4}')
+if [ "${free_gb:-0}" -lt "$min_gb" ]; then
+  echo "pre-commit: only ${free_gb} GB free (floor ${min_gb} GB); clippy not run, the commit was NOT made." >&2
+  echo "pre-commit: free space (prune the shared target inside the lock), or set GPUI_MAP_HOOK_MIN_FREE_GB." >&2
+  exit 1
+fi
+
+# Every cargo on this machine goes through the fair build lock, so the
+# hook's clippy queues behind running builds instead of racing them for
+# the shared target (lanes committed --no-verify to dodge the unlocked
+# cold build). A caller that already holds the lock (a hold script that
+# commits) sets GPUI_MAP_LOCK_HELD=1: taking it again would wait forever.
+lock="${GPUI_MAP_LOCK:-$HOME/.cache/gpui-map-lock.sh}"
+run=("$root/scripts/clippy.sh" "${args[@]+"${args[@]}"}")
+if [ "${GPUI_MAP_LOCK_HELD:-0}" != 1 ] && [ -f "$lock" ]; then
+  echo "pre-commit: clippy waits for the build lock ($lock)" >&2
+  run=(bash "$lock" env GPUI_MAP_LOCK_HELD=1 "${run[@]}")
+elif [ "${GPUI_MAP_LOCK_HELD:-0}" != 1 ]; then
+  echo "pre-commit: no build lock at $lock; clippy runs unlocked" >&2
+fi
+
+if ! "${run[@]}"; then
+  echo >&2
+  echo "pre-commit: clippy found warnings (above); the commit was NOT made." >&2
+  echo "pre-commit: fix them, or for a lint that is wrong here add a reasoned" >&2
+  echo "pre-commit: #[allow(clippy::...)] -- see [lints.clippy] in Cargo.toml." >&2
+  exit 1
+fi

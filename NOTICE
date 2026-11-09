@@ -1,0 +1,666 @@
+gpui-maps
+A GPU vector-map engine for GPUI.
+
+Copyright (c) 2026 SWAT Mobility Pte. Ltd.
+
+Repository: https://github.com/swatmobility/gpui-maps
+
+This project's own code is licensed under either of the Apache License,
+Version 2.0 (LICENSE-APACHE) or the MIT license (LICENSE-MIT), at your
+option.
+
+The SWAT name and the SWAT logo (src/assets/swat-on-light@2x.png and
+src/assets/swat-on-dark@2x.png) are trademarks. They are not licensed under
+the code licence. See TRADEMARK.md.
+
+Data, fonts, icons and other bundled assets, with their licences and the
+credits they ask for, are listed in ATTRIBUTION.md.
+
+This file carries the notices of third-party SOURCE CODE that parts of this
+project were ported from or derived from. Those licences require their
+notices to travel with copies of the source, and in most cases with binary
+redistributions as well (in the documentation or other materials). Where a
+module records its derivation in more detail, the PROVENANCE.md file named
+below has it.
+
+===============================================================================
+1. MapLibre GL JS  (BSD-3-Clause)
+   https://github.com/maplibre/maplibre-gl-js
+===============================================================================
+
+Read at commit 0d4b6f1e7d53beac00a4423ce53e7c16a3353b5f, and ported or
+re-expressed (in Rust and WGSL) in, among others:
+
+  src/render/atmosphere_shader.wgsl, src/render/atmosphere.rs
+      (atmosphere.fragment.glsl, draw_sky.ts)
+  src/render/sky_shader.wgsl, src/render/sky.rs
+      (sky.fragment.glsl, sky_program.ts, the style-spec sky defaults)
+  src/render/extrusion_shader.wgsl, src/render/extrusion.rs,
+  src/render/extrusion_gpu.rs
+      (fill_extrusion.vertex.glsl, draw_fill_extrusion.ts, painter.ts)
+  src/render/globe.rs, src/render/subdivide.rs, src/render/space.rs,
+  src/render/raster_mesh.rs, src/render/raster_pipeline.rs,
+  src/render/raster_plan.rs, src/render/cover_plan.rs, src/render/mesh.rs,
+  src/render/marker_shader.wgsl, src/render/label_fade.rs
+  src/story/fly.rs                       (flyTo, camera.ts and helpers)
+  src/camera_control.rs, src/touch_gesture.rs
+  src/symbol_line.rs, src/symbol_pass.rs, src/style.rs
+  src/overlay/source_paint.rs, src/overlay/live.rs, src/overlay/highlight.rs
+  src/overlay/tile_index/ and src/overlay/cluster.rs (option names, buffer)
+
+Details: src/render/PROVENANCE.md and src/story/PROVENANCE.md. The notice
+below is the upstream LICENSE.txt, copied verbatim (its two sections that
+apply here: MapLibre's own, and the mapbox-gl-js v1.13 code it contains).
+
+-------------------------------------------------------------------------------
+
+Copyright (c) 2023, MapLibre contributors
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+    * Neither the name of MapLibre GL JS nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+-------------------------------------------------------------------------------
+
+Contains code from mapbox-gl-js v1.13 and earlier
+
+Version v1.13 of mapbox-gl-js and earlier are licensed under a BSD-3-Clause license
+
+Copyright (c) 2020, Mapbox
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice,
+  this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+* Neither the name of Mapbox GL JS nor the names of its contributors
+  may be used to endorse or promote products derived from this software
+  without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+===============================================================================
+2. MapLibre Native  (BSD-2-Clause)
+   https://github.com/maplibre/maplibre-native
+===============================================================================
+
+Ported: the coarse prefetch pass of TilePyramid::update
+(src/mbgl/renderer/tile_pyramid.cpp) as MapView::coarse_prefetch_tiles in
+src/map_view.rs, and the DEFAULT_PREFETCH_ZOOM_DELTA it is driven by
+(src/map_view.rs, web/src/app.rs). The notice below is the upstream
+LICENSE.md, copied verbatim.
+
+-------------------------------------------------------------------------------
+
+BSD 2-Clause License
+
+Copyright (c) 2021 MapLibre contributors
+
+Copyright (c) 2018-2021 MapTiler.com
+
+Copyright (c) 2014-2020 Mapbox
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+* Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in
+  the documentation and/or other materials provided with the
+  distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+===============================================================================
+3. geojson-vt 4.0.2  (ISC)
+   https://github.com/mapbox/geojson-vt
+===============================================================================
+
+Ported: src/overlay/tile_index/mod.rs, simplify.rs and clip.rs (from
+index.js, tile.js, convert.js, simplify.js and clip.js). Each of those files
+also carries this notice in its header.
+
+-------------------------------------------------------------------------------
+
+Copyright (c) 2015, Mapbox
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+===============================================================================
+4. Supercluster 8.0.1 and KDBush 4.0.2  (ISC)
+   https://github.com/mapbox/supercluster
+   https://github.com/mourner/kdbush
+===============================================================================
+
+Ported: src/overlay/cluster.rs (point clustering and its KD-tree).
+
+-------------------------------------------------------------------------------
+
+Supercluster:
+
+ISC License
+
+Copyright (c) 2021, Mapbox
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+
+KDBush:
+
+ISC License
+
+Copyright (c) 2018, Vladimir Agafonkin
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+
+===============================================================================
+5. deck.gl  (MIT)
+   https://github.com/visgl/deck.gl
+===============================================================================
+
+Re-expressed in WGSL: ArcLayer (src/render/arc_shader.wgsl,
+src/render/arcs.rs), TripsLayer (src/render/trips_shader.wgsl,
+src/render/trips.rs) and HeatmapLayer (src/render/heatmap_shader.wgsl,
+src/render/heatmap.rs). Read, not ported line by line: the hexagon and grid
+aggregation (src/overlay/hexbin.rs, src/overlay/gridbin.rs). The notice
+below is the upstream LICENSE, copied verbatim.
+
+-------------------------------------------------------------------------------
+
+Copyright Vis.gl contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+===============================================================================
+6. kepler.gl 2.5.5  (MIT)
+   https://github.com/keplergl/kepler.gl
+===============================================================================
+
+The named colour palettes in src/overlay/color_scale.rs are kepler.gl's
+static colour ranges (src/constants/custom-color-ranges.js). The source
+cites "Copyright (c) 2021 Uber Technologies, Inc." for that release; the
+current upstream LICENSE reads "Copyright contributors to the kepler.gl
+project". Both lines are kept.
+
+-------------------------------------------------------------------------------
+
+Copyright (c) 2021 Uber Technologies, Inc.
+Copyright contributors to the kepler.gl project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+===============================================================================
+7. ColorBrewer colour schemes  (Apache-2.0 style licence)
+   http://colorbrewer.org/
+===============================================================================
+
+src/overlay/color_scale.rs carries the ColorBrewer ranges that kepler.gl's
+sample maps name.
+
+This product includes color specifications and designs developed by
+Cynthia Brewer (http://colorbrewer.org/).
+
+-------------------------------------------------------------------------------
+
+Apache-Style Software License for ColorBrewer software and ColorBrewer Color
+Schemes
+
+Copyright (c) 2002 Cynthia Brewer, Mark Harrower, and The Pennsylvania State
+University.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License.  You may obtain a copy of the
+License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+
+===============================================================================
+8. osrm-text-instructions 0.13.4  (BSD-2-Clause)
+   https://github.com/Project-OSRM/osrm-text-instructions
+===============================================================================
+
+Ported: src/nav/instructions.rs (index.js, for English). Vendored verbatim:
+src/nav/osrm_text_instructions/en.json and the test cases in
+tests/fixtures/osrm_text_instructions/en_v5_cases.json. The full licence is
+also beside both, as LICENSE.txt.
+
+-------------------------------------------------------------------------------
+
+Copyright (c) 2016, Project OSRM contributors
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list
+of conditions and the following disclaimer.
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+===============================================================================
+9. glsl-atmosphere  (The Unlicense, public-domain dedication)
+   https://github.com/wwwtyro/glsl-atmosphere
+===============================================================================
+
+The scattering function in src/render/atmosphere_shader.wgsl reaches this
+project through MapLibre GL JS (section 1), whose shader credits it. The
+Unlicense requires no notice; this credit is a courtesy. Details:
+src/render/PROVENANCE.md.
+
+===============================================================================
+10. OpenMapTiles-lineage style documents  (style code BSD-3-Clause)
+===============================================================================
+
+The vendored style JSON files examples/liberty-style.json,
+demos/positron-style.json, demos/openfreemap-dark-style.json and the three
+recoloured files under examples/styles-open/ are style CODE under
+BSD-3-Clause (their DESIGN is CC BY 4.0; see ATTRIBUTION.md). Origins:
+OpenFreeMap Liberty (a fork of maputnik/osm-liberty), OpenFreeMap Positron
+(openmaptiles/positron-gl-style) and OpenFreeMap Dark
+(openmaptiles/dark-matter-gl-style). Details: src/basemaps/PROVENANCE.md and
+examples/styles-open/README.md.
+
+The licence files below were fetched on 2026-10-17 from
+raw.githubusercontent.com and are copied verbatim (Markdown as published).
+Each style's CODE (the JSON) is under BSD-3-Clause; its DESIGN (the look and
+feel) is under Creative Commons Attribution 4.0 (CC BY 4.0), which in turn
+derives from CC BY 3.0 designs (CartoDB Basemaps; Mapbox Open Styles' OSM
+Bright). The OpenFreeMap styles repository, which forked all three, is itself
+under the MIT licence.
+
+-------------------------------------------------------------------------------
+10a. Positron  -- openmaptiles/positron-gl-style, LICENSE.md (branch master)
+     Code: BSD-3-Clause.  Design: CC BY 4.0 (derived from CC BY 3.0).
+-------------------------------------------------------------------------------
+
+Copyright (c) 2024, MapTiler.com & OpenMapTiles contributors.  
+Copyright (c) 2015, CartoDB Inc.  
+All rights reserved.
+
+Derived from "CartoDB Basemaps" (https://github.com/CartoDB/CartoDB-basemaps)
+designed by Stamen and Paul Norman for CartoDB Inc., licensed under CC-BY 3.0.
+
+# Code license: BSD 3-Clause License
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# Design license: CC-BY 4.0
+
+The visual design features of the style (also known as the "look and feel" of
+the map) are licensed under the Creative Commons Attribution 4.0 license.
+
+To view a copy of the license, visit https://creativecommons.org/licenses/by/4.0/.
+
+Attribution for the design defined in this repository needs not to be provided
+on map images, but should be reasonably accessible from maps based on this style
+(for example, in a webpage linked from copyright notice on the map).
+
+Products or services using maps derived from OpenMapTiles schema need to visibly
+credit "OpenMapTiles.org" or reference "OpenMapTiles" with a link to
+https://openmaptiles.org/.
+
+For a browsable electronic map based on OpenMapTiles and OpenStreetMap data, the
+credit should appear in the corner of the map. For example:
+
+[© OpenMapTiles](https://openmaptiles.org/)
+[© OpenStreetMap contributors](https://www.openstreetmap.org/copyright)
+
+For printed and static maps a similar attribution should be made in a textual
+description near the image, in the same fashion as if you cite a photograph.
+
+Exceptions to OpenMapTiles attribution requirement can be in a written form granted
+by MapTiler AG (info@maptiler.com).  
+The project contributors grant MapTiler AG the license to give such
+exceptions on a commercial basis.
+
+-------------------------------------------------------------------------------
+10b. Dark Matter  -- openmaptiles/dark-matter-gl-style, LICENSE.md
+     (branch master). Code: BSD-3-Clause.  Design: CC BY 4.0.
+-------------------------------------------------------------------------------
+
+The upstream LICENSE.md of Dark Matter is byte-for-byte identical to the
+Positron LICENSE.md reproduced in 10a (including its copyright lines and its
+CartoDB Basemaps credit); that text applies to the Dark Matter-derived files.
+
+-------------------------------------------------------------------------------
+10c. OSM Liberty  -- maputnik/osm-liberty, LICENSE.md (default branch
+     gh-pages; master identical). Code: BSD (3-clause form, Mapbox Open
+     Styles lineage).  Design: CC BY 3.0 lineage + OpenMapTiles CC BY 4.0.
+-------------------------------------------------------------------------------
+
+## Code License
+
+The Mapbox GL Style JSON file is originally derived from [OSM Bright from Mapbox Open Styles](https://github.com/mapbox/mapbox-gl-styles/blob/master/LICENSE.md). The modified Mapbox GL Style JSON retains the same BSD license.
+
+> Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+> * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+* Neither the name of Mapbox nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+## Design License
+
+The look and feel of the OSM liberty map design is also derived (although heavily altered) from [OSM Bright from Mapbox Open Styles](https://github.com/mapbox/mapbox-gl-styles/blob/master/LICENSE.md) which is licensed under the Creative Commons Attribution 3.0 license.
+
+The map is displaying and styling the data from [OpenMapTiles](https://openmaptiles.org/) with [CC-BY 4.0 design license](https://github.com/openmaptiles/openmaptiles/blob/master/LICENSE.md).
+
+The products or services using this map style need to visibly credit "OpenMapTiles.org" or reference "OpenMapTiles" with a link to http://openmaptiles.org/. For a browsable electronic map based on OpenMapTiles and OpenStreetMap data, the credit should appear in the corner of the map. For example:
+
+[© OpenMapTiles](https://openmaptiles.org/)
+[© OpenStreetMap contributors](https://www.openstreetmap.org/copyright)
+
+For printed and static maps a similar attribution should be made in a textual description near the image, in the same fashion as if you cite a photograph.
+
+## Icons
+
+OSM Liberty is using the [Maki POI icon set](https://github.com/mapbox/maki/blob/master/LICENSE.txt) which is licensed under CC0 1.0 Universal.
+
+The right arrow was derived from [Wikipedia][wiki_arrow] which is in the public domain.
+
+[wiki_arrow]: https://commons.wikimedia.org/wiki/File:Arrowright.svg
+
+## Fonts
+
+OSM Liberty is using the Roboto font family (Copyright 2011 Google).
+Roboto is licensed under the [Apache License, Version 2.0](https://github.com/google/roboto/blob/master/LICENSE).
+
+The copyright line of the "OSM Bright from Mapbox Open Styles" licence that
+OSM Liberty's code licence retains (mapbox/mapbox-gl-styles, LICENSE.md,
+branch master), and its code-licence section, verbatim:
+
+This document sets forth the licenses under which the design and code in this repository (collectively, the "Mapbox Open Styles") are made available.  Mapbox Open Styles are copyright (c) 2014, Mapbox, all rights reserved.
+
+# Code License
+
+The Mapbox GL Style JSON files in this repository and the code therein are licensed under the BSD license:
+
+> Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+> * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+* Neither the name of Mapbox nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-------------------------------------------------------------------------------
+10d. OpenFreeMap styles  -- hyperknot/openfreemap-styles, LICENSE.md
+     (branches main and master identical). Repository: MIT.
+-------------------------------------------------------------------------------
+
+## Licenses
+
+The license of this project is [MIT](https://www.tldrlegal.com/license/mit-license).
+
+Map data is from [OpenStreetMap](https://www.openstreetmap.org/copyright).
+
+[OpenMapTiles](https://github.com/openmaptiles/openmaptiles) code is released under the [BSD 3-Clause License](<https://tldrlegal.com/license/bsd-3-clause-license-(revised)>), design under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). [LICENSE.md](https://github.com/openmaptiles/openmaptiles/blob/master/LICENSE.md).
+
+### Styles
+
+#### Bright
+
+Fork from [openmaptiles/osm-bright-gl-style](https://github.com/openmaptiles/osm-bright-gl-style). The OSM Bright GL Style is derived from [Mapbox Open Styles](https://github.com/mapbox/mapbox-gl-styles). The OSM Bright GL Style’s code is released under the [BSD 3-Clause License](<https://tldrlegal.com/license/bsd-3-clause-license-(revised)>). The OSM Bright GL Style’s design is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). [LICENSE.md](https://github.com/openmaptiles/osm-bright-gl-style/blob/master/LICENSE.md).
+
+#### Liberty
+
+Fork from [maputnik/osm-liberty](https://github.com/maputnik/osm-liberty). OSM Liberty is a fork of OSM Bright. The OSM Bright GL Style is derived from [Mapbox Open Styles](https://github.com/mapbox/mapbox-gl-styles). The OSM Bright GL Style’s code is released under the [BSD 3-Clause License](<https://tldrlegal.com/license/bsd-3-clause-license-(revised)>). The OSM Bright GL Style’s design is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). [LICENSE.md](https://github.com/maputnik/osm-liberty/blob/gh-pages/LICENSE.md).
+
+#### Positron
+
+Fork from [openmaptiles/positron-gl-style](https://github.com/openmaptiles/positron-gl-style). The Positron GL Style is derived from [CartoDB Basemaps](https://github.com/CartoDB/CartoDB-basemaps) designed by Stamen and Paul Norman for CartoDB Inc., licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). The Positron GL style’s code is released under the [BSD 3-Clause License](<https://tldrlegal.com/license/bsd-3-clause-license-(revised)>). The Positron GL Style’s design is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). [LICENSE.md](https://github.com/openmaptiles/positron-gl-style/blob/master/LICENSE.md).
+
+### Fonts
+
+[Noto Sans](https://www.google.com/get/noto/) is released under the [SIL Open Font License, Version 1.1](https://openfontlicense.org/)
+
+### **Icons**
+
+The [Maki POI icon set](https://github.com/mapbox/maki/blob/master/LICENSE.txt) is licensed under CC0 1.0 Universal.
+
+The right arrow was derived from [Wikipedia](https://commons.wikimedia.org/wiki/File:Arrowright.svg), it is public domain.
+
+### Natural Earth
+
+[Natural Earth](https://www.naturalearthdata.com/) map data is in the public domain.
+
+### Tools
+
+spritezero-cli is from [mapbox/spritezero-cli](https://github.com/mapbox/spritezero-cli), licensed [ISC](https://github.com/mapbox/spritezero-cli/blob/master/LICENSE.md).
+
+---
+
+## Licence of this repo
+
+MIT License
+
+Copyright (c) 2023 Zsolt Ero
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+===============================================================================
+11. Test fixtures with their own licence files
+===============================================================================
+
+These are data rather than code, but their licences are code-style licences
+whose notices must travel with them. Each licence file sits beside the data:
+
+  tests/fixtures/fgb/LICENSE-flatgeobuf.txt          BSD-2-Clause,
+      Copyright (c) 2018, Björn Harrtell (FlatGeobuf reference test data)
+  tests/fixtures/geoparquet/LICENSE-geoparquet.txt   Apache-2.0
+      (GeoParquet specification example file)
+
+===============================================================================
+13. Small algorithms in the public domain (no notice required)
+===============================================================================
+
+  src/render/solar.rs, src/story/script.rs
+      Howard Hinnant's days_from_civil (public domain).
+  src/census/ramp.rs, src/tile_source/cog/mod.rs
+      matplotlib's viridis colour map stops (CC0).
+  src/projection.rs, src/render/shader.wgsl (project_to_flat)
+      Equal Earth: the published formulas and coefficients of Savric,
+      Patterson & Jenny (2018), IJGIS 33(3). Robinson: the 5-degree table
+      published by Robinson (1974) and Snyder (1990), as tabulated in PROJ
+      (src/projections/robin.cpp, MIT, Copyright (c) the PROJ authors).
+      The flat-projection design follows MapLibre GL JS 6.15's custom CRS
+      (section 1): the round-trip check and edge bisection of
+      CRSWorldCoordinateHelper.
+
+===============================================================================
+13. Digital twin vehicle models  (CC BY 4.0)
+===============================================================================
+
+  examples/samples/data/digital-twin/vehicles/{cargovan,nypd,stepvan}.glb
+      by M. K. Turkcan, from Valdrada
+      (huggingface.co/datasets/mehmetkeremturkcan/valdrada), CC BY 4.0.
+  examples/samples/data/digital-twin/vehicles/impala.glb
+      CARLA Simulator (carla.org), via Valdrada, CC BY 4.0.
+  examples/samples/data/digital-twin/vehicles/taxinv200.glb
+      body: "Dhl delivery van" by memoov (Sketchfab), via Valdrada,
+      CC BY 4.0.
+  All five modified: decoded, textures baked to flat colours, interiors
+  removed, simplified (scripts/digital-twin-vehicles/; details in
+  examples/samples/data/digital-twin/vehicles/SOURCE.md).
+  https://creativecommons.org/licenses/by/4.0/
+
+===============================================================================
+Consulted, not copied
+===============================================================================
+
+Some modules record that another engine was READ for its behaviour or its
+published constants, without code being copied: Organic Maps
+(Apache-2.0), MapLibre Navigation for iOS and Android, Ferrostar (BSD-3;
+also a normal Cargo dependency, which carries its own licence). These are
+named in the module documentation and listed here for completeness. They
+add no notice requirement beyond the sections above.
+
+Rust crate dependencies are not listed here. Each is distributed with its
+own licence, and `cargo deny` (deny.toml) checks them.

@@ -1,0 +1,15 @@
+{
+  "story": 1,
+  "output": { "width": 480, "height": 270, "fps": 10 },
+  "scene": {
+    "style": "../../../examples/liberty-style.json",
+    "basemap": { "source": "openfreemap" },
+    "tracks": [
+      { "id": "bus", "file": "fixtures/bus.csv", "style": { "color": "#1f77b4", "radius_px": 5, "trail_s": 30 } }
+    ]
+  },
+  "camera": [
+    { "type": "jump", "to": { "lon": 103.8, "lat": 1.3, "zoom": 15 } },
+    { "type": "follow", "track": "bus", "duration": 20, "bearing": "track" }
+  ]
+}

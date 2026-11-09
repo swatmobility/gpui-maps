@@ -1,0 +1,54 @@
+{
+  "version": "v0",
+  "config": {
+    "visState": {
+      "filters": [
+        { "dataId": "quakes", "id": "mag-filter", "name": "Magnitude", "type": "range", "value": [3.5, 7.2], "enlarged": false }
+      ],
+      "layers": [
+        {
+          "id": "old-points",
+          "type": "point",
+          "dataId": "quakes",
+          "label": "Old quakes",
+          "color": [200, 60, 60],
+          "columns": { "lat": { "value": "Latitude", "fieldIdx": 1 }, "lng": { "value": "Longitude", "fieldIdx": 2 } },
+          "isVisible": true,
+          "isAggregated": false,
+          "visConfig": {
+            "radius": 15,
+            "opacity": 0.6,
+            "outline": true,
+            "thickness": 3,
+            "colorRange": { "name": "Ember 3", "type": "sequential", "category": "Made up", "colors": ["#FFE0B0", "#F08040", "#902010"] },
+            "radiusRange": [1, 30]
+          },
+          "colorField": { "name": "Magnitude", "type": "real" },
+          "colorScale": "quantize",
+          "sizeField": { "name": "Depth", "type": "real" },
+          "sizeScale": "sqrt"
+        },
+        {
+          "id": "old-shapes",
+          "type": "geojson",
+          "dataId": "faults",
+          "label": "Faults",
+          "color": [90, 90, 220],
+          "columns": { "geojson": { "value": "_geojson", "fieldIdx": 0 } },
+          "isVisible": true,
+          "visConfig": { "radius": 20, "opacity": 0.5, "stroked": false, "filled": true, "thickness": 1, "radiusRange": [0, 50] },
+          "colorField": null,
+          "colorScale": "quantile",
+          "sizeField": { "name": "slip_rate", "type": "real" },
+          "sizeScale": "linear"
+        }
+      ],
+      "interactionConfig": {
+        "tooltip": { "fieldsToShow": { "quakes": ["Magnitude", "Place"] } }
+      },
+      "layerBlending": "normal"
+    },
+    "mapState": { "bearing": 0, "dragRotate": false, "latitude": 36.1, "longitude": -120.4, "pitch": 0, "zoom": 5 },
+    "mapStyle": { "styleType": "dark" }
+  }
+}

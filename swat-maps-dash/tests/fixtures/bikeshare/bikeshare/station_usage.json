@@ -1,0 +1,45 @@
+{
+  "dashboard": 1,
+  "id": "station-usage",
+  "title": { "fr": "Utilisation des stations", "en": "Station usage" },
+  "group": "Rides",
+  "order": 3,
+  "source": "bike",
+  "sources": { "bike": { "kind": "clickhouse", "database": "bikeshare_demo", "connection": "local", "privacy": "aggregate_only" } },
+  "variables": [
+    { "key": "day_type", "label": { "fr": "Type de jour", "en": "Day type" }, "control": "single", "required": true,
+      "options_sql": "SELECT DISTINCT day_kind FROM bike_trips ORDER BY day_kind" },
+    { "key": "zone", "label": { "en": "Zone" }, "control": "multi", "default": "all",
+      "options_sql": ["SELECT DISTINCT zone_name", "FROM bike_trips", "WHERE NOT is_test ${and_where -zone -cell -min_rides}", "ORDER BY zone_name"] },
+    { "key": "cell", "control": "hidden" },
+    { "key": "min_rides", "label": { "en": "At least" }, "control": "slider", "type": "UInt32" },
+    { "key": "station", "label": { "en": "Station" }, "control": "search" }
+  ],
+  "filters": [
+    { "var": "day_type", "column": "day_kind", "clause": "where" },
+    { "var": "zone", "column": "zone_name" },
+    { "var": "cell", "column": "start_cell" },
+    { "var": "min_rides", "column": "rides", "clause": "having", "op": "ge" },
+    { "var": "station", "column": "station_name" }
+  ],
+  "widgets": [
+    { "id": "rides_bar", "type": "bar", "x": "zone_name", "y": "rides", "format": { "rides": "integer" },
+      "sql": [
+        "SELECT zone_name, sum(ride_count) AS rides",
+        "FROM bike_trips",
+        "WHERE NOT is_test AND lower(bike_kind) = 'electric' ${and_where}",
+        "GROUP BY zone_name ${having}",
+        "ORDER BY rides DESC" ] },
+    { "id": "rides_map", "type": "map", "geometry": "start_cell", "measure": "rides",
+      "click": { "set": "cell", "value": "start_cell" },
+      "sql": "SELECT start_cell, sum(ride_count) AS rides FROM bike_trips WHERE NOT is_test ${and_where -cell} GROUP BY start_cell ${having}" },
+    { "id": "total", "type": "number", "value": "rides", "query": "total" }
+  ],
+  "queries": {
+    "total": { "table": "bike_trips", "agg": { "rides": "sum(ride_count)" }, "filters": "all" }
+  },
+  "layout": { "columns": 12, "row_height": 100, "items": [
+    { "widget": "total", "col": 1, "span": 12, "height": 1 },
+    { "widget": "rides_bar", "col": 1, "span": 6, "height": 3 },
+    { "widget": "rides_map", "col": 7, "span": 6, "height": 3 } ] }
+}

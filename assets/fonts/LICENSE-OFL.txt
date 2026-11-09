@@ -1,0 +1,150 @@
+This file is the SIL Open Font License 1.1, and it covers NINE font files:
+FOUR that `web/build.sh` ships beside it in `dist/`, and FIVE more that
+`font_fallback::STORY_FONTS` bundles directly into the native (desktop and
+capture) binary for the story design system's card (spec §4.1, D5) and
+that neither `build.sh` nor the iOS shell ever touches. All nine are under
+the same licence but have DIFFERENT copyright holders, so every statement
+is below -- each taken verbatim from its own font's `name` table
+(nameID 0).
+
+  NotoSansJP-Regular.japan-subset.otf
+  NotoSansJP-Bold.japan-subset.otf
+      Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font
+      Name 'Source'.
+      Noto Sans JP is Adobe's build, derived from Source Han Sans, which is
+      where the reserved name comes from. Subset to the 2,836 codepoints in
+      `japan-codepoints.txt`.
+
+  NotoSans-Regular.latin-subset.ttf
+  NotoSans-Bold.latin-subset.ttf
+      Copyright 2015 Google Inc. All Rights Reserved.
+      Noto Sans (Latin), version 2.000. No reserved font name. Subset to
+      911 codepoints; see `README.md` in this directory for the exact
+      `fontTools.subset` invocation and where the upstream file came from.
+
+  SourceSans3-Regular.latin-subset.ttf
+  SourceSans3-Semibold.latin-subset.ttf
+  SourceSans3-Bold.latin-subset.ttf
+      Copyright 2023 Adobe (http://www.adobe.com/), with Reserved Font Name
+      'Source'.
+      Source Sans 3, release 3.052R, TTF static. Latin, Greek and Cyrillic
+      subset; see `README.md` in this directory for the exact
+      `fontTools.subset` invocation, the upstream SHA-256 and where the
+      file came from. Native-only (not shipped by `build.sh` or to iOS).
+
+  IBMPlexSansArabic-Regular.arabic-subset.ttf
+  IBMPlexSansArabic-Bold.arabic-subset.ttf
+      Copyright 2019 IBM Corp. All rights reserved.
+      IBM Plex Sans Arabic, release `@ibm/plex-sans-arabic@1.1.0`. Arabic
+      subset with full OpenType joining features; see `README.md` in this
+      directory for the exact `fontTools.subset` invocation, the upstream
+      SHA-256 and where the file came from. Native-only (not shipped by
+      `build.sh` or to iOS).
+
+All five Modified Versions above are Modified Versions in the OFL's sense.
+The OFL permits that (clause 1) and requires the licence and these
+copyright notices to travel with them (clause 2), which is what this file
+is for and why `build.sh` fails the build when it or either of the
+**shipped** fonts' copyright holder's name is absent. The two story-only
+holders (Adobe's 2023 Source Sans 3 line and IBM's) are covered by this
+same file for the same clause-2 reason, even though no automated build
+check watches them -- `build.sh` only ever builds the browser bundle, and
+the native build has nothing equivalent to assert against.
+
+The licence text itself follows, unmodified.
+
+===========================================================================
+
+Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+https://scripts.sil.org/OFL
+
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded, 
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.

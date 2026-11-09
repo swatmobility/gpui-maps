@@ -1,0 +1,47 @@
+name,country,lat,lon,population,capital
+Tokyo,Japan,35.69,139.75,35676000,true
+Delhi,India,28.67,77.23,15926000,false
+Shanghai,China,31.22,121.43,14987000,false
+São Paulo,Brazil,-23.56,-46.63,18845000,false
+Mexico City,Mexico,19.44,-99.13,19028000,true
+Cairo,Egypt,30.05,31.25,11893000,true
+Mumbai,India,19.02,72.86,18978000,false
+Beijing,China,39.93,116.39,11106000,true
+Dhaka,Bangladesh,23.73,90.41,12797394,true
+Osaka,Japan,34.75,135.46,11294000,false
+New York,United States,40.75,-73.98,19040000,false
+Karachi,Pakistan,24.87,66.99,12130000,false
+Buenos Aires,Argentina,-34.60,-58.40,12795000,true
+Istanbul,Turkey,41.11,29.01,10061000,false
+Kolkata,India,22.50,88.32,14787000,false
+Lagos,Nigeria,6.45,3.39,9466000,false
+Manila,Philippines,14.61,120.98,11100000,true
+Rio de Janeiro,Brazil,-22.92,-43.23,11748000,false
+Moscow,Russia,55.75,37.61,10452000,true
+Los Angeles,United States,33.99,-118.18,12500000,false
+Paris,France,48.87,2.33,9904000,true
+Jakarta,Indonesia,-6.17,106.83,9125000,true
+Lima,Peru,-12.05,-77.05,8012000,true
+Bangkok,Thailand,13.75,100.51,6704000,true
+Seoul,South Korea,37.57,127.00,9796000,true
+London,United Kingdom,51.50,-0.12,8567000,true
+Tehran,Iran,35.67,51.42,7873000,true
+Bogotá,Colombia,4.60,-74.09,7772000,true
+Johannesburg,South Africa,-26.17,28.03,3435000,false
+Chicago,United States,41.83,-87.75,8990000,false
+Singapore,Singapore,1.29,103.85,5183700,true
+Sydney,Australia,-33.92,151.18,4630000,false
+Nairobi,Kenya,-1.28,36.81,3010000,true
+Madrid,Spain,40.40,-3.69,5567000,true
+Toronto,Canada,43.70,-79.42,5213000,false
+Berlin,Germany,52.52,13.40,3406000,true
+"Washington, D.C.",United States,38.90,-77.01,4338000,true
+Santiago,Chile,-33.45,-70.67,5720000,true
+Riyadh,Saudi Arabia,24.64,46.77,4465000,true
+Kinshasa,DR Congo,-4.33,15.31,7843000,true
+Anchorage,United States,61.22,-149.90,260283,false
+Reykjavík,Iceland,64.15,-21.95,166212,true
+Auckland,New Zealand,-36.85,174.76,1377200,false
+Honolulu,United States,21.31,-157.86,786000,false
+Cape Town,South Africa,-33.92,18.43,3215000,true
+Perth,Australia,-31.95,115.84,1532000,false

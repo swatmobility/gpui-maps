@@ -1,0 +1,74 @@
+# The demo kit: the window shell, cards, popups, charts, the agentic HTTP
+# surface and the demo panels that the library's examples and Studio share.
+# Not published; the root's examples and `studio-app` depend on it by path.
+[workspace]
+
+[package]
+name = "swat-maps-kit"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[features]
+# Each turns on the `gpui-maps` feature of the same name; the root's and
+# `studio-app`'s features turn these on in turn.
+default = []
+probe = ["gpui-maps/probe"]
+clickhouse-demo = ["gpui-maps/clickhouse-demo"]
+h3 = ["gpui-maps/h3"]
+orbits = ["gpui-maps/orbits"]
+mbtiles = ["gpui-maps/mbtiles", "dep:rusqlite"]
+geoparquet = ["gpui-maps/geoparquet"]
+# `internal-assets`: embed the previews of the gallery pages a free build
+# leaves out (`kit/build.rs`); Studio's `studio-internal` turns it on.
+internal-assets = []
+
+# `celestrak_ureq` is NOT a feature here: `demos/satellites/fetch.rs`
+# (included by `panels/satellites.rs`) requests on `ureq` under it only in
+# the iOS Studio app (`studio-mobile`). This crate has no `ureq`, so it is a
+# known cfg instead, which `--all-features` (scripts/clippy.sh) cannot turn on.
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(feature, values("celestrak_ureq"))'] }
+
+[lints.clippy]
+neg_cmp_op_on_partial_ord = "allow"
+too_many_arguments = "allow"
+type_complexity = "allow"
+
+[dependencies]
+gpui-maps = { path = "..", default-features = false }
+gpui = { package = "gpui-pre", version = "=0.3.12" }
+gpui-component = "=0.9.1"
+gpui-kit-assets = "=0.9.1"
+gpui-agentic-http = { path = "../gpui-agentic-http" }
+anyhow = "1"
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+flate2 = "1"
+glam = { version = "0.33", features = ["bytemuck", "f64"] }
+image = "0.25"
+pmtiles = { version = "0.23", default-features = false, features = ["mmap-async-tokio", "http-async", "reqwest-rustls", "brotli", "zstd"] }
+pollster = "1.0"
+reqwest = { version = "0.12", features = ["rustls-tls", "gzip"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+shapefile = { version = "0.7", default-features = false }
+tempfile = "3"
+tiny_http = "0.12"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "time"] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rusqlite = { version = "0.32", features = ["bundled"], optional = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+libc = "0.2"
+raw-window-handle = "0.6"
+objc2 = "0.6"
+objc2-app-kit = { version = "0.3.2", features = ["std", "NSView", "NSColor", "NSEvent", "NSWindow", "NSResponder", "NSGraphicsContext", "NSScreen", "NSApplication", "objc2-quartz-core", "objc2-core-graphics"] }
+objc2-core-foundation = { version = "0.3.2", features = ["CFCGTypes"] }
+objc2-core-graphics = { version = "0.3.2", features = ["std", "CGEvent", "CGEventTypes", "CGEventSource", "libc"] }
+objc2-foundation = { version = "0.3.2", features = ["std", "NSString"] }
+
+[dev-dependencies]
+gpui = { package = "gpui-pre", version = "=0.3.12", features = ["test-support"] }
+wiremock = "0.6"

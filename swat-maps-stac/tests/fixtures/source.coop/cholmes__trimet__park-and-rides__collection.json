@@ -1,0 +1,356 @@
+{
+  "type": "Collection",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://schemas.portolan-sdi.org/portolan/v0.1.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json",
+    "https://stac-extensions.github.io/table/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/web-map-links/v1.3.0/schema.json",
+    "https://stac-extensions.github.io/alternate-assets/v1.2.0/schema.json"
+  ],
+  "id": "park-and-rides",
+  "title": "TriMet Park and Rides",
+  "description": "TriMet park and ride locations. 46 Point features covering [TriMet](https://developer.trimet.org/gis/)'s service district in the Portland, Oregon metropolitan area, published by TriMet as [`tm_parkride`](https://developer.trimet.org/gis/data/tm_parkride.zip) and last updated at the source on June 23, 2026.\n\nThis is a cloud-native mirror: the same data as GeoParquet and PMTiles. The GeoParquet keeps TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)), so lengths and areas are in feet; only the PMTiles are reprojected to WGS84. The original [Shapefile](https://developer.trimet.org/gis/data/tm_parkride.zip), [KML](https://developer.trimet.org/gis/data/tm_parkride.kml) and [metadata page](https://developer.trimet.org/gis/meta_tm_parkride.shtml) are linked as assets, and column descriptions and code lists are TriMet's own, taken from that page.\n\nThe [collection README](https://source.coop/cholmes/trimet/park-and-rides/README.md) covers suggested uses, limitations and the full schema.\n\n**Agents:** [`AGENTS.md`](https://source.coop/cholmes/trimet/park-and-rides/AGENTS.md) is the guide written for you \u2014 what joins to what and on which column, the quirks that produce silently wrong answers (documented codes that do not appear in the data, columns TriMet's metadata omits, counts that mean different things in different collections), what the coordinate system implies for measurement, and query recipes that have each been run against these files.",
+  "license": "other",
+  "keywords": [
+    "transit",
+    "public transport",
+    "TriMet",
+    "Portland",
+    "Oregon",
+    "point"
+  ],
+  "providers": [
+    {
+      "name": "TriMet",
+      "description": "Tri-County Metropolitan Transportation District of Oregon, the transit agency for the Portland metropolitan area and the originator of this data.",
+      "roles": [
+        "producer",
+        "licensor"
+      ],
+      "url": "https://developer.trimet.org/gis/",
+      "email": "gis@trimet.org"
+    },
+    {
+      "name": "Chris Holmes",
+      "description": "Maintains this cloud-native mirror. Not affiliated with TriMet.",
+      "roles": [
+        "host"
+      ],
+      "url": "https://github.com/cholmes/portolan-catalog-trimet",
+      "email": "cholmes@9eo.org"
+    }
+  ],
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -122.990552,
+          45.284869,
+          -122.332396,
+          45.605293
+        ]
+      ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "2026-06-23T00:00:00Z",
+          null
+        ]
+      ]
+    }
+  },
+  "updated": "2026-08-02T18:02:50Z",
+  "table:columns": [
+    {
+      "name": "name",
+      "type": "string",
+      "description": "Name of park and ride."
+    },
+    {
+      "name": "address",
+      "type": "string",
+      "description": "Park and ride street address or major intersection."
+    },
+    {
+      "name": "city",
+      "type": "string",
+      "description": "City in which park and ride is located."
+    },
+    {
+      "name": "county",
+      "type": "string",
+      "description": "County in which park and ride is located."
+    },
+    {
+      "name": "zipcode",
+      "type": "string",
+      "description": "Zipcode in which park and ride is located."
+    },
+    {
+      "name": "owner",
+      "type": "string",
+      "description": "Indicates whether a park and ride is TriMet owned or a shared use facility. Values: TriMet = TriMet owned; Shared = Shared use."
+    },
+    {
+      "name": "spaces",
+      "type": "int32",
+      "description": "Indicates number of parking spaces available at park and ride."
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "description": "Operational status of park and ride. Values: Existing = Park and ride is operational; Planned = Park and ride is in advanced planning stages; UC = Park and ride is under construction."
+    },
+    {
+      "name": "geometry",
+      "type": "binary",
+      "description": "Feature geometry in TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)). Coordinates are feet, not degrees."
+    },
+    {
+      "name": "geometry_bbox",
+      "type": "struct<xmin: float not null, ymin: float not null, xmax: float not null, ymax: float not null>",
+      "description": "Per-feature bounding box struct, the GeoParquet covering column. Same projected feet as the geometry."
+    }
+  ],
+  "table:primary_geometry": "geometry",
+  "table:row_count": 46,
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "describedby",
+      "href": "./README.md",
+      "type": "text/markdown",
+      "title": "TriMet Park and Rides README"
+    },
+    {
+      "rel": "agents",
+      "href": "./AGENTS.md",
+      "type": "text/markdown",
+      "title": "TriMet Park and Rides agent guide"
+    },
+    {
+      "rel": "license",
+      "href": "https://developer.trimet.org/terms_of_use.shtml",
+      "type": "text/html",
+      "title": "TriMet Terms of Use"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://source.coop/cholmes/trimet/park-and-rides/",
+      "type": "text/html",
+      "title": "TriMet Park and Rides on Source Cooperative"
+    },
+    {
+      "rel": "via",
+      "href": "https://developer.trimet.org/gis/meta_tm_parkride.shtml",
+      "type": "text/html",
+      "title": "TriMet metadata for tm_parkride"
+    },
+    {
+      "rel": "via",
+      "href": "https://developer.trimet.org/gis/",
+      "type": "text/html",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "icon",
+      "href": "../_assets/trimet-logo.png",
+      "type": "image/png",
+      "title": "TriMet"
+    },
+    {
+      "rel": "pmtiles",
+      "href": "./park-and-rides.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "title": "TriMet Park and Rides vector tiles",
+      "pmtiles:layers": [
+        "park-and-rides"
+      ]
+    }
+  ],
+  "assets": {
+    "data": {
+      "href": "./park-and-rides.parquet",
+      "type": "application/vnd.apache.parquet",
+      "title": "TriMet Park and Rides (GeoParquet)",
+      "description": "TriMet park and ride locations. In TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)), not reprojected, so lengths and areas are in feet. Hilbert-ordered, zstd-compressed, with a GeoParquet 1.1 bbox covering column for row-group pruning.",
+      "roles": [
+        "data"
+      ],
+      "file:size": 15056,
+      "file:checksum": "12204f805dc17250339d0ebe2f5a6f2042b0777bba4952fc65920bd2d4f67c6f0a0a",
+      "table:columns": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name of park and ride."
+        },
+        {
+          "name": "address",
+          "type": "string",
+          "description": "Park and ride street address or major intersection."
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "description": "City in which park and ride is located."
+        },
+        {
+          "name": "county",
+          "type": "string",
+          "description": "County in which park and ride is located."
+        },
+        {
+          "name": "zipcode",
+          "type": "string",
+          "description": "Zipcode in which park and ride is located."
+        },
+        {
+          "name": "owner",
+          "type": "string",
+          "description": "Indicates whether a park and ride is TriMet owned or a shared use facility. Values: TriMet = TriMet owned; Shared = Shared use."
+        },
+        {
+          "name": "spaces",
+          "type": "int32",
+          "description": "Indicates number of parking spaces available at park and ride."
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "Operational status of park and ride. Values: Existing = Park and ride is operational; Planned = Park and ride is in advanced planning stages; UC = Park and ride is under construction."
+        },
+        {
+          "name": "geometry",
+          "type": "binary",
+          "description": "Feature geometry in TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North (ft)). Coordinates are feet, not degrees."
+        },
+        {
+          "name": "geometry_bbox",
+          "type": "struct<xmin: float not null, ymin: float not null, xmax: float not null, ymax: float not null>",
+          "description": "Per-feature bounding box struct, the GeoParquet covering column. Same projected feet as the geometry."
+        }
+      ],
+      "table:primary_geometry": "geometry",
+      "table:row_count": 46,
+      "proj:code": "EPSG:2913",
+      "alternate": {
+        "s3": {
+          "href": "s3://us-west-2.opendata.source.coop/cholmes/trimet/park-and-rides/park-and-rides.parquet",
+          "title": "S3 URI"
+        }
+      }
+    },
+    "visual": {
+      "href": "./park-and-rides.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "title": "TriMet Park and Rides (PMTiles)",
+      "description": "Vector tiles for web display, layer name `park-and-rides`, reprojected to WGS84 as tiles require. Built with tippecanoe keeping every feature at every zoom, so what a map draws matches the GeoParquet exactly.",
+      "roles": [
+        "visual",
+        "data"
+      ],
+      "file:size": 62549,
+      "file:checksum": "1220ea9693a0527f8456e3505056fbd16db1b66b6466be3059b698d429955beadfc0",
+      "alternate": {
+        "s3": {
+          "href": "s3://us-west-2.opendata.source.coop/cholmes/trimet/park-and-rides/park-and-rides.pmtiles",
+          "title": "S3 URI"
+        }
+      }
+    },
+    "thumbnail": {
+      "href": "./thumbnail.webp",
+      "type": "image/webp",
+      "title": "TriMet Park and Rides preview",
+      "description": "Rendered from this collection's styles/default.json with MapLibre GL Native, over a light basemap. WebP is allowed for thumbnails by spec PR portolan-sdi/portolan-spec#121, which this catalog targets; Portolan 0.1 alone permits only PNG and JPEG.",
+      "roles": [
+        "thumbnail"
+      ],
+      "file:size": 47898,
+      "file:checksum": "12209b5aaaecb6f91165e26cdb78ee0ddcac2c07f1d963afa1837a93a07df5d52ef9"
+    },
+    "style": {
+      "href": "./styles/default.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Park and Rides",
+      "description": "The 46 park and ride facilities in TriMet blue. A steady mark size makes this the right style when the question is where the lots are rather than how big they are.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 896,
+      "file:checksum": "12203877cd9582f40a607268bb52d4c1d30912a7de3f4152cecb467992a629f46c97"
+    },
+    "style-by-capacity": {
+      "href": "./styles/by-capacity.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Park and Rides by capacity",
+      "description": "Scales each mark by SPACES and ramps its color with it, over a range that runs from small lots up to the 750-space Clackamas Town Center garage. Area, not radius, tracks capacity, so a lot that looks twice as big holds roughly twice as many cars. The whole system holds 12,501 spaces.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 2615,
+      "file:checksum": "12201ba57c710845788318970a5403d140668643bedbf3aa7466715698e7317f9788"
+    },
+    "style-by-owner": {
+      "href": "./styles/by-owner.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Park and Rides by ownership",
+      "description": "Separates the 32 TriMet-owned lots from the 14 shared-use facilities. The distinction matters in practice: shared lots are much smaller, 929 spaces between them against 11,572 in the TriMet-owned lots, and their availability depends on an agreement with the property owner.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 1613,
+      "file:checksum": "1220c0a8c6cef1626a5e3f8e0ad0530f353ecf72fb939af9e7384029fe55ef30eae4"
+    },
+    "style-labeled": {
+      "href": "./styles/labeled.json",
+      "type": "application/vnd.mapbox.style+json",
+      "title": "TriMet Park and Rides with names and capacity",
+      "description": "Capacity-scaled marks labeled with the facility name and its space count, so a reader can identify a specific lot without clicking it.",
+      "roles": [
+        "style"
+      ],
+      "file:size": 3275,
+      "file:checksum": "1220fd70ec88d8d2fc3ac03070aebde8529ed38caed3d863c5d6df433c8115b31809"
+    },
+    "source_shapefile": {
+      "href": "https://developer.trimet.org/gis/data/tm_parkride.zip",
+      "type": "application/zip",
+      "title": "TriMet Park and Rides \u2014 original TriMet Shapefile",
+      "description": "TriMet's own distribution of `tm_parkride`, in NAD83(HARN) / Oregon North (ft). This is the file this collection was built from. Size and checksum are of what TriMet served at the sync time recorded in `updated`.",
+      "roles": [
+        "data",
+        "source"
+      ],
+      "file:size": 3588,
+      "file:checksum": "12202a96f73b259332b5cccc038873d26bcaf5e83791be9c6788de7a4779fcd703e7"
+    },
+    "source_kml": {
+      "href": "https://developer.trimet.org/gis/data/tm_parkride.kml",
+      "type": "application/vnd.google-earth.kml+xml",
+      "title": "TriMet Park and Rides \u2014 original TriMet KML",
+      "description": "TriMet's KML distribution of the same layer.",
+      "roles": [
+        "data",
+        "source"
+      ],
+      "file:size": 53704,
+      "file:checksum": "12200f8f82892c5850dbe427a4f6b95d8a18bbd909a7a3d00f77f17f94a9f1912f18"
+    }
+  }
+}

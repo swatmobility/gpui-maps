@@ -1,0 +1,111 @@
+# CI for the open gpui-maps repository. macOS runners: the desktop shell
+# renders through Metal, and the iOS target needs Apple's SDK.
+#
+# GPU-backed tests (capture goldens, GPU timing budgets) run on the hosted
+# runner's virtual GPU; if one proves unreliable there, move it behind a
+# self-hosted Apple-silicon runner rather than deleting it.
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+  RUST_BACKTRACE: "1"
+
+jobs:
+  build-test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: cargo check --all-targets
+        run: cargo check --all-targets --locked
+      - name: cargo test
+        run: cargo test --locked --no-fail-fast
+      - name: hello_map builds with default features
+        run: cargo build --locked --example hello_map
+      - name: published crates' own tests
+        run: |
+          cargo test --locked --manifest-path swat-maps-doc/Cargo.toml
+          cargo test --locked --manifest-path swat-maps-dash/Cargo.toml --all-features
+          cargo test --locked --manifest-path kit/Cargo.toml --all-features
+
+  linux:
+    # Off macOS the map draws offscreen; this keeps that path compiling and
+    # tested. Mesa's lavapipe is the Vulkan device, the fonts serve the
+    # label tests. Packages as in scripts/check-linux.sh's header.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            clang cmake pkg-config libssl-dev libzstd-dev \
+            libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev libvulkan-dev \
+            libx11-xcb-dev libxcb1-dev libfontconfig-dev libfreetype-dev \
+            libasound2-dev libdbus-1-dev \
+            mesa-vulkan-drivers fonts-dejavu-core fonts-noto-core
+      - run: ./scripts/check-linux.sh
+
+  clippy:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+          targets: wasm32-unknown-unknown, aarch64-apple-ios
+      - uses: Swatinem/rust-cache@v2
+      - run: bash scripts/clippy.sh --all
+
+  wasm:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: web
+      - run: bash scripts/check-wasm.sh
+
+  ios:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ios
+      - run: bash scripts/check-ios.sh
+
+  cargo-deny:
+    runs-on: macos-15
+    strategy:
+      matrix:
+        manifest: [Cargo.toml, swat-maps-doc/Cargo.toml, swat-maps-dash/Cargo.toml]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-deny
+      - run: cargo deny --manifest-path ${{ matrix.manifest }} check --config deny.toml advisories bans licenses sources

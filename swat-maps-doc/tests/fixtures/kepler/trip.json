@@ -1,0 +1,41 @@
+{
+  "version": "v1",
+  "config": {
+    "visState": {
+      "layers": [
+        {
+          "id": "flights-trip",
+          "type": "trip",
+          "config": {
+            "dataId": "flights",
+            "label": "Flights",
+            "color": [18, 147, 154],
+            "columns": { "geojson": "_geojson" },
+            "isVisible": true,
+            "visConfig": { "opacity": 0.9, "thickness": 3, "trailLength": 600 },
+            "hidden": false
+          },
+          "visualChannels": { "colorField": null, "colorScale": "quantile", "sizeField": null, "sizeScale": "linear" }
+        },
+        {
+          "id": "buses-trip",
+          "type": "trip",
+          "config": {
+            "dataId": "buses",
+            "label": "Buses",
+            "color": [221, 178, 124],
+            "columns": { "id": "bus", "lat": "lat", "lng": "lon", "timestamp": "time" },
+            "isVisible": true,
+            "visConfig": { "opacity": 0.8, "thickness": 2, "colorRange": { "name": "Four Inks", "type": "qualitative", "category": "Made up", "colors": ["#1B6CA8", "#D1495B", "#EDAE49", "#00798C"] } },
+            "hidden": false
+          },
+          "visualChannels": { "colorField": { "name": "route", "type": "string" }, "colorScale": "ordinal" }
+        }
+      ],
+      "interactionConfig": { "tooltip": { "fieldsToShow": {}, "enabled": true } },
+      "layerBlending": "normal"
+    },
+    "mapState": { "latitude": 1.35, "longitude": 103.82, "zoom": 10 },
+    "mapStyle": { "styleType": "light" }
+  }
+}

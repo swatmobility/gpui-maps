@@ -1,0 +1,32 @@
+{
+  "version": "v1",
+  "config": {
+    "visState": {
+      "layers": [
+        {
+          "id": "od-arcs",
+          "type": "arc",
+          "config": {
+            "dataId": "od",
+            "label": "Commutes",
+            "color": [146, 38, 198],
+            "columns": { "lat0": "origin_lat", "lng0": "origin_lon", "lat1": "dest_lat", "lng1": "dest_lon" },
+            "isVisible": true,
+            "visConfig": { "opacity": 0.8, "thickness": 2, "colorRange": { "name": "Violet 3", "type": "sequential", "category": "Made up", "colors": ["#E6D3F2", "#A970D6", "#5E1F8F"] }, "sizeRange": [0, 10], "targetColor": [255, 203, 153] }
+          },
+          "visualChannels": { "colorField": null, "colorScale": "quantile", "sizeField": { "name": "trips", "type": "integer" }, "sizeScale": "linear" }
+        },
+        {
+          "id": "od-origins",
+          "type": "point",
+          "config": { "dataId": "od", "label": "Origins", "color": [146, 38, 198], "columns": { "lat": "origin_lat", "lng": "origin_lon" }, "isVisible": false, "visConfig": { "radius": 5, "opacity": 0.5, "filled": true, "outline": false, "thickness": 2, "strokeColor": null } },
+          "visualChannels": {}
+        }
+      ],
+      "interactionConfig": { "tooltip": { "fieldsToShow": {}, "enabled": true } },
+      "layerBlending": "normal"
+    },
+    "mapState": { "latitude": 40.71, "longitude": -74.0, "zoom": 9, "mapViewMode": "MODE_GLOBE" },
+    "mapStyle": { "styleType": "dark-matter" }
+  }
+}

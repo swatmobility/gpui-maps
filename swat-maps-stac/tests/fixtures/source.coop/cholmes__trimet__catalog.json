@@ -1,0 +1,144 @@
+{
+  "type": "Catalog",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://schemas.portolan-sdi.org/portolan/v0.1.0/schema.json"
+  ],
+  "id": "trimet",
+  "title": "TriMet Geospatial Data",
+  "description": "A cloud-native mirror of the eight geospatial datasets TriMet publishes at [developer.trimet.org/gis](https://developer.trimet.org/gis/) \u2014 the transit district boundary, fixed-route alignments, rail lines, stops, route stops, rail stops, transit centers and park and rides for the Portland, Oregon metropolitan area. TriMet distributes these as Shapefile and KML; this catalog republishes them as GeoParquet and PMTiles with the original files, KML and metadata linked from every collection. The GeoParquet keeps TriMet's native EPSG:2913 (NAD83(HARN) / Oregon North, international feet), so lengths and areas are in feet; only the PMTiles are reprojected to WGS84. Visualization styles reproduce TriMet's own published cartography.\n\nEach collection carries an [**AGENTS.md** agent guide](https://source.coop/cholmes/trimet/AGENTS.md) alongside its README \u2014 join keys, the quirks that produce silently wrong answers, and query recipes that have each been run against the published files.",
+  "updated": "2026-08-02T18:02:50Z",
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -123.153536,
+          45.255802,
+          -122.277052,
+          45.657213
+        ]
+      ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "2013-01-09T00:00:00Z",
+          null
+        ]
+      ]
+    }
+  },
+  "providers": [
+    {
+      "name": "TriMet",
+      "description": "Tri-County Metropolitan Transportation District of Oregon, the transit agency for the Portland metropolitan area and the originator of this data.",
+      "roles": [
+        "producer",
+        "licensor"
+      ],
+      "url": "https://developer.trimet.org/gis/",
+      "email": "gis@trimet.org"
+    },
+    {
+      "name": "Chris Holmes",
+      "description": "Maintains this cloud-native mirror. Not affiliated with TriMet.",
+      "roles": [
+        "host"
+      ],
+      "url": "https://github.com/cholmes/portolan-catalog-trimet",
+      "email": "cholmes@9eo.org"
+    }
+  ],
+  "links": [
+    {
+      "rel": "root",
+      "href": "./catalog.json",
+      "type": "application/json",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "describedby",
+      "href": "./README.md",
+      "type": "text/markdown",
+      "title": "Catalog README"
+    },
+    {
+      "rel": "agents",
+      "href": "./AGENTS.md",
+      "type": "text/markdown",
+      "title": "Catalog agent guide"
+    },
+    {
+      "rel": "license",
+      "href": "https://developer.trimet.org/terms_of_use.shtml",
+      "type": "text/html",
+      "title": "TriMet Terms of Use"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://source.coop/cholmes/trimet/",
+      "type": "text/html",
+      "title": "Browse this catalog on Source Cooperative"
+    },
+    {
+      "rel": "via",
+      "href": "https://developer.trimet.org/gis/",
+      "type": "text/html",
+      "title": "TriMet Geospatial Data"
+    },
+    {
+      "rel": "icon",
+      "href": "./_assets/trimet-logo.png",
+      "type": "image/png",
+      "title": "TriMet"
+    },
+    {
+      "rel": "child",
+      "href": "./district-boundary/collection.json",
+      "type": "application/json",
+      "title": "TriMet District Boundary"
+    },
+    {
+      "rel": "child",
+      "href": "./routes/collection.json",
+      "type": "application/json",
+      "title": "TriMet Routes"
+    },
+    {
+      "rel": "child",
+      "href": "./rail-lines/collection.json",
+      "type": "application/json",
+      "title": "TriMet Rail Lines"
+    },
+    {
+      "rel": "child",
+      "href": "./stops/collection.json",
+      "type": "application/json",
+      "title": "TriMet Stops"
+    },
+    {
+      "rel": "child",
+      "href": "./route-stops/collection.json",
+      "type": "application/json",
+      "title": "TriMet Route Stops"
+    },
+    {
+      "rel": "child",
+      "href": "./rail-stops/collection.json",
+      "type": "application/json",
+      "title": "TriMet Rail Stops"
+    },
+    {
+      "rel": "child",
+      "href": "./transit-centers/collection.json",
+      "type": "application/json",
+      "title": "TriMet Transit Centers"
+    },
+    {
+      "rel": "child",
+      "href": "./park-and-rides/collection.json",
+      "type": "application/json",
+      "title": "TriMet Park and Rides"
+    }
+  ]
+}

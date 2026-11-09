@@ -1,0 +1,38 @@
+{
+  "story": 1,
+  "title": "Singapore to Tokyo",
+  "output": { "preset": "1080p30", "pixel_ratio": 1 },
+  "clock": { "start_utc": "2026-03-20T10:00:00Z", "rate": 1.0, "utc_offset_min": 480 },
+  "scene": {
+    "style": "../../../examples/mapbox-streets-style.json",
+    "basemap": { "source": "mapbox" },
+    "raster": null,
+    "globe": true,
+    "atmosphere": true,
+    "stars": false,
+    "labels": true,
+    "overlays": [
+      { "id": "routes", "geojson": "data/routes.geojson", "paint": { "line-color": "#e4572e" }, "above_labels": false }
+    ],
+    "tracks": [
+      { "id": "bus-12", "file": "data/bus12.track.json", "style": { "color": "#1f77b4", "radius_px": 5, "trail_s": 30 } }
+    ],
+    "credits": ["Route data: SWAT Mobility"]
+  },
+  "camera": [
+    { "type": "jump",  "label": "start", "to": { "lon": 103.82, "lat": 1.35, "zoom": 10, "pitch": 0, "bearing": 0 } },
+    { "type": "hold",  "duration": 1.5, "settle": true },
+    { "type": "fly",   "label": "to-tokyo", "to": { "lon": 139.76, "lat": 35.68, "zoom": 11, "pitch": 45, "bearing": -20 }, "speed": 1.2, "curve": 1.42 },
+    { "type": "orbit", "degrees": 90, "duration": 6, "easing": "ease-in-out" },
+    { "type": "ease",  "to": { "zoom": 13, "pitch": 60 }, "duration": 3, "easing": [0.25, 0.1, 0.25, 1] },
+    { "type": "hold",  "duration": 2 }
+  ],
+  "events": [
+    { "at": 0.0,                         "set_layer_visibility": { "layer": "poi-label", "visible": false } },
+    { "at": { "after": "to-tokyo", "offset": 0.5 }, "set_filter": { "layer": "road-primary", "filter": ["==", ["get", "class"], "primary"] } },
+    { "at": 4.0,                         "set_paint_property": { "layer": "water", "name": "fill-color", "value": "#0b3d91" } },
+    { "at": 6.0, "until": 9.0,           "caption": { "text": "Tokyo, 11:00 local", "anchor": "bottom-left", "size_px": 28, "fade_s": 0.4 } },
+    { "at": 2.0, "until": 5.0,           "tween": { "param": "raster_opacity", "from": 0, "to": 1, "easing": "linear" } },
+    { "at": 0.0,                         "set_param": { "param": "dots.epoch_mix", "value": 0 } }
+  ]
+}

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gpui-maps: native GPU maps for Rust and GPUI</title>
+<meta name="description" content="gpui-maps is an open-source vector-map engine for Rust and GPUI: MapLibre styles, PMTiles, a globe, 3D buildings and data overlays, drawn on your GPU. Agents can drive it over a local HTTP port.">
+<meta property="og:title" content="gpui-maps: native GPU maps for Rust and GPUI">
+<meta property="og:description" content="An open-source vector-map engine for Rust. Free under MIT or Apache-2.0.">
+<meta property="og:image" content="https://gpui-maps.swatmobility.com/img/og.jpg">
+<meta property="og:url" content="https://gpui-maps.swatmobility.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#000000">
+<link rel="alternate" hreflang="en" href="https://gpui-maps.swatmobility.com/">
+<link rel="alternate" hreflang="ja" href="https://gpui-maps.swatmobility.com/ja/">
+<link rel="alternate" hreflang="x-default" href="https://gpui-maps.swatmobility.com/">
+<script src="lang.js?v=15"></script>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css?v=16">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="flag-gb" viewBox="0 0 60 30"><clipPath id="flag-gb-t"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path d="M0,0v30h60v-30z" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" clip-path="url(#flag-gb-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></symbol>
+  <symbol id="flag-jp" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#BC002D"/></symbol>
+</svg>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="gpui-maps home">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9.25" fill="none" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="4.2" ry="9.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.5"/></svg>
+      gpui-maps
+    </a>
+    <a class="by" href="https://www.swatmobility.com" aria-label="gpui-maps is by SWAT Mobility"><span>by</span><img src="img/swat@2x.png" width="68" height="14" alt=""></a>
+    <nav aria-label="Sections">
+      <a href="#start">Get started</a>
+      <a href="#try">Try it</a>
+      <a href="#features">Features</a>
+      <a href="#agents">Agents</a>
+      <a href="#platforms">Platforms</a>
+      <a href="#studio">Studio</a>
+      <a href="#support">Support</a>
+    </nav>
+    <a class="nav-gh" href="https://github.com/swatmobility/gpui-maps">GitHub</a>
+    <div class="lang">
+      <button class="lang-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu" aria-label="Language: English">
+        <svg class="flag" aria-hidden="true"><use href="#flag-gb"/></svg>EN
+        <svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <ul class="lang-menu" id="lang-menu" hidden>
+        <li><a href="./" data-lang="en" hreflang="en" lang="en" aria-current="page"><svg class="flag" aria-hidden="true"><use href="#flag-gb"/></svg>English</a></li>
+        <li><a href="ja/" data-lang="ja" hreflang="ja" lang="ja"><svg class="flag" aria-hidden="true"><use href="#flag-jp"/></svg>日本語</a></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="hero-copy">
+    <h1 aria-label="Maps SDK for agents, Rust, desktop apps, gpui-kit, logistics, route planning, fleet management, optimisation, public transport, mobile, offline and private networks"><span aria-hidden="true">Maps SDK for<br><span class="rot" data-words="agents|Rust|desktop apps|gpui-kit|logistics|route planning|fleet management|optimisation|public transport|mobile|offline|private networks">agents</span></span></h1>
+    <p class="hero-sub">gpui-maps is a vector-map engine written in Rust. It draws on your GPU, inside your GPUI window, and the same code runs on iOS and in the browser as WebAssembly. No web view, no JavaScript, no access token.</p>
+    <div class="hero-actions">
+      <button class="install" type="button" data-copy="cargo add gpui-maps" data-copied="Copied" data-failed="Select it" aria-label="Copy the install command: cargo add gpui-maps">
+        <code>cargo add gpui-maps</code>
+        <span class="install-state" aria-live="polite">Copy</span>
+      </button>
+      <a class="btn-light" href="https://github.com/swatmobility/gpui-maps">View the source</a>
+    </div>
+  </div>
+  <div class="player" id="try">
+    <div class="player-bar">
+      <div class="try-tabs" role="tablist" aria-label="Live demos">
+        <button class="try-tab" type="button" role="tab" aria-selected="true" aria-controls="try-stage" data-key="globe" data-cam="108,14,globe,0,0" data-credit="© OpenStreetMap contributors · OpenFreeMap · Sentinel-2 cloudless by EOX · NASA" data-q="demo/?embed&amp;lon=108&amp;lat=14&amp;look=space&amp;look_time=1762462800&amp;imagery=https%3A%2F%2Ftiles.maps.eox.at%2Fwmts%2F1.0.0%2Fs2cloudless_3857%2Fdefault%2Fg%2F%7Bz%7D%2F%7By%7D%2F%7Bx%7D.jpg" data-style="satellite" data-poster="img/play-globe.webp" data-desc="The whole planet, with clouds, night and stars, down to a single street. Drag to spin; pinch, or hold ⌘ or Ctrl and scroll, to zoom.">Globe</button>
+        <button class="try-tab" type="button" role="tab" aria-selected="false" aria-controls="try-stage" data-key="nav" data-route="singapore-bugis-marina-bay" data-credit="© OpenStreetMap contributors · OpenFreeMap" data-q="demo/?embed&amp;nav=sim&amp;route=singapore-bugis-marina-bay&amp;speed=2" data-style="./liberty-style.json" data-poster="img/play-nav.webp" data-desc="A simulated drive through Bugis, Singapore, on Ferrostar's Rust core. Pause it, change the speed, or turn the voice on.">Turn-by-turn</button>
+        <button class="try-tab" type="button" role="tab" aria-selected="false" aria-controls="try-stage" data-key="census" data-credit="© OpenStreetMap contributors · OpenFreeMap · US Census Bureau" data-page="census=us_bg_2023" data-q="demo/?embed&amp;census=us_bg_2023" data-style="./positron-style.json" data-poster="img/play-census.webp" data-desc="Median household income for every US block group (ACS 2023), with a histogram, an income filter and a chart for every state. Point at a block group for its numbers.">US census</button>
+        <button class="try-tab" type="button" role="tab" aria-selected="false" aria-controls="try-stage" data-key="nyc" data-cam="-73.985,40.754,15.6,60,29" data-credit="© OpenStreetMap contributors · OpenFreeMap" data-q="demo/?embed&amp;lon=-73.985&amp;lat=40.754&amp;z=15.6&amp;pitch=60&amp;bearing=29" data-style="./liberty-style.json" data-poster="img/play-nyc.webp" data-desc="Midtown Manhattan's buildings in 3D. Drag to pan; right-drag, Ctrl-drag or two fingers to tilt and turn.">3D Manhattan</button>
+        <button class="try-tab" type="button" role="tab" aria-selected="false" aria-controls="try-stage" data-key="shinjuku" data-cam="139.7005,35.6895,16,60,-25" data-credit="© OpenStreetMap contributors · OpenFreeMap" data-q="demo/?embed&amp;lon=139.7005&amp;lat=35.6895&amp;z=16&amp;pitch=60&amp;bearing=-25" data-style="./open-swat-routes-dark-style.json" data-poster="img/play-shinjuku.webp" data-desc="Shinjuku in 3D on Graphite, our quiet dark style for routes and data.">Shinjuku</button>
+        <button class="try-tab" type="button" role="tab" aria-selected="false" aria-controls="try-stage" data-key="tokyo" data-cam="139.7528,35.6825,14.2,0,0" data-credit="© OpenStreetMap contributors · OpenFreeMap" data-q="demo/?embed&amp;lon=139.7528&amp;lat=35.6825&amp;z=14.2" data-style="./open-streets-style.json" data-poster="img/play-tokyo.webp" data-desc="Central Tokyo, with labels in Japanese and Latin script shaped by the engine.">Japanese labels</button>
+      </div>
+      <div class="styles" role="group" aria-label="Style">
+        <button class="style-chip" type="button" aria-pressed="true" data-style="satellite">Satellite</button>
+        <button class="style-chip" type="button" aria-pressed="false" data-style="./liberty-style.json">Liberty</button>
+        <button class="style-chip" type="button" aria-pressed="false" data-style="./open-streets-style.json">Streets</button>
+        <button class="style-chip" type="button" aria-pressed="false" data-style="./positron-style.json">Positron</button>
+        <button class="style-chip" type="button" aria-pressed="false" data-style="./open-dark-style.json">Dark</button>
+        <button class="style-chip" type="button" aria-pressed="false" data-style="./open-swat-routes-dark-style.json">Graphite</button>
+      </div>
+    </div>
+    <div class="try-stage" id="try-stage" data-boot="demo/?embed&amp;look=space&amp;look_time=1762462800&amp;imagery=https%3A%2F%2Ftiles.maps.eox.at%2Fwmts%2F1.0.0%2Fs2cloudless_3857%2Fdefault%2Fg%2F%7Bz%7D%2F%7By%7D%2F%7Bx%7D.jpg" role="tabpanel" data-frame-title="Live map: gpui-maps running in this page as WebAssembly">
+      <img src="img/play-globe.webp" width="2360" height="1476" alt="A still frame of this demo. Start it to use it live.">
+      <div class="try-start">
+        <button class="btn-light" type="button">Start the live map</button>
+        <span>Runs on your GPU. Loads a 15&nbsp;MB WebAssembly module once.</span>
+      </div>
+      <p class="try-credit">© OpenStreetMap contributors · OpenFreeMap · Sentinel-2 cloudless by EOX · NASA</p>
+    </div>
+    <p class="try-desc" aria-live="polite">The whole planet, with clouds, night and stars, down to a single street. Drag to spin; pinch, or hold ⌘ or Ctrl and scroll, to zoom. <a class="try-open" href="demo/?site&amp;style=./liberty-style.json&amp;lon=108&amp;lat=14&amp;look=space&amp;look_time=1762462800&amp;imagery=https%3A%2F%2Ftiles.maps.eox.at%2Fwmts%2F1.0.0%2Fs2cloudless_3857%2Fdefault%2Fg%2F%7Bz%7D%2F%7By%7D%2F%7Bx%7D.jpg">Open full screen</a></p>
+  </div>
+</section>
+
+<section class="start" id="start">
+  <div class="wrap">
+    <h2>Your first map in three commands.</h2>
+    <p class="lede">Clone the repository and run the first example. It opens a window on Singapore with an open, keyless basemap.</p>
+    <div class="start-grid">
+      <div class="term" role="img" aria-label="Terminal: clone the repository and run the hello_map example">
+        <div class="term-bar"><i></i><i></i><i></i><span>zsh</span></div>
+<pre class="term-body"><span class="p">$</span> git clone https://github.com/swatmobility/gpui-maps
+<span class="p">$</span> cd gpui-maps
+<span class="p">$</span> cargo run --example hello_map
+<span class="dim">   Compiling gpui-maps v0.7.0
+    Finished `dev` profile
+     Running `target/debug/examples/hello_map`</span></pre>
+      </div>
+      <div class="code">
+        <div class="code-bar">src/main.rs</div>
+<pre class="code-body"><span class="k">use</span> gpui_maps::basemaps::{<span class="k">self</span>, Basemap};
+<span class="k">use</span> gpui_maps::map_view::MapView;
+
+<span class="k">let</span> b = basemaps::load(Basemap::Liberty)?;
+<span class="k">let</span> map = cx.new(|_| MapView::new(
+    <span class="n">103.85</span>, <span class="n">1.29</span>, <span class="n">12.0</span>, <span class="n">1024.0</span>, <span class="n">768.0</span>,
+    b.style, b.source, rt.clone(),
+));</pre>
+      </div>
+    </div>
+    <p class="aside">A map is a GPUI view, so you add it to a window like any other element. <a href="https://github.com/swatmobility/gpui-maps/blob/master/docs/public/getting-started.md">Read the getting-started guide</a>.</p>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <h2>Everything a map needs, in one engine.</h2>
+    <p class="lede">The live maps above use a few of these. The rest are in the examples and the docs.</p>
+    <dl class="specs">
+      <div><dt>Tiles</dt><dd>Vector tiles over HTTP, PMTiles, MBTiles and raster tiles. Runs fully offline from a single <code>.pmtiles</code> file, with no account, key or outside service, so it works on private networks with no internet.</dd></div>
+      <div><dt>Data</dt><dd>GeoJSON, CSV, FlatGeobuf, GeoParquet and Cloud-Optimised GeoTIFF, with hover and click picking.</dd></div>
+      <div><dt>Visualisation</dt><dd>Arcs, animated trips, heatmaps, hexagon and grid binning, dot density, clustering.</dd></div>
+      <div><dt>3D</dt><dd>A globe with atmosphere and sky, building extrusion, and glTF models.</dd></div>
+      <div><dt>Navigation</dt><dd>Turn-by-turn route following on <a href="https://github.com/stadiamaps/ferrostar">Ferrostar</a>'s Rust core: manoeuvres, rerouting and a follow camera, drawn by the engine.</dd></div>
+      <div><dt>Capture</dt><dd>Render a camera or a scripted map story to PNG or video, with no window.</dd></div>
+      <div><dt>Big data</dt><dd>Dot-density and H3 hexagon layers that stream their tiles live from ClickHouse, read-only and behind a SQL guard.</dd></div>
+      <div><dt>Dashboards</dt><dd>Charts linked to the map, defined in one JSON file with the SQL inline, for ClickHouse and Postgres (<code>swat-maps-dash</code>).</dd></div>
+      <div><dt>Catalogues</dt><dd>STAC 1.1 catalogues of open geodata, read into map layers with their licences (<code>swat-maps-stac</code>).</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="agents" id="agents">
+  <div class="wrap">
+    <h2>Your coding agent can drive the map.</h2>
+    <p class="lede">An app built on gpui-maps can open a local HTTP port that describes itself. An agent lists the actions, calls them, and reads the map's state back as JSON, so it can move, inspect and test the map without screenshots.</p>
+    <div class="term term-agent" id="agent-term">
+      <div class="term-bar"><i></i><i></i><i></i><span>claude</span></div>
+<pre class="term-body" aria-label="A coding agent session that drives the map"><span class="line"><span class="p">$</span> GPUI_MAP_AGENTIC_PORT=7334 cargo run --example basic_map &amp;</span>
+<span class="line"><span class="p">$</span> claude</span>
+<span class="line"> </span>
+<span class="line"><span class="you">&gt; Fly to Tokyo Station and tilt it so the buildings show.</span></span>
+<span class="line"> </span>
+<span class="line"><span class="dot">●</span> Bash(curl -s localhost:7334/ | jq -c '[.actions[].name]')</span>
+<span class="line dim">  ⎿ ["map.state","map.tiles","map.layers",…,"map.fly_to",…]</span>
+<span class="line"> </span>
+<span class="line"><span class="dot">●</span> Bash(curl -s -X POST localhost:7334/map/fly_to \</span>
+<span class="line">       -d '{"lon":139.7671,"lat":35.6812,"zoom":16,"pitch":60,"ms":1500}')</span>
+<span class="line dim">  ⎿ {"ok":true,"camera":{"lon":139.7671,"lat":35.6812,"zoom":16.0,</span>
+<span class="line dim">     "pitch_degrees":60.0,"bearing_degrees":null},"eased_ms":1500.0}</span>
+<span class="line"> </span>
+<span class="line"><span class="dot">●</span> The map is over Tokyo Station at zoom 16, tilted 60° so the</span>
+<span class="line">  buildings stand up. Read <code>map.state</code> to confirm what it drew.</span></pre>
+    </div>
+    <ul class="points">
+      <li><strong>Self-describing.</strong> <code>GET /</code> returns every action with its method, path and parameters, so the agent never works from a stale list.</li>
+      <li><strong>Local only.</strong> The port binds to 127.0.0.1 and is off unless your app turns it on.</li>
+      <li><strong>Reusable.</strong> The <code>gpui-agentic-http</code> crate gives any GPUI app the same surface, with an MCP server and a skill for Claude Code.</li>
+    </ul>
+    <div class="connect">
+      <h3>Connect Claude Code.</h3>
+      <p class="aside">Start your app with its agentic port open, then pick either way, or both. They also work for any other GPUI app built on <code>gpui-agentic-http</code>.</p>
+      <div class="connect-grid">
+        <div>
+          <div class="term">
+            <div class="term-bar"><i></i><i></i><i></i><span>MCP server</span></div>
+<pre class="term-body"><span class="p">$</span> cargo install gpui-agentic-http
+<span class="p">$</span> claude mcp add gpui-maps -e AGENTIC_HTTP_PORT=7334 \
+    -- agentic_mcp_server</pre>
+          </div>
+          <p class="note">Every action becomes a Claude Code tool. A new action shows up as a tool by itself.</p>
+        </div>
+        <div>
+          <div class="term">
+            <div class="term-bar"><i></i><i></i><i></i><span>Skill</span></div>
+<pre class="term-body"><span class="p">$</span> mkdir -p .claude/skills
+<span class="p">$</span> cp -r gpui-agentic-http/skills/agentic-app \
+    .claude/skills/</pre>
+          </div>
+          <p class="note">Claude Code finds the app's port and calls its actions over HTTP. Nothing to configure.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="platforms" id="platforms">
+  <div class="wrap">
+    <h2>Rust everywhere: desktop, mobile and WebAssembly.</h2>
+    <p class="lede">One engine, written once in Rust with WGSL shaders. It compiles to a native macOS view, an iOS app and a WebAssembly module, and draws the same map on each.</p>
+  </div>
+  <div class="devices">
+    <figure class="dev dev-mac">
+      <div class="dev-frame">
+        <div class="dev-chrome"><i></i><i></i><i></i><span>Your GPUI app</span></div>
+        <img src="img/nyc-dark.webp" width="1600" height="1000" loading="lazy" alt="Midtown Manhattan in 3D, in a dark style, inside a macOS window.">
+      </div>
+      <figcaption><strong>macOS.</strong> A GPUI view on Metal. Add it to any window of your app.</figcaption>
+    </figure>
+    <figure class="dev dev-web">
+      <div class="dev-frame">
+        <div class="dev-chrome dev-chrome-web"><i></i><i></i><i></i><span>gpui-maps.swatmobility.com/demo</span></div>
+        <img src="img/web-demo.webp" width="1400" height="875" loading="lazy" alt="The web demo: central Tokyo drawn in a browser by the WebAssembly build.">
+      </div>
+      <figcaption><strong>Web.</strong> The same Rust compiled to WebAssembly, on WebGPU with a WebGL2 fallback. This is a real browser frame.</figcaption>
+    </figure>
+    <figure class="dev dev-phone">
+      <div class="phone"><img src="img/iphone-transit.webp" width="590" height="1279" loading="lazy" alt="An iPhone showing the Megurin bus network of Taito City, Tokyo, on a dark map with a legend and a time slider."></div>
+      <figcaption><strong>iOS.</strong> Rust on Metal in a UIKit shell, with a Swift embedding for SwiftUI apps. Shown: SWAT Studio on iPhone, replaying a Tokyo bus timetable.</figcaption>
+    </figure>
+  </div>
+  <div class="wrap">
+    <p class="demo-row"><a class="btn-dark" href="demo/?site">Open the live web demo</a> <span class="note">Loads a 15&nbsp;MB WebAssembly module. Works best in a browser with WebGPU.</span></p>
+    <div class="studio-dl" id="studio">
+      <h3>SWAT Studio: every example in one app</h3>
+      <p class="studio-desc">A free Mac app that opens the engine's demos side by side: styles, the globe, 3D buildings and vehicles, 25 transit networks on the clock, data visualisation, ClickHouse dashboards, PMTiles and GeoParquet. Built from the examples in the repository.</p>
+      <p class="demo-row"><a class="btn-dark" href="https://github.com/swatmobility/gpui-maps/releases/latest/download/SWAT-Studio-macOS.dmg">Download for Mac</a> <a class="btn-line" href="https://github.com/swatmobility/gpui-maps/releases">All releases</a> <span class="note">Free. Signed and notarised. macOS 13 or later, Apple silicon and Intel.</span></p>
+    </div>
+    <div class="crates">
+      <h3>Also in the repository</h3>
+      <ul>
+        <li><code>swat-maps-doc</code> A map document format: datasets, layers, filters, scales and tooltips, with undo and redo.</li>
+        <li><code>swat-maps-dash</code> A dashboard format and a guarded SQL template compiler.</li>
+        <li><code>swat-maps-stac</code> A reader for STAC catalogues of open geodata.</li>
+      </ul>
+      <p class="note">Plain Rust with no GPUI dependency. They build for WebAssembly.</p>
+    </div>
+  </div>
+</section>
+
+<section class="support" id="support">
+  <div class="wrap">
+    <h2>Free for everyone. Supported for teams.</h2>
+    <div class="plans">
+      <div class="plan">
+        <h3>Open source</h3>
+        <p class="price">Free</p>
+        <ul>
+          <li>MIT or Apache-2.0, your choice</li>
+          <li>Commercial use included, no sign-up</li>
+          <li>Questions and bugs in GitHub issues</li>
+        </ul>
+        <a class="btn-line" href="https://github.com/swatmobility/gpui-maps">Get the source</a>
+      </div>
+      <div class="plan plan-main">
+        <h3>Commercial support</h3>
+        <p class="price">Talk to us</p>
+        <ul>
+          <li>Agreed response times and a private channel</li>
+          <li>Long-term support releases</li>
+          <li>Features built to your schedule</li>
+          <li>A commercial agreement for procurement</li>
+        </ul>
+        <a class="btn-dark" href="https://www.swatmobility.com/contact-us">Contact SWAT</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>gpui-maps is made by <a href="https://www.swatmobility.com/">SWAT Mobility</a>. Licensed under MIT or Apache-2.0. SWAT and the SWAT logo are trademarks of SWAT Mobility Pte. Ltd.; see <a href="https://github.com/swatmobility/gpui-maps/blob/master/TRADEMARK.md">the trademark policy</a>.</p>
+    <p>Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, served by <a href="https://openfreemap.org">OpenFreeMap</a> with the <a href="https://openmaptiles.org">OpenMapTiles</a> schema. Globe imagery: Sentinel-2 cloudless 2016 by EOX IT Services GmbH, CC BY 4.0, contains modified Copernicus Sentinel data 2016. Clouds: NASA Goddard Space Flight Center, Reto Stöckli. Stars: NASA/Goddard SVS; Gaia DR2: ESA/Gaia/DPAC. Megurin bus feed: Taito City Office, CC BY 4.0, via the ODPT catalogue.</p>
+    <ul class="foot-links">
+      <li><a href="https://github.com/swatmobility/gpui-maps">Source</a></li>
+      <li><a href="https://github.com/swatmobility/gpui-maps/blob/master/SUPPORT.md">Support</a></li>
+      <li><a href="https://github.com/swatmobility/gpui-maps/blob/master/SECURITY.md">Report a security issue</a></li>
+      <li>© 2026 SWAT Mobility Pte. Ltd.</li>
+    </ul>
+  </div>
+</footer>
+
+<script src="site.js?v=15" defer></script>
+</body>
+</html>

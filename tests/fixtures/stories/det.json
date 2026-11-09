@@ -1,0 +1,7 @@
+{"story":1,"output":{"width":480,"height":270,"fps":10},
+ "scene":{"style":"../../../examples/liberty-style.json","basemap":{"source":"fixture"},"labels":true},
+ "camera":[{"type":"jump","to":{"lon":103.851,"lat":1.2905,"zoom":14.2}},
+           {"type":"fly","label":"fly","to":{"lon":103.856,"lat":1.2850,"zoom":15,"pitch":40},"duration":1.0},
+           {"type":"orbit","degrees":30,"duration":1.0}],
+ "events":[{"at":0.5,"set_layer_visibility":{"layer":"water","visible":false}},
+           {"at":0.2,"until":1.8,"caption":{"text":"Marina Bay","anchor":"bottom-left"}}]}

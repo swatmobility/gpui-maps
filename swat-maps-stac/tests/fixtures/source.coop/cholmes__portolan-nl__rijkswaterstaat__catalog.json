@@ -1,0 +1,89 @@
+{
+  "type": "Catalog",
+  "id": "rijkswaterstaat",
+  "stac_version": "1.1.0",
+  "title": "Rijkswaterstaat",
+  "description": "Open geodatasets from Rijkswaterstaat, the Dutch Directorate-General for Public Works and Water Management. Rijkswaterstaat manages the main road and waterway networks and the water systems in the Netherlands.",
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Portolan NL — Cloud-Native Dutch Geodata"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "icon",
+      "href": "./logo.png",
+      "type": "image/png",
+      "title": "Rijkswaterstaat logo"
+    },
+    {
+      "rel": "describedby",
+      "href": "./README.md",
+      "type": "text/markdown",
+      "title": "Rijkswaterstaat documentation"
+    },
+    {
+      "rel": "child",
+      "href": "./bergingsgebieden/collection.json",
+      "type": "application/json",
+      "title": "Flood Retention Areas"
+    },
+    {
+      "rel": "child",
+      "href": "./fme_disk_tunnels/collection.json",
+      "type": "application/json",
+      "title": "Rijkswaterstaat Tunnels"
+    },
+    {
+      "rel": "child",
+      "href": "./hectometervakken_vaargeul/collection.json",
+      "type": "application/json",
+      "title": "Water Depth Charts — Rhine Branches"
+    },
+    {
+      "rel": "child",
+      "href": "./rijksviswegen_2024/collection.json",
+      "type": "application/json",
+      "title": "Fish Migration Routes (2024)"
+    },
+    {
+      "rel": "child",
+      "href": "./sluizen/collection.json",
+      "type": "application/json",
+      "title": "Navigation Locks"
+    },
+    {
+      "rel": "child",
+      "href": "./waterkeringen/collection.json",
+      "type": "application/json",
+      "title": "Primary Flood Defenses"
+    },
+    {
+      "rel": "child",
+      "href": "./zero_emissiezones/collection.json",
+      "type": "application/json",
+      "title": "Zero Emission Zones"
+    },
+    {
+      "rel": "agents",
+      "href": "./AGENTS.md",
+      "type": "text/markdown"
+    },
+    {
+      "rel": "child",
+      "href": "./nwb_wegen/collection.json",
+      "type": "application/json",
+      "title": "National Road Network (NWB Wegen)"
+    }
+  ],
+  "stac_extensions": [
+    "https://schemas.portolan-sdi.org/portolan/v0.1.0/schema.json"
+  ],
+  "updated": "2026-07-31T23:32:32Z"
+}

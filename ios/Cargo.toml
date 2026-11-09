@@ -1,0 +1,284 @@
+# The iOS spike's own package, deliberately OUTSIDE the `gpui-maps`
+# package -- exactly as `web/Cargo.toml` is in the wasm spike, and for the
+# same reason. `gpui-maps` links gpui, tokio's multi-threaded runtime,
+# reqwest, pmtiles' mmap and the objc2/AppKit stack; none of those belong on
+# iOS, and a `path` dependency would drag every one of them in even behind a
+# feature. So this crate reaches the engine by SOURCE instead -- `#[path]`
+# module includes in `src/lib.rs`, pointing at `../../src/`. Nothing in the
+# shipped crate changes: `git diff master -- src/` is 0 bytes.
+#
+# `[workspace]` is present and empty so cargo treats this directory as its
+# own workspace root rather than trying to attach it to the package above.
+[workspace]
+
+[package]
+name = "swat-maps-ios"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "gpui_maps_ios"
+path = "src/lib.rs"
+# No host unit tests (gated 2026-10-25, combo27). The lib compiles the
+# engine's own src/ files by `#[path]`, so `cargo test` here also compiles
+# THEIR test modules, which reach modules this shell leaves out
+# (crate::census, story::test_util, basemaps, trackpad_pinch, naga,
+# tempfile, the pmtiles writer): ~100 errors, and the lib never built in
+# test mode. The engine's tests run in the root crate; this shell's own
+# unit tests (cog_http, net, pmtiles_http, app_vector_overlay, app) are
+# therefore NOT run on the host either -- owed: move them to a test target
+# that does not re-compile src/'s test modules. `scripts/clippy.sh --ios`
+# still lints the lib.
+test = false
+doctest = false
+
+# The bundle's `CFBundleExecutable`. winit's iOS backend calls
+# `UIApplicationMain` from `run_app`, so a plain Rust binary IS the app --
+# there is no Swift host, no Xcode project and no storyboard.
+[[bin]]
+name = "gpui-map-demo"
+path = "src/main.rs"
+required-features = ["winit-shell"]
+
+# Declared (and left off) only so the engine's own `#[cfg(feature =
+# "probe")]` blocks in `render/alloc.rs` are a known name rather than sixty
+# lines of `unexpected cfg` warnings.
+[features]
+# The standalone demo app's shell: winit's event loop, window and touches
+# (`app::winit_shell`, and the `gpui-map-demo` binary). On by default so
+# `run.sh`, `run-device.sh` and `check-ios.sh` are unchanged. An embedding
+# host (`../embed-ios`) depends on this crate with `default-features = false`
+# and drives `app::host::Host` from its own UIKit view, linking no winit.
+default = ["winit-shell", "speech", "cog_ureq", "orbits"]
+winit-shell = ["dep:winit", "dep:raw-window-handle"]
+# Turn-by-turn voice (`src/speech.rs`): links AVFAudio. Off for the embed.
+speech = ["dep:objc2-avf-audio"]
+probe = []
+# Declared and left off: `overlay::cluster`'s H3 roll-up (`src/overlay/`,
+# included whole for `overlay::host`) is behind it, and a known-but-off
+# name keeps `-D warnings` quiet about its `cfg`s. The H3 crate is not here.
+h3 = []
+# Declared and left off, the same known-name reason: `overlay::dotgrid::clickhouse`
+# (the demo's live ClickHouse source) is behind it and never built here.
+clickhouse-demo = []
+# `src/orbit` (CelesTrak OMM parsing, the catalogue, SGP4 propagation) by
+# `#[path]`, on the pure-Rust `sgp4`: the Studio app's "Satellites: live
+# orbits" card. On by default; the embed and studio-mobile turn it on too.
+orbits = ["dep:sgp4"]
+# Declared and left off, the same known-name reason: `overlay::geoparquet`
+# (and the `parquet` reader under it) is not built for the phone yet.
+geoparquet = []
+# Declared, and deliberately left OFF (not in `default` above):
+# this crate's `sprite.rs` include
+# (`ios/src/lib.rs`, for `glyph_atlas`/`icon_pipeline`/`symbol_pass`) must
+# NOT compile `fetch_sprite_atlas`/`fetch_bytes`, which name `reqwest` --
+# a dependency this crate does not carry (see `net.rs`). See the parent
+# `Cargo.toml`'s own comment on this feature for why it is a feature and
+# not a `cfg(target_os = "ios")`: this crate is also built with a plain
+# `cargo build --manifest-path ios/Cargo.toml` (no `--target`) as a fast
+# host-side sanity check, and `target_os` there reads `"macos"`.
+sprite_http_fetch = []
+# `tile_source::cog` (the desktop's COG reader, by `#[path]`) on this crate's
+# `ureq` (`src/tile_source/cog/fetch_ureq.rs`), and the fetcher's `cog+`
+# tiles (`src/cog_http.rs`). On by default; the embed turns it on too.
+cog_ureq = []
+
+[lints.clippy]
+# The few clippy defaults that are wrong for this code, set once here and
+# repeated verbatim in `web/Cargo.toml` and `ios/Cargo.toml`, which compile
+# the same `src/` files by `#[path]`. Everything else is enforced at
+# `-D warnings` by `scripts/clippy.sh` (and the pre-commit hook).
+#
+# `!(a < b)` is how this code says "fail on NaN as well": it is the test a
+# NaN cannot pass, and `a >= b` (or a `partial_cmp` match) would silently
+# let one through.
+neg_cmp_op_on_partial_ord = "allow"
+# Renderer plumbing threads a device, a pass, the camera and per-frame
+# state through one call; bundling them into one-use structs hides what a
+# draw reads. 45 item-level allows said so before this line did.
+too_many_arguments = "allow"
+# Inline tuple and closure types in tests and one-off plumbing read better
+# where they are used than behind an alias defined somewhere else.
+type_complexity = "allow"
+
+[dependencies]
+# --- the engine's own dependency set, at the versions the parent
+# `Cargo.toml` pins, so what compiles here is what the shipped crate
+# compiles rather than a lookalike. -------------------------------------
+anyhow = "1"
+base64 = "0.22"
+bytemuck = { version = "1.25", features = ["derive"] }
+geo-types = "0.7"
+# `style_spec::lut` decodes the style's `color-theme` LUT, which arrives as
+# a base64 PNG. Only the `png` decoder is on that path.
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp"] }
+# `tile_source::cog`'s LZW tiles (`cog/decode.rs`); the parent's version.
+weezl = "0.1.12"
+glam = { version = "0.33", features = ["bytemuck", "f64"] }
+# `font_fallback.rs` is new in the `#[path]` closure -- `style.rs` and
+# `style_spec/mod.rs` both name `crate::font_fallback::{FontStack,
+# default_font_stack}` for a symbol layer's `text-font`, so the module has to
+# EXIST here even though this spike draws no text. A `#[path]` include is a
+# source include and carries no transitive dependencies, so its three deps
+# have to be named here, exactly as `smallvec` was (see `ONTO-MASTER.md`, "The
+# one break").
+#
+# `glyphon` is the expensive one and it is unavoidable: `new_font_system`,
+# `MapLabelFallback` and `ResolvedFace::attrs` are in the same FILE as the two
+# items the closure needs, and a file is the smallest unit a `#[path]` include
+# can take. It costs nothing at the wgpu level -- glyphon depends on
+# `wgpu = { default-features = false, features = ["wgsl"] }`, so the Metal-only
+# choice above still holds and no other backend is pulled in.
+glyphon = "0.12"
+lyon = "1.0"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# SGP4/SDP4 for `src/orbit` (behind `orbits`), the parent's pin. Pure Rust,
+# MIT/Apache-2.0.
+sgp4 = { version = "2.4", optional = true, default-features = false, features = ["alloc", "std"] }
+# `style.rs` -- in the `#[path]` closure -- stores `ZoomValue::stops` in a
+# `SmallVec`. A `#[path]` include brings NO transitive dependencies with it,
+# so the engine having this in the parent manifest does nothing here; the
+# crate must name it itself. `"1"`, not `"1.16"`, deliberately: the engine's
+# floor was relaxed to `1` for a consumer whose graph carried a `<1.16`
+# ceiling, and pinning tighter here would put that hazard back.
+smallvec = "1"
+# `overlay::host` keeps each tiled overlay source's GPU tiles in the
+# engine's `tile_source::TileCache` (`src/tile_source/cache.rs`, included by
+# `#[path]`), which is an `lru::LruCache` underneath. Same version as the
+# parent manifest.
+lru = "0.12"
+# `overlay::dotgrid::codec`: gzip for count tiles. This crate now includes
+# the WHOLE `src/overlay/mod.rs` verbatim through `overlay::host` (see
+# above), so `dotgrid` comes along with it and needs its own copy of this
+# dependency -- a `#[path]` include carries none. Default features, same
+# reason as the parent manifest: the pure-Rust `miniz_oxide` backend, since
+# this crate links no C toolchain for its target either.
+flate2 = "1"
+# `font_fallback`'s other two, at the versions the parent manifest pins. The
+# `unicode-script` version has to keep matching cosmic-text's, or the
+# `Fallback` trait signature `MapLabelFallback` implements stops lining up.
+unicode-script = "0.5.8"
+sys-locale = "0.3"
+# `story::panel::fit_text` (included by `#[path]` above) falls back to
+# grapheme-cluster boundaries when truncating text with no word breaks, so
+# an emoji with a ZWJ or a combining mark is never split mid-cluster. Same
+# version as the parent manifest.
+unicode-segmentation = "1.13.3"
+# Turn-by-turn navigation's route model, snapping, step advance, deviation
+# detection and location simulation (`src/nav/`). BSD-3. Pinned EXACTLY:
+# Ferrostar releases weekly before 1.0, and `src/nav/route_source.rs` is the
+# one place its OSRM adapter is touched. `default-features = false` drops
+# `uniffi` (the Swift/Kotlin bindings); `std` is all the Rust core needs.
+ferrostar = { version = "=0.57.0", default-features = false, features = ["std"] }
+# The ETA is read in local time, and std cannot say what that is: `nav`
+# takes the offset as `format::WallClock::utc_offset_min`, and the phone
+# reads it from `chrono::Local`. chrono is already in the graph (Ferrostar's).
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+# Metal only. The `webgpu`/`webgl`/`dx12`/`vulkan` backends are dead weight
+# in an iOS bundle, and `wgsl` is required -- `shader.wgsl` is the engine's.
+wgpu = { version = "=30.0.0", default-features = false, features = ["metal", "wgsl"] }
+# `request_adapter`/`request_device` are futures even on a backend that
+# resolves them synchronously. `pollster` is the parent crate's answer too.
+pollster = "1.0"
+# PMTiles archives over HTTP range requests (`src/pmtiles_http.rs`): the
+# desktop's reader (`tile_source::pmtiles`), its async core only -- no
+# reqwest, no mmap; the fetcher's workers run it with `pollster`.
+pmtiles = { version = "0.23", default-features = false, features = ["__async"] }
+bytes = "1"
+
+# --- the iOS shell ------------------------------------------------------
+# winit gives the UIKit app lifecycle, a UIView the Metal layer attaches to,
+# and touch events, without hand-writing the FFI. Its iOS backend is a real
+# one: `EventLoop::run_app` IS `UIApplicationMain`.
+winit = { version = "0.30", optional = true }
+raw-window-handle = { version = "0.6", optional = true }
+
+# Exactly one thing in this shell needs hand-written QuartzCore FFI: the
+# `CADisplayLink` in `display_link.rs`, which is the only way left to tell
+# Core Animation this process wants more than 60 Hz. Nothing else here talks
+# to Objective-C -- winit covers the window, the view and the touches, and
+# wgpu covers the Metal layer.
+#
+# These are the same crates at the same versions winit and wgpu-hal already
+# pull in, so this adds no new compilation units to the graph -- only feature
+# flags on crates that were being built regardless. `default-features =
+# false` keeps that true: the framework crates' defaults switch on dozens of
+# unrelated classes.
+objc2 = "0.6"
+objc2-foundation = { version = "0.3", default-features = false, features = [
+    "std",
+    "NSRunLoop",
+    "NSString",
+    "NSObjCRuntime",
+    # `app::bundle_env`: the home-screen drive's `LSEnvironment`.
+    "NSBundle",
+    "NSDictionary",
+] }
+objc2-quartz-core = { version = "0.3", default-features = false, features = [
+    "std",
+    "CADisplayLink",
+    "CAFrameRateRange",
+] }
+# `src/speech.rs`, the turn-by-turn speaker shared with native macOS:
+# `AVSpeechSynthesizer`, and the `.playback` + `.duckOthers` session that
+# dips music under a prompt. Same 0.3 line as the two crates above.
+#
+# `system_fonts.rs`: the phone's own fonts per script, found through
+# CoreText descriptors (family name -> the face's file URL). Same 0.3 line.
+objc2-core-text = { version = "0.3.2", default-features = false, features = ["std", "CTFontDescriptor"] }
+objc2-core-foundation = { version = "0.3.2", default-features = false, features = [
+    "std",
+    "CFString",
+    "CFDictionary",
+    "CFURL",
+    "CFCGTypes",
+] }
+objc2-avf-audio = { version = "0.3.2", optional = true, default-features = false, features = [
+    "std",
+    "AVSpeechSynthesis",
+    "AVAudioSession",
+    "AVAudioSessionTypes",
+] }
+
+# HTTP for tiles. `ureq` rather than `reqwest` + tokio: tile fetching here is
+# eight blocking GETs on a worker pool, and a multi-threaded async runtime
+# buys nothing for that. `default-features = false` + `rustls` drops ureq's
+# `platform-verifier` (which links the Security framework through a second
+# objc stack) in favour of the bundled webpki roots, and drops gzip -- MVT
+# tiles are already gzip-compressed at the payload level and OpenFreeMap
+# serves them with `content-encoding: gzip` only when asked.
+ureq = { version = "3", default-features = false, features = ["rustls", "gzip"] }
+
+# One profile, not two. An iOS target tree is large and disk is the binding
+# constraint here, so `cargo build` (the dev profile) is the ONLY build this
+# spike does -- but a debug-profile tessellator is ~10x too slow to pan, so
+# the dev profile is optimised and stripped of debug info instead.
+[dev-dependencies]
+# Kept ONLY so `agrees_with_mvt_reader_coordinate_for_coordinate` can hold
+# this crate's own decoder against the one it replaced. `src/mvt.rs` parses
+# MVT itself now: `mvt-reader` sizes every ring for the WHOLE feature, which
+# is a peak of `parts x varints` and reaches 3.36 GB on a single z12 tile --
+# survivable on 64-bit, fatal in a browser's 4 GiB of address space. See
+# `mvt::decode`.
+mvt-reader = "2.4"
+# Needed for exactly one thing: several of the vendored engine files
+# (`mvt.rs`, `style.rs`, `style_spec/*.rs`, `render/mesh.rs`) build a fixture
+# MVT tile in their own `#[cfg(test)]` blocks using this ENCODER crate --
+# unrelated to `mvt-reader` above, which DECODES tiles and is now a
+# dev-dependency too. The parent crate carries it the same way, in its own
+# `[dev-dependencies]` (see `../Cargo.toml`): `cargo test` recompiles the
+# WHOLE crate with `cfg(test)` active, including every vendored module this
+# crate pulls in by `#[path]`, so without this the ios crate could not run
+# `cargo test` at all, on any test, vendored or its own.
+mvt = "0.15"
+
+[profile.dev]
+opt-level = 2
+debug = false
+incremental = true
+
+[profile.dev.package."*"]
+opt-level = 2
+debug = false

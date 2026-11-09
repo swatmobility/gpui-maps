@@ -1,0 +1,23 @@
+{
+  "story": 1,
+  "title": "Tokyo to Singapore",
+  "output": { "preset": "1080p30" },
+  "clock": { "start_utc": "2026-03-20T03:00:00Z", "rate": 1.0, "utc_offset_min": 480 },
+  "scene": {
+    "style": "../../../examples/mapbox-streets-style.json",
+    "basemap": { "source": "mapbox" },
+    "globe": true, "atmosphere": true, "stars": false, "labels": true,
+    "credits": []
+  },
+  "camera": [
+    { "type": "jump", "label": "tokyo", "to": { "lon": 139.767, "lat": 35.681, "zoom": 9.5, "pitch": 0, "bearing": 0 } },
+    { "type": "hold", "duration": 0.8, "settle": true },
+    { "type": "fly", "label": "cross", "to": { "lon": 103.8519, "lat": 1.2903, "zoom": 12.5, "pitch": 30, "bearing": 0 }, "duration": 5.2, "curve": 1.42 },
+    { "type": "ease", "label": "descend", "to": { "zoom": 16.8, "pitch": 55, "bearing": -25 }, "duration": 3.0, "easing": "ease-in-out" },
+    { "type": "hold", "duration": 1.0, "settle": true }
+  ],
+  "events": [
+    { "at": 0.0, "until": 1.6, "caption": { "text": "Tokyo", "anchor": "bottom-left", "size_px": 34, "fade_s": 0.4, "offset_px": [0, -60] } },
+    { "at": { "after": "cross", "offset": 0.2 }, "until": 10.0, "caption": { "text": "Singapore · Marina Bay", "anchor": "bottom-left", "size_px": 34, "fade_s": 0.4, "offset_px": [0, -60] } }
+  ]
+}

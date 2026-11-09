@@ -1,0 +1,75 @@
+# The embeddable iOS engine: gpui-maps for a native SwiftUI app, through
+# uniffi. A thin FFI layer over `swat-maps-ios`'s `app::host::Host` -- the
+# same `MapApp` the standalone demo (`../ios`) runs, minus winit: the app
+# owns the view, the `CAMetalLayer`, the `CADisplayLink` and the touches,
+# and hands each to `MapEngine`.
+#
+# Consumed as a LIBRARY CRATE by the app's own Rust core, which links one
+# staticlib (two Rust staticlibs in one app collide on std's symbols):
+#
+#     gpui-maps-embed = { git = "...gpui-map", rev = "<rev>" }
+#
+# This crate calls `uniffi::setup_scaffolding!()` itself (uniffi's rule for
+# every crate that exports), so the app's library-mode bindgen writes a
+# `gpui_maps_embed.swift` + `gpui_maps_embedFFI.h` beside its own. See
+# `swift/README.md` for the Swift side.
+#
+# Its own workspace, for the reason `../ios/Cargo.toml` gives: an iOS
+# dependency set that must never reach the shipped crate's lockfile. The
+# `bindgen` member is a host-side `uniffi-bindgen` for checking the Swift
+# bindings here; it never builds for iOS.
+[workspace]
+members = ["bindgen"]
+
+[package]
+name = "gpui-maps-embed"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+publish = false
+
+[lib]
+name = "gpui_maps_embed"
+crate-type = ["lib"]
+
+[dependencies]
+# The engine shell, without its winit shell: no event loop, no window.
+# `speech`: turn-by-turn voice (`src/speech.rs`, AVSpeechSynthesizer).
+# `orbits`: the space scene's satellites (`src/space.rs`).
+swat-maps-ios = { path = "../ios", default-features = false, features = ["cog_ureq", "speech", "orbits"] }
+uniffi = "=0.31.2"
+anyhow = "1"
+serde_json = "1"
+
+[target.'cfg(target_vendor = "apple")'.dev-dependencies]
+# A real, offscreen `CAMetalLayer` for the tests that attach a surface (the
+# pixel-ratio regression), as an app's `MetalMapView` does.
+objc2 = "0.6"
+objc2-quartz-core = { version = "0.3", default-features = false, features = ["std", "CALayer", "CAMetalLayer", "objc2-metal"] }
+
+[lints.clippy]
+# Repeated from `../ios/Cargo.toml` (and the root), which this crate compiles
+# by dependency; the reasons are given there.
+neg_cmp_op_on_partial_ord = "allow"
+too_many_arguments = "allow"
+type_complexity = "allow"
+
+# Debug builds stay fast enough to pan (see `../ios/Cargo.toml`'s profile).
+[profile.dev]
+opt-level = 2
+debug = false
+incremental = true
+
+[profile.dev.package."*"]
+opt-level = 2
+debug = false
+
+# Profiles apply only when this workspace is built on its own (tests); as a
+# dependency, the app core's profile governs -- it wants opt-level >= 2 for
+# this crate (a debug tessellator is ~10x too slow to pan).
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "unwind"

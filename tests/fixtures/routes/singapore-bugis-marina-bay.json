@@ -1,0 +1,1042 @@
+{
+  "code": "Ok",
+  "routes": [
+    {
+      "geometry": "kfknA{pzaeEdErDnApAjEpDjZ~Tt@h@hb@z]tDvCtC~BZTzd@b]bAr@bBoBtH{IzEoG~CgE~F{H`JyKpCgDxAyBxHgLzS}X|CqEvJ_NzB{CfBkCdCqBAsACWSmBaA{B_ZmSsLcJaHwGaN}LgCoCyNyN{HaIeDeDcDeD_X_X_PaQ}OoPcB_BcPkO_DgDnEsDfC_AxGoCfVqMlc@}SzPsFn^qKvM}DxNaCfLeBtDIjCDtKt@pHJvOiAh[eLjDuAfBFbBa@dBaA|FiGtB}BvBmAnDkAfImBnViKxS}H|g@q[dXuMbYsJtXsF~CGlOhAvc@|Gh\\xJl^vKx\\fHpX|Cz\\vB~St@j]~@d]jB~\\pBliAn@nYPrj@n@lp@~Bha@rBrV~C~Y`FjZvGnRbElKjCbRlGzBxDf@bA`@z@ThA@`ACp@I`@cNvVqK`SkBdAe@Vk@\\_@J[B[GmAm@iAw@mCiBk@q@Sc@Am@Bw@Tk@tMeQbBu@dAKp@Rv@RdAf@z@d@dF}I`@mATkABk@G}Ds@SwNmE}KxD]HaDz@{@Jw@AuA}@w@U}DmC{EeDyAc@iD_@kXkB",
+      "legs": [
+        {
+          "steps": [
+            {
+              "geometry": "kfknA{pzaeEdErDnApAjEpDjZ~Tt@h@hb@z]tDvCtC~BZTzd@b]bAr@",
+              "maneuver": {
+                "bearing_after": 222,
+                "bearing_before": 0,
+                "location": [
+                  103.855902,
+                  1.300598
+                ],
+                "type": "depart"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "Victoria Street",
+              "intersections": [
+                {
+                  "out": 0,
+                  "entry": [
+                    true
+                  ],
+                  "bearings": [
+                    222
+                  ],
+                  "location": [
+                    103.855902,
+                    1.300598
+                  ]
+                },
+                {
+                  "lanes": [
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "straight",
+                        "right"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "right"
+                      ]
+                    }
+                  ],
+                  "out": 1,
+                  "in": 0,
+                  "entry": [
+                    false,
+                    true
+                  ],
+                  "bearings": [
+                    45,
+                    225
+                  ],
+                  "location": [
+                    103.855771,
+                    1.300459
+                  ]
+                }
+              ],
+              "weight": 49,
+              "duration": 49,
+              "distance": 303.1
+            },
+            {
+              "geometry": "ucgnAwcwaeEbBoBtH{IzEoG~CgE~F{H`JyKpCgDxAyBxHgLzS}X|CqEvJ_NzB{CfBkCdCqB",
+              "maneuver": {
+                "bearing_after": 129,
+                "bearing_before": 217,
+                "location": [
+                  103.854156,
+                  1.298507
+                ],
+                "modifier": "left",
+                "type": "turn"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "Middle Road",
+              "intersections": [
+                {
+                  "lanes": [
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight",
+                        "left"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "right"
+                      ]
+                    }
+                  ],
+                  "out": 1,
+                  "in": 0,
+                  "entry": [
+                    false,
+                    true,
+                    true,
+                    false
+                  ],
+                  "bearings": [
+                    45,
+                    135,
+                    225,
+                    315
+                  ],
+                  "location": [
+                    103.854156,
+                    1.298507
+                  ]
+                },
+                {
+                  "lanes": [
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight",
+                        "right"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "right"
+                      ]
+                    }
+                  ],
+                  "out": 1,
+                  "in": 3,
+                  "entry": [
+                    false,
+                    true,
+                    true,
+                    false
+                  ],
+                  "bearings": [
+                    30,
+                    120,
+                    210,
+                    315
+                  ],
+                  "location": [
+                    103.855069,
+                    1.297734
+                  ]
+                }
+              ],
+              "weight": 52.2,
+              "duration": 52.2,
+              "distance": 309.2
+            },
+            {
+              "geometry": "{ucnAej{aeEAsACWSmBaA{B_ZmSsLcJaHwGaN}LgCoCyNyN{HaIeDeDcDeD_X_X_PaQ}OoPcB_BcPkO_DgD",
+              "maneuver": {
+                "bearing_after": 74,
+                "bearing_before": 130,
+                "location": [
+                  103.856307,
+                  1.29675
+                ],
+                "modifier": "left",
+                "type": "turn"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "Beach Road",
+              "intersections": [
+                {
+                  "out": 0,
+                  "in": 2,
+                  "entry": [
+                    true,
+                    true,
+                    false
+                  ],
+                  "bearings": [
+                    75,
+                    165,
+                    315
+                  ],
+                  "location": [
+                    103.856307,
+                    1.29675
+                  ]
+                },
+                {
+                  "out": 0,
+                  "in": 2,
+                  "entry": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "bearings": [
+                    30,
+                    225,
+                    255
+                  ],
+                  "location": [
+                    103.856478,
+                    1.296796
+                  ]
+                },
+                {
+                  "out": 0,
+                  "in": 1,
+                  "entry": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "bearings": [
+                    45,
+                    225,
+                    315
+                  ],
+                  "location": [
+                    103.856983,
+                    1.297446
+                  ]
+                },
+                {
+                  "lanes": [
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight",
+                        "left"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "none"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "none"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "none"
+                      ]
+                    }
+                  ],
+                  "out": 0,
+                  "in": 1,
+                  "entry": [
+                    true,
+                    false,
+                    true
+                  ],
+                  "bearings": [
+                    45,
+                    225,
+                    315
+                  ],
+                  "location": [
+                    103.857346,
+                    1.297832
+                  ]
+                },
+                {
+                  "lanes": [
+                    {
+                      "valid": false,
+                      "indications": [
+                        "left"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight"
+                      ]
+                    }
+                  ],
+                  "out": 0,
+                  "in": 2,
+                  "entry": [
+                    true,
+                    false,
+                    false,
+                    true
+                  ],
+                  "bearings": [
+                    45,
+                    135,
+                    225,
+                    315
+                  ],
+                  "location": [
+                    103.857915,
+                    1.298394
+                  ]
+                }
+              ],
+              "weight": 87.6,
+              "duration": 87.6,
+              "distance": 485.6
+            },
+            {
+              "geometry": "}uinAaiabeEnEsDfC_AxGoCfVqMlc@}SzPsFn^qKvM}DxNaCfLeBtDIjCDtKt@pHJvOiAh[eLjDuA",
+              "maneuver": {
+                "bearing_after": 137,
+                "bearing_before": 43,
+                "location": [
+                  103.859361,
+                  1.299823
+                ],
+                "modifier": "right",
+                "type": "turn"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "Ophir Road",
+              "intersections": [
+                {
+                  "lanes": [
+                    {
+                      "valid": false,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight",
+                        "right"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "right"
+                      ]
+                    }
+                  ],
+                  "out": 1,
+                  "in": 2,
+                  "entry": [
+                    true,
+                    true,
+                    false,
+                    false
+                  ],
+                  "bearings": [
+                    45,
+                    135,
+                    225,
+                    315
+                  ],
+                  "location": [
+                    103.859361,
+                    1.299823
+                  ]
+                },
+                {
+                  "lanes": [
+                    {
+                      "valid": false,
+                      "indications": [
+                        "left"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight",
+                        "left"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight",
+                        "right"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "right"
+                      ]
+                    }
+                  ],
+                  "out": 1,
+                  "in": 3,
+                  "entry": [
+                    false,
+                    true,
+                    true,
+                    false
+                  ],
+                  "bearings": [
+                    60,
+                    150,
+                    225,
+                    315
+                  ],
+                  "location": [
+                    103.859451,
+                    1.299719
+                  ]
+                },
+                {
+                  "lanes": [
+                    {
+                      "valid": false,
+                      "indications": [
+                        "left"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "straight"
+                      ]
+                    }
+                  ],
+                  "out": 1,
+                  "in": 2,
+                  "entry": [
+                    true,
+                    true,
+                    false
+                  ],
+                  "bearings": [
+                    135,
+                    150,
+                    330
+                  ],
+                  "location": [
+                    103.860874,
+                    1.295826
+                  ]
+                }
+              ],
+              "weight": 47.1,
+              "duration": 47.1,
+              "distance": 495.5
+            },
+            {
+              "geometry": "wvanAijdbeEfBFbBa@dBaA|FiGtB}BvBmAnDkAfImBnViKxS}H|g@q[dXuMbYsJtXsF~CGlOhAvc@|Gh\\xJl^vKx\\fHpX|Cz\\vB~St@j]~@d]jB~\\pB",
+              "maneuver": {
+                "bearing_after": 135,
+                "bearing_before": 153,
+                "location": [
+                  103.860917,
+                  1.29574
+                ],
+                "modifier": "slight right",
+                "type": "fork"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "Ophir Road",
+              "intersections": [
+                {
+                  "out": 0,
+                  "in": 2,
+                  "entry": [
+                    true,
+                    true,
+                    false
+                  ],
+                  "bearings": [
+                    136,
+                    136,
+                    333
+                  ],
+                  "location": [
+                    103.860917,
+                    1.29574
+                  ]
+                }
+              ],
+              "weight": 71,
+              "duration": 71,
+              "distance": 991.2
+            },
+            {
+              "geometry": "apqmAivebeEliAn@nYPrj@n@lp@~Bha@rBrV~C~Y`FjZvGnRbElKjCbRlG",
+              "maneuver": {
+                "bearing_after": 180,
+                "bearing_before": 185,
+                "location": [
+                  103.861621,
+                  1.287441
+                ],
+                "modifier": "straight",
+                "type": "new name"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "Sheares Avenue",
+              "intersections": [
+                {
+                  "out": 2,
+                  "in": 1,
+                  "entry": [
+                    false,
+                    false,
+                    true
+                  ],
+                  "bearings": [
+                    1,
+                    7,
+                    181
+                  ],
+                  "location": [
+                    103.861621,
+                    1.287441
+                  ]
+                },
+                {
+                  "out": 1,
+                  "classes": [
+                    "toll"
+                  ],
+                  "in": 0,
+                  "entry": [
+                    false,
+                    true
+                  ],
+                  "bearings": [
+                    0,
+                    180
+                  ],
+                  "location": [
+                    103.861564,
+                    1.285128
+                  ]
+                },
+                {
+                  "out": 1,
+                  "in": 0,
+                  "entry": [
+                    false,
+                    true
+                  ],
+                  "bearings": [
+                    15,
+                    195
+                  ],
+                  "location": [
+                    103.861249,
+                    1.282978
+                  ]
+                }
+              ],
+              "weight": 40.3,
+              "duration": 40.3,
+              "distance": 647.8
+            },
+            {
+              "geometry": "ujfmAkcdbeEzBxDf@bA`@z@ThA@`ACp@I`@",
+              "maneuver": {
+                "bearing_after": 236,
+                "bearing_before": 202,
+                "location": [
+                  103.860806,
+                  1.281723
+                ],
+                "modifier": "slight right",
+                "type": "turn"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "Sheares Link",
+              "intersections": [
+                {
+                  "lanes": [
+                    {
+                      "valid": false,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": false,
+                      "indications": [
+                        "straight"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "right"
+                      ]
+                    }
+                  ],
+                  "out": 2,
+                  "in": 0,
+                  "entry": [
+                    false,
+                    true,
+                    true
+                  ],
+                  "bearings": [
+                    30,
+                    210,
+                    240
+                  ],
+                  "location": [
+                    103.860806,
+                    1.281723
+                  ]
+                }
+              ],
+              "weight": 8.8,
+              "duration": 8.8,
+              "distance": 33.4
+            },
+            {
+              "geometry": "edfmAqrcbeEcNvVqK`S",
+              "maneuver": {
+                "bearing_after": 302,
+                "bearing_before": 257,
+                "location": [
+                  103.860537,
+                  1.281619
+                ],
+                "modifier": "right",
+                "type": "continue"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "Sheares Link",
+              "intersections": [
+                {
+                  "out": 3,
+                  "in": 1,
+                  "entry": [
+                    false,
+                    false,
+                    false,
+                    true
+                  ],
+                  "bearings": [
+                    30,
+                    75,
+                    210,
+                    300
+                  ],
+                  "location": [
+                    103.860537,
+                    1.281619
+                  ]
+                }
+              ],
+              "weight": 17.5,
+              "duration": 17.5,
+              "distance": 92.2
+            },
+            {
+              "geometry": "{_gmAwfbbeEkBdAe@Vk@\\_@J[B[GmAm@iAw@mCiBk@q@Sc@Am@Bw@Tk@tMeQbBu@dAKp@Rv@RdAf@z@d@",
+              "maneuver": {
+                "bearing_after": 326,
+                "bearing_before": 300,
+                "location": [
+                  103.859836,
+                  1.282062
+                ],
+                "modifier": "right",
+                "type": "turn"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "",
+              "intersections": [
+                {
+                  "out": 2,
+                  "in": 0,
+                  "entry": [
+                    false,
+                    true,
+                    true
+                  ],
+                  "bearings": [
+                    120,
+                    300,
+                    330
+                  ],
+                  "location": [
+                    103.859836,
+                    1.282062
+                  ]
+                },
+                {
+                  "out": 0,
+                  "in": 2,
+                  "entry": [
+                    true,
+                    true,
+                    false,
+                    false
+                  ],
+                  "bearings": [
+                    30,
+                    120,
+                    195,
+                    300
+                  ],
+                  "location": [
+                    103.859793,
+                    1.28224
+                  ]
+                }
+              ],
+              "weight": 29.1,
+              "duration": 29.1,
+              "distance": 118.8
+            },
+            {
+              "geometry": "swfmA}`cbeEdF}I`@mATkABk@G}D",
+              "maneuver": {
+                "bearing_after": 122,
+                "bearing_before": 208,
+                "location": [
+                  103.860255,
+                  1.28193
+                ],
+                "modifier": "left",
+                "type": "turn"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "Sheares Link",
+              "intersections": [
+                {
+                  "out": 1,
+                  "in": 0,
+                  "entry": [
+                    false,
+                    true,
+                    true,
+                    false
+                  ],
+                  "bearings": [
+                    30,
+                    120,
+                    225,
+                    300
+                  ],
+                  "location": [
+                    103.860255,
+                    1.28193
+                  ]
+                }
+              ],
+              "weight": 9.5,
+              "duration": 9.5,
+              "distance": 45.4
+            },
+            {
+              "geometry": "ynfmA_xcbeEs@SwNmE",
+              "maneuver": {
+                "bearing_after": 21,
+                "bearing_before": 84,
+                "location": [
+                  103.860624,
+                  1.281789
+                ],
+                "modifier": "left",
+                "type": "turn"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "Sheares Avenue",
+              "intersections": [
+                {
+                  "lanes": [
+                    {
+                      "valid": true,
+                      "indications": [
+                        "left"
+                      ]
+                    },
+                    {
+                      "valid": true,
+                      "indications": [
+                        "left"
+                      ]
+                    }
+                  ],
+                  "out": 0,
+                  "in": 2,
+                  "entry": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "bearings": [
+                    15,
+                    210,
+                    270
+                  ],
+                  "location": [
+                    103.860624,
+                    1.281789
+                  ]
+                }
+              ],
+              "weight": 3.7,
+              "duration": 3.7,
+              "distance": 33.4
+            },
+            {
+              "geometry": "e`gmAa_dbeE}KxD]HaDz@{@Jw@AuA}@w@U}DmC{EeDyAc@iD_@kXkB",
+              "maneuver": {
+                "bearing_after": 334,
+                "bearing_before": 21,
+                "location": [
+                  103.860737,
+                  1.282067
+                ],
+                "modifier": "left",
+                "type": "turn"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "",
+              "intersections": [
+                {
+                  "out": 2,
+                  "in": 1,
+                  "entry": [
+                    true,
+                    false,
+                    true
+                  ],
+                  "bearings": [
+                    15,
+                    195,
+                    330
+                  ],
+                  "location": [
+                    103.860737,
+                    1.282067
+                  ]
+                },
+                {
+                  "out": 0,
+                  "in": 2,
+                  "entry": [
+                    true,
+                    false,
+                    false
+                  ],
+                  "bearings": [
+                    30,
+                    165,
+                    195
+                  ],
+                  "location": [
+                    103.860635,
+                    1.282471
+                  ]
+                }
+              ],
+              "weight": 21.1,
+              "duration": 21.1,
+              "distance": 141.4
+            },
+            {
+              "geometry": "oiimAohdbeE",
+              "maneuver": {
+                "bearing_after": 0,
+                "bearing_before": 8,
+                "location": [
+                  103.860888,
+                  1.28324
+                ],
+                "modifier": "left",
+                "type": "arrive"
+              },
+              "mode": "driving",
+              "driving_side": "left",
+              "name": "",
+              "intersections": [
+                {
+                  "in": 0,
+                  "entry": [
+                    true
+                  ],
+                  "bearings": [
+                    188
+                  ],
+                  "location": [
+                    103.860888,
+                    1.28324
+                  ]
+                }
+              ],
+              "weight": 0,
+              "duration": 0,
+              "distance": 0
+            }
+          ],
+          "summary": "Middle Road, Beach Road",
+          "weight": 436.9,
+          "duration": 436.9,
+          "distance": 3697
+        }
+      ],
+      "weight_name": "routability",
+      "weight": 436.9,
+      "duration": 436.9,
+      "distance": 3697
+    }
+  ],
+  "waypoints": [
+    {
+      "hint": "1hMAgP___38BAAAADAAAAAAAAAAFAAAADc5IP19lbUEAAAAAyFjLQAEAAAAMAAAAAAAAAAUAAACrCwAAHrcwBnbYEwActzAGeNgTAAAA7w1aypRd",
+      "distance": 0.313758,
+      "name": "Victoria Street",
+      "location": [
+        103.855902,
+        1.300598
+      ]
+    },
+    {
+      "hint": "2tEAANvRAIAAAAAAPQAAAAAAAAA-AAAAAAAAAAQqNUIAAAAAc7M6QgAAAAA9AAAAAAAAAD4AAACrCwAAmMowBqiUEwDcyTAGSJUTAAAAvwtaypRd",
+      "distance": 27.399709,
+      "name": "",
+      "location": [
+        103.860888,
+        1.28324
+      ]
+    }
+  ],
+  "version": {
+    "patch": 10,
+    "major": 6,
+    "minor": 6,
+    "changes": "DIRTY",
+    "tag": "v6.6.10",
+    "git-sha1": "7c4b1fa54025081c4607b01799068e9185f0e835"
+  }
+}
