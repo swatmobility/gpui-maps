@@ -2558,7 +2558,7 @@ impl LabelShapeCache {
             // share one, and a cut at a shared frame kept every label of
             // that frame -- more than `expensive_kept`. Which of a tied
             // frame's labels stay is arbitrary; how many is not.
-            expensive.sort_unstable_by(|a, b| b.0.cmp(&a.0));
+            expensive.sort_unstable_by_key(|e| std::cmp::Reverse(e.0));
             let kept: HashSet<LabelKey> =
                 expensive.into_iter().take(expensive_kept).map(|(_, key)| key.clone()).collect();
             let Self { entries, used_this_frame: used, evicted, .. } = self;

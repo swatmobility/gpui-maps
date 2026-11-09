@@ -1223,8 +1223,8 @@ pub(crate) fn center_placing_world_at_nearest(
         // path, including those that move the centre away from the pole.
         let unclamped = |c: glam::DVec2| (c.y.abs() <= max_lat).then(|| wrap(c));
         let slope = |d: glam::DVec2| {
-            let forward = unclamped(centre + d).and_then(&drawn).map(|p| (p - s) / h);
-            forward.or_else(|| unclamped(centre - d).and_then(&drawn).map(|p| (s - p) / h))
+            let forward = unclamped(centre + d).and_then(drawn).map(|p| (p - s) / h);
+            forward.or_else(|| unclamped(centre - d).and_then(drawn).map(|p| (s - p) / h))
         };
         let (Some(jx), Some(jy)) = (slope(glam::DVec2::new(h, 0.0)), slope(glam::DVec2::new(0.0, h))) else { break };
         let jacobian = glam::DMat2::from_cols(jx, jy);

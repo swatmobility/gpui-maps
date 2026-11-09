@@ -27,6 +27,9 @@ use crate::geo::TileId;
 /// is a claim a constant can keep and a literal cannot.
 pub const DEFAULT_MAX_ZOOM: u8 = 22;
 
+// async_trait marks each method #[must_use] on a future that already is;
+// clippy 1.99's double_must_use reads the expansion, not this source.
+#[allow(clippy::double_must_use)]
 #[async_trait::async_trait]
 pub trait TileSource: Send + Sync {
     /// The bytes for `tile`, or `Ok(None)` when this source has no data

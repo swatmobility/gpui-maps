@@ -44,7 +44,7 @@ fetch() {
     echo "ok (cached)  $out"
     return
   fi
-  curl -sSfL --retry 2 -m 300 -A "$ua" -o "$out.part" "$url"
+  curl -sSfL --retry 5 --retry-all-errors --retry-delay 5 -m 300 -A "$ua" -o "$out.part" "$url"
   local got
   got="$(shasum -a 256 "$out.part" | cut -d' ' -f1)"
   if [[ "$got" != "$sha" ]]; then

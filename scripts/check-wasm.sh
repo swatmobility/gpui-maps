@@ -91,7 +91,7 @@ cd - >/dev/null
 # The agent chat's process-spawning, socket-binding crate is desktop-only
 # (spec 2026-10-07-agent-chat-design.md §11): it must never enter the
 # browser graph. `cargo tree -i` fails with "did not match" when absent.
-tree_out="$(cd "$(git rev-parse --show-toplevel)/web" && cargo tree --offline --target "$TARGET" -i gpui-agentic-acp 2>&1 || true)"
+tree_out="$(cd "$(git rev-parse --show-toplevel)/web" && cargo tree --target "$TARGET" -i gpui-agentic-acp 2>&1 || true)"
 if ! grep -q "did not match" <<<"$tree_out"; then
   echo "check-wasm: FAILED -- gpui-agentic-acp is in the web dependency graph (or cargo tree could not run); it is desktop-only:" >&2
   echo "$tree_out" | tail -5 >&2

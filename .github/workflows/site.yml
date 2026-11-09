@@ -42,6 +42,14 @@ jobs:
         run: |
           v=$(sed -n 's/^wasm-bindgen = "=\(.*\)"$/\1/p' web/Cargo.toml)
           cargo install --locked wasm-bindgen-cli --version "$v"
+      # The space look's two textures (scripts/fetch-space-assets.sh), keyed
+      # by the digests they are pinned to: a run after the first one needs no
+      # network for them.
+      - name: Space textures cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/gpui-map/space
+          key: space-${{ hashFiles('src/space_assets.rs') }}
       - name: Build the web demo
         run: bash web/build.sh
       - name: Assemble the site

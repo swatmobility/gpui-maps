@@ -108,4 +108,4 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-deny
-      - run: cargo deny --manifest-path ${{ matrix.manifest }} check --config deny.toml advisories bans licenses sources
+      - run: cargo deny --manifest-path ${{ matrix.manifest }} check advisories bans licenses sources
