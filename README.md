@@ -11,6 +11,25 @@ to the repository root, not to docs/public/.
 Rust on `wgpu`. A map is a GPUI view: add it to any window. No web view, no JavaScript runtime, no account
 or token needed for the default maps.
 
+<p align="center">
+  <img src="site/img/play-nyc.webp" width="100%" alt="Midtown Manhattan in 3D: extruded buildings, streets and labels, tilted.">
+</p>
+
+<table>
+  <tr>
+    <td width="33%"><img src="site/img/play-globe.webp" alt="The globe over Asia, with satellite imagery, atmosphere and stars."><br><sub><b>Globe</b> that blends into flat Mercator</sub></td>
+    <td width="33%"><img src="site/img/play-census.webp" alt="US median household income by block group, with a histogram filter and a breakdown by state."><br><sub><b>Data</b>: 224,390 US census block groups, filtered live</sub></td>
+    <td width="33%"><img src="site/img/play-nav.webp" alt="Turn-by-turn navigation in Singapore: a route line, the puck and the next turn."><br><sub><b>Navigation</b>: turn-by-turn route following</sub></td>
+  </tr>
+  <tr>
+    <td width="33%"><img src="site/img/play-tokyo.webp" alt="Central Tokyo around the Imperial Palace, in a light street style."><br><sub><b>Styles</b>: six keyless basemaps, MapLibre style JSON</sub></td>
+    <td width="33%"><img src="site/img/nyc-dark.webp" alt="Midtown Manhattan in 3D in a dark style."><br><sub><b>3D</b>: <code>fill-extrusion</code> buildings, any style</sub></td>
+    <td width="33%"><img src="site/img/web-demo.webp" alt="Central Tokyo drawn in a browser by the WebAssembly build."><br><sub><b>Web</b>: the same engine in a browser (wasm)</sub></td>
+  </tr>
+</table>
+
+Try it live in a browser: [gpui-maps.swatmobility.com](https://gpui-maps.swatmobility.com).
+
 - **Tiles:** Mapbox Vector Tiles (MVT) over HTTP, local or remote
   [PMTiles](https://github.com/protomaps/PMTiles) archives, MBTiles files,
   and raster tiles.
