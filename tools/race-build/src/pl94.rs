@@ -292,8 +292,9 @@ pub fn parse_state(zip_path: &Path) -> Result<StateCounts> {
     };
     let member = |a: &zip::ZipArchive<std::fs::File>, suffix: &str| -> Result<String> {
         a.file_names()
+            .filter_map(Result::ok)
             .find(|n| n.to_lowercase().ends_with(suffix))
-            .map(str::to_string)
+            .map(|n| n.into_owned())
             .ok_or_else(|| anyhow!("{}: no zip entry ending with {suffix:?}", zip_path.display()))
     };
     // Two handles, so both members stream at once.
@@ -366,7 +367,7 @@ pub fn write_test_zip(path: &Path, blocks: &[(u64, [u32; 8], (f64, f64))]) {
     }
     seg.insert(0, seg1_row(1, total));
     let mut z = zip::ZipWriter::new(std::fs::File::create(path).unwrap());
-    let o = zip::write::FileOptions::default().compression_method(zip::CompressionMethod::Stored);
+    let o = zip::write::SimpleFileOptions::default().compression_method(zip::CompressionMethod::Stored);
     z.start_file("xxgeo2020.pl", o).unwrap();
     z.write_all(geo.join("\n").as_bytes()).unwrap();
     z.start_file("xx000012020.pl", o).unwrap();

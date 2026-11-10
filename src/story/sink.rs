@@ -1147,7 +1147,11 @@ impl FrameSink for EncodeLaterSink {
         }))
     }
     fn abort(&mut self) {
-        self.frames.abort();
+        // A render cancelled before its first frame wrote nothing: leave no
+        // frames directory behind, not even the partial-run marker.
+        if self.cleared {
+            self.frames.abort();
+        }
     }
 }
 

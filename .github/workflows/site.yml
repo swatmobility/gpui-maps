@@ -50,6 +50,9 @@ jobs:
         with:
           path: ~/.cache/gpui-map/space
           key: space-${{ hashFiles('src/space_assets.rs') }}
+      # web/build.sh checks the bundled font's coverage with fontTools.
+      - name: fontTools
+        run: python3 -m pip install --user --break-system-packages fonttools
       - name: Build the web demo
         run: bash web/build.sh
       - name: Assemble the site

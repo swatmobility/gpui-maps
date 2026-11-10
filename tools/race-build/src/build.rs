@@ -1024,7 +1024,7 @@ mod tests {
     /// paired with `geoids` in record order.
     fn tiger_zip_of(path: &Path, polys: &[Vec<Vec<[f64; 2]>>], geoids: &[u64]) {
         let mut z = zip::ZipWriter::new(File::create(path).unwrap());
-        let o = zip::write::FileOptions::default().compression_method(zip::CompressionMethod::Deflated);
+        let o = zip::write::SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated);
         z.start_file("tl_2020_11_tabblock20.shp", o).unwrap();
         z.write_all(&tiger::shp_bytes(polys)).unwrap();
         z.start_file("tl_2020_11_tabblock20.dbf", o).unwrap();

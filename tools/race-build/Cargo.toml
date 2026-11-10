@@ -14,7 +14,7 @@ publish = false
 
 [dependencies]
 anyhow = "1"
-zip = { version = "0.6", default-features = false, features = ["deflate"] }
+zip = { version = "9", default-features = false, features = ["deflate-flate2"] }
 # Task 5 (the converter): the engine for the grid geometry, the part
 # allocation/splitting and the v2 tile codec, so the archive and its reader
 # share one definition of each (Task 10: with the engine's `h3` feature, so

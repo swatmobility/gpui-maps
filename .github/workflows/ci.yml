@@ -38,6 +38,9 @@ jobs:
         run: cargo test --locked --no-fail-fast
         env:
           GPUI_MAP_SKIP_EXACT_RASTER: "1"
+          # Time budgets and request-overlap checks: a shared runner is
+          # too noisy for them; they run on a developer's Mac.
+          GPUI_MAP_SKIP_TIMING: "1"
       - name: hello_map builds with default features
         run: cargo build --locked --example hello_map
       - name: published crates' own tests

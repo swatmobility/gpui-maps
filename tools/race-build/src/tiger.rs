@@ -363,7 +363,7 @@ pub fn for_each_block(zip_path: &Path, mut visit: impl FnMut(u64, Vec<Vec<[f64; 
     };
     let (mut za, mut zb) = (open()?, open()?);
     let name = |za: &zip::ZipArchive<BufReader<File>>, ext: &str| -> Result<String> {
-        za.file_names().find(|n| n.ends_with(ext)).map(str::to_string).with_context(|| format!("{}: no *{ext} member", zip_path.display()))
+        za.file_names().filter_map(Result::ok).find(|n| n.ends_with(ext)).map(|n| n.into_owned()).with_context(|| format!("{}: no *{ext} member", zip_path.display()))
     };
     let (shp_name, dbf_name) = (name(&za, ".shp")?, name(&za, ".dbf")?);
     let mut shp = ShpReader::new(BufReader::with_capacity(1 << 20, za.by_name(&shp_name)?))?;

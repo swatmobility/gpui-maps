@@ -208,7 +208,7 @@ fn read_zip_member_ending_with(
     suffix: &str,
 ) -> Result<String> {
     let name = (0..archive.len())
-        .map(|i| archive.by_index(i).map(|f| f.name().to_string()))
+        .map(|i| archive.by_index(i).and_then(|f| f.name().map(|n| n.into_owned())))
         .collect::<Result<Vec<_>, _>>()?
         .into_iter()
         .find(|n| n.to_lowercase().ends_with(suffix))

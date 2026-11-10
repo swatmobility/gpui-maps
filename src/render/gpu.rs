@@ -12874,6 +12874,11 @@ pub(crate) mod tests {
     #[test]
     #[cfg_attr(not(target_os = "macos"), ignore = "the budget is for a hardware GPU; Linux CI renders in software (lavapipe)")]
     fn the_full_screen_atmosphere_costs_less_than_the_plans_half_millisecond() {
+        // A budget on a shared virtual GPU measures the neighbours too.
+        if std::env::var("GPUI_MAP_SKIP_TIMING").is_ok_and(|v| v == "1") {
+            eprintln!("skipped: GPUI_MAP_SKIP_TIMING=1 (a GPU time budget)");
+            return;
+        }
         pollster::block_on(async {
             let ctx = GpuContext::new_headless().await.expect("headless device");
             let pipeline = TilePipeline::new(&ctx, wgpu::TextureFormat::Rgba8Unorm);

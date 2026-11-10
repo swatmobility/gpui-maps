@@ -272,6 +272,7 @@ About 20 render tests compare frames bit for bit against hashes recorded on
 an Apple-silicon Mac. If they fail on your machine only because of a few
 pixels, your GPU rasterizes edges differently: run the tests with
 `GPUI_MAP_SKIP_EXACT_RASTER=1` (as CI does) and say so in the pull request.
+`GPUI_MAP_SKIP_TIMING=1` does the same for the few time-budget checks.
 
 `./scripts/install-hooks.sh` installs a pre-commit hook that runs clippy on
 staged Rust changes. Changes that touch rendering should also pass the

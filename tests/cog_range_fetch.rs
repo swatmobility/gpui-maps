@@ -171,7 +171,11 @@ fn a_view_requested_at_once_fetches_each_internal_tile_once() {
     // sharing their edges.
     assert_eq!(cog.stats().tiles_decoded, 64, "{:?}", cog.stats());
     let requests = log.lock().unwrap().ranges.len() - 1;
-    assert!(requests < 16, "coalesced: {requests} requests for 64 tiles over 16 map tiles");
+    // Coalescing needs the 16 requests to overlap in time; on a loaded
+    // runner (GPUI_MAP_SKIP_TIMING=1) they may not.
+    if !std::env::var("GPUI_MAP_SKIP_TIMING").is_ok_and(|v| v == "1") {
+        assert!(requests < 16, "coalesced: {requests} requests for 64 tiles over 16 map tiles");
+    }
 
     // Uncoalesced, the ranges are exactly the tiles: none fetched twice.
     let (url, log) = serve(dem(), true, 200);
