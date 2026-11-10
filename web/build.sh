@@ -106,8 +106,9 @@ cp ../examples/styles-open/open-streets-style.json ../examples/styles-open/open-
    ../examples/styles-open/open-swat-routes-dark-style.json ../examples/liberty-style.json dist/
 
 # The space look's textures, for `?look=space` (`app::load_space_textures`):
-# NASA's star map and cloud map, attribution-only and NOT in the tree.
-# `scripts/fetch-space-assets.sh` downloads them into the cache
+# NASA's star map and cloud map, attribution required, committed in
+# `web/space/`. `scripts/fetch-space-assets.sh` copies them (or, without
+# that copy, downloads them) into the cache
 # (`$GPUI_MAP_SPACE_DIR`, else `~/.cache/gpui-map/space/`) and checks each
 # against the sha256 pinned in `src/space_assets.rs`; a file already cached
 # with the right digest is not downloaded again. So a clean CI runner fetches

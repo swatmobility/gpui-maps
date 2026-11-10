@@ -143,6 +143,20 @@ These carry no third-party data, as recorded beside them:
 
 ---
 
+## Space look textures (`web/space/`)
+
+`web/space/starmap_2020_3840.jpg` and `web/space/cloud_combined_2048.jpg`
+are copies of upstream files, used by the optional space look and served by
+the web demo. Stars: Deep Star Maps 2020 (https://svs.gsfc.nasa.gov/4851),
+"NASA/Goddard Space Flight Center Scientific Visualization Studio. Gaia DR2:
+ESA/Gaia/DPAC." Attribution required. Clouds: NASA Visible Earth, Blue
+Marble: Clouds (https://visibleearth.nasa.gov/images/57747), NASA Goddard
+Space Flight Center image by Reto Stoeckli. Both credits join the on-map
+attribution while drawn. They are not in the published crates; the engine
+downloads them on first use (`src/space_assets.rs`).
+
+---
+
 ## Fetched at run time, not bundled
 
 None of the following is in the repository. The examples, demos and scripts
@@ -159,7 +173,6 @@ product that fetches or bundles them, their terms apply to you.
 | US Census Bureau: TIGER/Line 2023 block groups, ACS 5-year 2023 (B19013), 2020 Census P.L. 94-171 and DHC, 2020 cartographic boundaries | `demos/us_block_groups.rs`, `demos/race_dots.rs`, `scripts/fetch-census-2020.sh`, `demos/data/fetch_us_block_groups.sh` | Public domain (U.S. Government works) |
 | GHSL GHS-POP R2023A | `demos/world_dots.rs`, `scripts/fetch-ghsl.sh`, `tools/dotgrid-build` | European Commission, Joint Research Centre, CC BY 4.0 |
 | CelesTrak GP element sets (`active`, `stations`, `gps-ops`, `geo`) | `demos/satellites.rs` (feature `orbits`) | Produced by the US Space Force, redistributed by CelesTrak (T.S. Kelso). Credit: "Orbits: CelesTrak / US Space Force". Usage policy in `demos/README.md`. |
-| Deep Star Maps 2020 (Wikimedia Commons rendition) and NASA Visible Earth "Blue Marble: Clouds" | the optional space look (`src/space_assets.rs`, `scripts/fetch-space-assets.sh`) | Stars: "NASA/Goddard Space Flight Center Scientific Visualization Studio. Gaia DR2: ESA/Gaia/DPAC." Attribution required. Clouds: NASA Goddard Space Flight Center image by Reto Stoeckli. Both join the on-map credit while drawn. |
 | FlatGeobuf US counties demo file (GitHub Pages) | the FlatGeobuf panel (`kit/src/panels/fgb.rs`, `demos/fgb.rs`) | BSD-2-Clause, FlatGeobuf project |
 | data.gov.sg datasets | `scripts/fetch-singapore-overlay.sh` | Singapore Open Data Licence v1.0, attribution required |
 | Mapbox tiles, styles and sprites (**optional, off by default**) | the Mapbox-named examples, only with `GPUI_MAP_ALLOW_MAPBOX=1` and your own token | Mapbox Terms of Service; credit "© Mapbox © OpenStreetMap". Never committed. Without the opt-in, these examples draw an open look-alike. |

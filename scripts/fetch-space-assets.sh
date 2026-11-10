@@ -6,7 +6,10 @@
 #
 #     ./scripts/fetch-space-assets.sh
 #
-# Nothing here is committed: the files stay in the cache directory.
+# A copy of both files is committed in web/space/ (the site serves them
+# anyway): a file there with the pinned digest is used before the network,
+# so the site build does not depend on NASA's server, which GitHub's runners
+# cannot always reach. The download stays for a checkout without them.
 #
 # What the digests pin: the UPSTREAM bytes, as served. Both files are used
 # as-is -- the star map is Wikimedia Commons' 3840x1920 rendition of the SVS
@@ -36,12 +39,18 @@ dir="${GPUI_MAP_SPACE_DIR:-$HOME/.cache/gpui-map/space}"
 # The project, never a person: no email, no token.
 ua="gpui-map-space-look (+https://github.com/swatmobility/gpui-maps)"
 mkdir -p "$dir"
+seed="$(cd "$(dirname "$0")/.." && pwd)/web/space"
 
 fetch() {
   local file="$1" url="$2" sha="$3"
   local out="$dir/$file"
   if [[ -f "$out" ]] && [[ "$(shasum -a 256 "$out" | cut -d' ' -f1)" == "$sha" ]]; then
     echo "ok (cached)  $out"
+    return
+  fi
+  if [[ -f "$seed/$file" ]] && [[ "$(shasum -a 256 "$seed/$file" | cut -d' ' -f1)" == "$sha" ]]; then
+    cp "$seed/$file" "$out"
+    echo "ok (in repo) $out"
     return
   fi
   curl -sSfL --retry 5 --retry-all-errors --retry-delay 5 -m 300 -A "$ua" -o "$out.part" "$url"

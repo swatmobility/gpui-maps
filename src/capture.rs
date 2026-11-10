@@ -2381,6 +2381,20 @@ fn capture_donuts(
 #[cfg(test)]
 pub(crate) mod golden_tests;
 
+/// True when `GPUI_MAP_SKIP_EXACT_RASTER=1`: the tests that compare frames
+/// pixel for pixel (blessed sha256 hashes, "no pixel lost" checks) then
+/// return early. Those frames are blessed on Apple-silicon Metal; another
+/// GPU, or a virtual one such as a CI runner's, rasterizes a few edge
+/// pixels differently. CI sets it; a contributor whose GPU differs can too.
+#[cfg(test)]
+pub(crate) fn exact_raster_skipped() -> bool {
+    let skip = std::env::var("GPUI_MAP_SKIP_EXACT_RASTER").is_ok_and(|v| v == "1");
+    if skip {
+        eprintln!("skipped: GPUI_MAP_SKIP_EXACT_RASTER=1 (frames are compared bit for bit)");
+    }
+    skip
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -5185,6 +5199,9 @@ mod tests {
 
     #[test]
     fn halving_ppd_only_adds_dots() {
+        if exact_raster_skipped() {
+            return;
+        }
         let coarse = dot_capture(10.0, 20.0, 10.0, dot_fixture(10.0, 20.0, 12, 40.0, 8.0));
         let fine = dot_capture(10.0, 20.0, 10.0, dot_fixture(10.0, 20.0, 12, 40.0, 4.0));
         let (coarse, fine) = (lit(&coarse), lit(&fine));
@@ -5778,6 +5795,9 @@ mod tests {
     /// Skipping is per block: a partly dead block is still drawn.
     #[test]
     fn a_tile_built_for_a_finer_ppd_draws_the_same_dots_and_skips_its_dead_blocks() {
+        if exact_raster_skipped() {
+            return;
+        }
         use crate::overlay::dotgrid::blocks;
         let fresh = dot_capture(10.0, 20.0, 10.0, dot_fixture(10.0, 20.0, 12, 40.0, 8.0));
         let stale_dots = CaptureDots { ppd_build: Some(2.0), ..dot_fixture(10.0, 20.0, 12, 40.0, 8.0) };

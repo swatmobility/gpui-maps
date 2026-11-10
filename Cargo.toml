@@ -189,7 +189,7 @@ gpui = { package = "gpui-pre", version = "=0.3.12" }
 anyhow = "1"
 geo-types = "0.7"
 glyphon = "0.12"
-lru = "0.12"
+lru = "0.18"
 reqwest = { version = "0.12", features = ["rustls-tls", "gzip"] }
 async-trait = "0.1"
 # `tile_source::wms` reads GetCapabilities. Already in the graph (usvg).
@@ -331,7 +331,7 @@ arrow-ipc = { version = "60", optional = true }
 # size a writer may have used), and an MBTiles reader that fails on a real
 # file costs more than the C. Not reachable on wasm32 (see the feature).
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-rusqlite = { version = "0.32", features = ["bundled"], optional = true }
+rusqlite = { version = "0.41", features = ["bundled"], optional = true }
 
 # Turn-by-turn voice: `src/speech.rs`'s one `AVSpeechSynthesizer`, shared
 # with the iOS shell. `AVAudioSession*` is for the phone's ducking session;
@@ -488,7 +488,7 @@ objc2-foundation = { version = "0.3.2", features = ["std", "NSArray", "NSBundle"
 # streamed through a CSV reader, never read whole. Examples only. zip
 # without its default codecs: GTFS zips are stored or deflated, and
 # `deflate-flate2` reuses the flate2 already in the graph.
-zip = { version = "8.6", default-features = false, features = ["deflate-flate2"] }
+zip = { version = "9", default-features = false, features = ["deflate-flate2"] }
 csv = "1.4"
 # Planning → Datasets (`examples/studio/planning/datasets/`): a CSV saved
 # as Shift_JIS (a Japanese Excel's default "CSV") read as text. Already in

@@ -131,6 +131,9 @@ fn read_golden() -> std::collections::BTreeMap<String, String> {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn every_golden_scene_is_bit_identical_to_the_blessed_hash() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let bless = std::env::var("GPUI_MAP_BLESS_GOLDEN").is_ok_and(|v| v == "1");
     let golden = read_golden();
@@ -182,6 +185,9 @@ const ENHANCED_BUILDINGS_HASH: &str = "362daae67c88eb9f9bc1ae85aeeeb44ecf06ad365
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn master_building_scenes_match_master_one_shot_bit_for_bit() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let sg = |zoom: f64, pitch_deg: f32, bearing_deg: f32| CaptureRequest {
         center_lon: 103.851, center_lat: 1.2905, zoom,
@@ -243,6 +249,9 @@ fn per_frame_cost_at_1080p() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn one_session_renders_every_golden_scene_bit_identical_to_the_one_shot_path() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_golden();
     let mut session = CaptureSession::new_blocking(None).expect("device");
@@ -264,6 +273,9 @@ fn one_session_renders_every_golden_scene_bit_identical_to_the_one_shot_path() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn a_session_reused_in_reverse_order_gives_the_same_hashes() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_golden();
     let mut session = CaptureSession::new_blocking(None).expect("device");
@@ -446,6 +458,9 @@ fn overlay_labels_scene() -> (CaptureRequest, TileStore, Style) {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn a_session_switching_fonts_and_drawing_nav_and_overlay_labels_matches_one_shot() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_golden();
     let (noto_name, noto_req, noto_store, noto_style) = scenes().remove(0);
@@ -628,6 +643,9 @@ fn per_frame_cost_at_1080p_session_cold_labels() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn a_b_a_through_one_session_gives_hash_a_twice() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let scenes = scenes();
     let (a, b) = (&scenes[0], &scenes[1]);
@@ -667,6 +685,9 @@ fn a_new_style_generation_never_draws_an_old_mesh() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn a_mesh_baked_at_one_zoom_is_never_drawn_at_another() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let (_, base, _, style) = scenes().remove(0);
     let at = |zoom: f64| {
@@ -710,6 +731,9 @@ fn a_sixty_frame_orbit_hits_the_cache_and_prints_the_rate() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn a_tiny_budget_evicts_and_stays_correct() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_golden();
     let mut session = CaptureSession::new_blocking(None).expect("device");
@@ -804,6 +828,9 @@ fn tile_bytes_without_layer(bytes: &[u8], drop: &str) -> Vec<u8> {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn a_source_switch_under_the_same_ids_and_generation_draws_the_new_data() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let (name, request, store, style) = scenes().remove(0);
     let raw = std::fs::read(concat!(env!("CARGO_MANIFEST_DIR"), "/benches/fixtures/singapore_z14.pbf")).expect("fixture");
@@ -880,6 +907,9 @@ fn a_style_edit_without_a_generation_bump_fails_in_debug() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn pipelined_output_equals_synchronous_output() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_golden();
     let scenes = scenes();
@@ -933,6 +963,9 @@ fn an_oversized_target_is_refused_by_name_before_wgpu_sees_it() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn an_injected_validation_error_fails_the_frame_and_the_next_frame_recovers() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_golden();
     let (name, request, store, style) = scenes().remove(0);
@@ -1035,6 +1068,9 @@ fn the_ring_at_a_padded_width_equals_the_synchronous_frame_byte_for_byte() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn a_validation_error_in_the_ring_fails_render_pipelined_and_the_ring_recovers() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_golden();
     let (name, request, store, style) = scenes().remove(0);
@@ -1066,6 +1102,9 @@ fn a_validation_error_in_the_ring_fails_render_pipelined_and_the_ring_recovers()
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn a_late_device_error_fails_flush_and_the_session_recovers() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_golden();
     let (name, request, store, style) = scenes().remove(0);
@@ -1714,6 +1753,9 @@ fn icons_at_ratio_two_are_twice_the_size() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn a_session_that_drew_icons_draws_the_golden_frame_without_them() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_golden();
     let (name, base, store, style) = scenes().remove(1);
@@ -1941,6 +1983,9 @@ fn line_label_churn_over_a_short_orbit_is_measured() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn a_session_that_drew_street_names_draws_the_golden_frame_without_them() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_golden();
     let (name, base, store, style) = scenes().remove(0);
@@ -2468,6 +2513,9 @@ fn a_line_across_the_antimeridian_goes_the_short_way_with_continuous_progress() 
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn fresh_sessions_draw_the_building_scene_identically() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let request = CaptureRequest {
         center_lon: 103.851, center_lat: 1.2905, zoom: 16.2,
@@ -3522,6 +3570,9 @@ fn a_rebless_refuses_a_listed_name_it_did_not_render() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn every_story_golden_is_bit_identical() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let bless = std::env::var("GPUI_MAP_BLESS_STORY_GOLDEN").is_ok_and(|v| v == "1");
     let rebless = std::env::var("GPUI_MAP_REBLESS_STORY_GOLDEN").ok();
@@ -3669,6 +3720,9 @@ fn port_to_port_design_validates_with_no_errors() {
 #[test]
 #[cfg_attr(not(target_os = "macos"), ignore = "golden hashes are blessed on macOS/Metal; another GPU or driver rasterizes differently")]
 fn one_session_draws_every_story_golden_in_reverse_order() {
+    if super::exact_raster_skipped() {
+        return;
+    }
     let _refused = refused_lock();
     let golden = read_story_golden();
     assert_eq!(golden.len(), story_scenes().len(), "every story golden scene is blessed");

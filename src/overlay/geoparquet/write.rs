@@ -349,6 +349,10 @@ fn write_core<'a>(
         .set_max_row_group_row_count(Some(options.row_group_rows.max(1)))
         .set_statistics_enabled(if options.statistics { EnabledStatistics::Chunk } else { EnabledStatistics::None })
         .set_key_value_metadata(Some(vec![KeyValue::new("geo".into(), geo.to_string())]))
+        // A fixed writer name, not parquet-rs' default (which carries its
+        // version): the same features give the same bytes after a parquet
+        // patch release, so the bundled fixtures stay byte-exact.
+        .set_created_by("gpui-maps geoparquet writer".to_string())
         .build();
     let mut out = Vec::new();
     let mut writer = ArrowWriter::try_new(&mut out, Arc::clone(&schema), Some(props)).map_err(|e| other(e.to_string()))?;

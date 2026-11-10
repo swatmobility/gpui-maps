@@ -148,7 +148,7 @@ smallvec = "1"
 # engine's `tile_source::TileCache` (`src/tile_source/cache.rs`, included by
 # `#[path]`), which is an `lru::LruCache` underneath. Same version as the
 # parent manifest.
-lru = "0.12"
+lru = "0.18"
 # `overlay::dotgrid::codec`: gzip for count tiles. This crate now includes
 # the WHOLE `src/overlay/mod.rs` verbatim through `overlay::host` (see
 # above), so `dotgrid` comes along with it and needs its own copy of this

@@ -55,6 +55,26 @@ allow-wildcard-paths = true
 [advisories]
 version = 2
 yanked = "warn"
+# Each ignore names the crate that brings the advisory in and why it does
+# not reach this library's users. Our own direct dependencies carry no
+# advisory: fix those by upgrading, never by adding a line here.
+ignore = [
+    # Unmaintained, and only inside GPUI, which this library is built on:
+    # they go when GPUI replaces them.
+    { id = "RUSTSEC-2024-0384", reason = "instant: unmaintained; via gpui-base" },
+    { id = "RUSTSEC-2024-0436", reason = "paste: unmaintained proc-macro; via gpui-component and rav1e" },
+    { id = "RUSTSEC-2025-0134", reason = "rustls-pemfile: unmaintained; via gpui-pre-reqwest" },
+    { id = "RUSTSEC-2026-0192", reason = "ttf-parser: unmaintained; via fontdb (GPUI's and usvg's font loading)" },
+    { id = "RUSTSEC-2026-0206", reason = "rustybuzz: unmaintained; via usvg (GPUI's SVG icons)" },
+    { id = "RUSTSEC-2026-0374", reason = "basic-toml: unmaintained; build-time only, via the askama_derive proc-macro" },
+    # lru < 0.18.2 frees a node before unlinking it when a key's Drop
+    # panics in pop(). Our own lru is 0.18; glyphon 0.12 still holds 0.16
+    # with plain-data glyph keys, whose Drop cannot panic.
+    { id = "RUSTSEC-2026-0253", reason = "lru 0.16 via glyphon; its keys' Drop cannot panic" },
+    # Unmaintained; serde_yaml is used only by an unpublished in-repo tool
+    # crate, never by the library or its published crates.
+    { id = "RUSTSEC-2024-0449", reason = "unsafe-libyaml via serde_yaml in an unpublished tool crate" },
+]
 
 [sources]
 unknown-registry = "deny"
