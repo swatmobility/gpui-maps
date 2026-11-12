@@ -67,6 +67,7 @@
       </button>
       <a class="btn-light" href="https://github.com/swatmobility/gpui-maps">View the source</a>
     </div>
+    <p class="install-hint">Your app also needs GPUI and Tokio. <a href="#add">See the commands</a>.</p>
   </div>
   <div class="player" id="try">
     <div class="player-bar">
@@ -101,31 +102,63 @@
 
 <section class="start" id="start">
   <div class="wrap">
-    <h2>Your first map in three commands.</h2>
-    <p class="lede">Clone the repository and run the first example. It opens a window on Singapore with an open, keyless basemap.</p>
+    <h2>Your first map in a few commands.</h2>
+    <p class="lede">Run the first example from the repository, or add a map to your own GPUI app. Both open a window on Singapore with an open, keyless basemap.</p>
     <div class="start-grid">
-      <div class="term" role="img" aria-label="Terminal: clone the repository and run the hello_map example">
-        <div class="term-bar"><i></i><i></i><i></i><span>zsh</span></div>
+      <div class="start-col">
+        <h3>Try an example</h3>
+        <div class="term" role="img" aria-label="Terminal: clone the repository and run the hello_map example">
+          <div class="term-bar"><i></i><i></i><i></i><span>zsh</span></div>
 <pre class="term-body"><span class="p">$</span> git clone https://github.com/swatmobility/gpui-maps
 <span class="p">$</span> cd gpui-maps
 <span class="p">$</span> cargo run --example hello_map
 <span class="dim">   Compiling gpui-maps v0.8.0
     Finished `dev` profile
      Running `target/debug/examples/hello_map`</span></pre>
+        </div>
       </div>
-      <div class="code">
-        <div class="code-bar">src/main.rs</div>
-<pre class="code-body"><span class="k">use</span> gpui_maps::basemaps::{<span class="k">self</span>, Basemap};
-<span class="k">use</span> gpui_maps::map_view::MapView;
-
-<span class="k">let</span> b = basemaps::load(Basemap::Liberty)?;
-<span class="k">let</span> map = cx.new(|_| MapView::new(
-    <span class="n">103.85</span>, <span class="n">1.29</span>, <span class="n">12.0</span>, <span class="n">1024.0</span>, <span class="n">768.0</span>,
-    b.style, b.source, rt.clone(),
-));</pre>
+      <div class="start-col" id="add">
+        <h3>Add to your app</h3>
+        <div class="term" role="img" aria-label="Terminal: create a new app and add gpui-maps, GPUI and Tokio with cargo add">
+          <div class="term-bar"><i></i><i></i><i></i><span>zsh</span></div>
+<pre class="term-body"><span class="p">$</span> cargo new my-map &amp;&amp; cd my-map
+<span class="p">$</span> cargo add gpui-maps
+<span class="p">$</span> cargo add gpui-pre@=0.3.12 --rename gpui
+<span class="p">$</span> cargo add gpui-pre-platform@=0.3.12 \
+    --rename gpui-platform -F font-kit
+<span class="p">$</span> cargo add tokio -F rt-multi-thread
+<span class="dim"># put the code below in src/main.rs</span>
+<span class="p">$</span> cargo run</pre>
+        </div>
       </div>
     </div>
-    <p class="aside">A map is a GPUI view, so you add it to a window like any other element. <a href="https://github.com/swatmobility/gpui-maps/blob/master/docs/public/getting-started.md">Read the getting-started guide</a>.</p>
+    <div class="code start-main">
+      <div class="code-bar">src/main.rs</div>
+<pre class="code-body"><span class="k">use</span> gpui::{prelude::*, px, size, App, Bounds, WindowBounds, WindowOptions};
+<span class="k">use</span> gpui_maps::basemaps::{<span class="k">self</span>, Basemap};
+<span class="k">use</span> gpui_maps::map_view::MapView;
+
+<span class="k">fn</span> main() {
+    <span class="k">let</span> runtime = tokio::runtime::Runtime::new().expect(<span class="n">"tokio runtime"</span>);
+    <span class="k">let</span> rt = runtime.handle().clone();
+    gpui_platform::application().run(<span class="k">move</span> |cx: &amp;<span class="k">mut</span> App| {
+        <span class="k">let</span> bounds = Bounds::centered(None, size(px(<span class="n">1024.0</span>), px(<span class="n">768.0</span>)), cx);
+        <span class="k">let</span> options = WindowOptions { window_bounds: Some(WindowBounds::Windowed(bounds)), ..Default::default() };
+        cx.open_window(options, <span class="k">move</span> |_window, cx| {
+            <span class="k">let</span> b = basemaps::load(Basemap::Liberty).expect(<span class="n">"the bundled Liberty style compiles"</span>);
+            <span class="dim">// Singapore, zoom 12; the view resizes itself to the window.</span>
+            <span class="k">let</span> map = cx.new(|_| MapView::new(<span class="n">103.85</span>, <span class="n">1.29</span>, <span class="n">12.0</span>, <span class="n">1024.0</span>, <span class="n">768.0</span>, b.style, b.source, rt.clone()));
+            <span class="k">if let</span> Some(sprite) = b.sprite {
+                basemaps::spawn_sprites(map.downgrade(), sprite, None, rt, cx);
+            }
+            map
+        })
+        .expect(<span class="n">"open the window"</span>);
+    });
+    std::mem::forget(runtime); <span class="dim">// the app owns the process from here</span>
+}</pre>
+    </div>
+    <p class="aside">A map is a GPUI view, so you add it to a window like any other element. The <a href="https://github.com/swatmobility/gpui-maps/blob/master/docs/public/getting-started.md">getting-started guide</a> goes on to styles, your own data and offline maps.</p>
   </div>
 </section>
 

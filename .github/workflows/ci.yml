@@ -31,6 +31,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      # The install lines in the README, the guide and the site name the
+      # same gpui-pre pin and version as Cargo.toml.
+      - name: install instructions match Cargo.toml
+        run: bash scripts/check-doc-pins.sh
       - uses: Swatinem/rust-cache@v2
       - name: cargo check --all-targets
         run: cargo check --all-targets --locked

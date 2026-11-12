@@ -68,6 +68,7 @@
       </button>
       <a class="btn-light" href="https://github.com/swatmobility/gpui-maps">ソースを見る</a>
     </div>
+    <p class="install-hint">アプリには GPUI と Tokio も必要です。<a href="#add">コマンドを見る</a>。</p>
   </div>
   <div class="player" id="try">
     <div class="player-bar">
@@ -102,31 +103,63 @@
 
 <section class="start" id="start">
   <div class="wrap">
-    <h2>3 つのコマンドで、最初の地図を。</h2>
-    <p class="lede">リポジトリをクローンして、最初のサンプルを実行します。キー不要のオープンなベースマップで、シンガポールを表示するウィンドウが開きます。</p>
+    <h2>いくつかのコマンドで、最初の地図を。</h2>
+    <p class="lede">リポジトリの最初のサンプルを実行するか、ご自身の GPUI アプリに地図を追加します。どちらも、キー不要のオープンなベースマップでシンガポールを表示するウィンドウが開きます。</p>
     <div class="start-grid">
-      <div class="term" role="img" aria-label="ターミナル：リポジトリをクローンして hello_map サンプルを実行">
-        <div class="term-bar"><i></i><i></i><i></i><span>zsh</span></div>
+      <div class="start-col">
+        <h3>サンプルを試す</h3>
+        <div class="term" role="img" aria-label="ターミナル：リポジトリをクローンして hello_map サンプルを実行">
+          <div class="term-bar"><i></i><i></i><i></i><span>zsh</span></div>
 <pre class="term-body"><span class="p">$</span> git clone https://github.com/swatmobility/gpui-maps
 <span class="p">$</span> cd gpui-maps
 <span class="p">$</span> cargo run --example hello_map
 <span class="dim">   Compiling gpui-maps v0.8.0
     Finished `dev` profile
      Running `target/debug/examples/hello_map`</span></pre>
+        </div>
       </div>
-      <div class="code">
-        <div class="code-bar">src/main.rs</div>
-<pre class="code-body"><span class="k">use</span> gpui_maps::basemaps::{<span class="k">self</span>, Basemap};
-<span class="k">use</span> gpui_maps::map_view::MapView;
-
-<span class="k">let</span> b = basemaps::load(Basemap::Liberty)?;
-<span class="k">let</span> map = cx.new(|_| MapView::new(
-    <span class="n">103.85</span>, <span class="n">1.29</span>, <span class="n">12.0</span>, <span class="n">1024.0</span>, <span class="n">768.0</span>,
-    b.style, b.source, rt.clone(),
-));</pre>
+      <div class="start-col" id="add">
+        <h3>アプリに追加する</h3>
+        <div class="term" role="img" aria-label="ターミナル：新しいアプリを作成し、cargo add で gpui-maps、GPUI、Tokio を追加">
+          <div class="term-bar"><i></i><i></i><i></i><span>zsh</span></div>
+<pre class="term-body"><span class="p">$</span> cargo new my-map &amp;&amp; cd my-map
+<span class="p">$</span> cargo add gpui-maps
+<span class="p">$</span> cargo add gpui-pre@=0.3.12 --rename gpui
+<span class="p">$</span> cargo add gpui-pre-platform@=0.3.12 \
+    --rename gpui-platform -F font-kit
+<span class="p">$</span> cargo add tokio -F rt-multi-thread
+<span class="dim"># 下のコードを src/main.rs に置く</span>
+<span class="p">$</span> cargo run</pre>
+        </div>
       </div>
     </div>
-    <p class="aside">地図は GPUI のビューなので、ほかの要素と同じようにウィンドウに追加できます。<a href="https://github.com/swatmobility/gpui-maps/blob/master/docs/public/getting-started.md">スタートガイドを読む</a>（英語）。</p>
+    <div class="code start-main">
+      <div class="code-bar">src/main.rs</div>
+<pre class="code-body"><span class="k">use</span> gpui::{prelude::*, px, size, App, Bounds, WindowBounds, WindowOptions};
+<span class="k">use</span> gpui_maps::basemaps::{<span class="k">self</span>, Basemap};
+<span class="k">use</span> gpui_maps::map_view::MapView;
+
+<span class="k">fn</span> main() {
+    <span class="k">let</span> runtime = tokio::runtime::Runtime::new().expect(<span class="n">"tokio runtime"</span>);
+    <span class="k">let</span> rt = runtime.handle().clone();
+    gpui_platform::application().run(<span class="k">move</span> |cx: &amp;<span class="k">mut</span> App| {
+        <span class="k">let</span> bounds = Bounds::centered(None, size(px(<span class="n">1024.0</span>), px(<span class="n">768.0</span>)), cx);
+        <span class="k">let</span> options = WindowOptions { window_bounds: Some(WindowBounds::Windowed(bounds)), ..Default::default() };
+        cx.open_window(options, <span class="k">move</span> |_window, cx| {
+            <span class="k">let</span> b = basemaps::load(Basemap::Liberty).expect(<span class="n">"the bundled Liberty style compiles"</span>);
+            <span class="dim">// Singapore, zoom 12; the view resizes itself to the window.</span>
+            <span class="k">let</span> map = cx.new(|_| MapView::new(<span class="n">103.85</span>, <span class="n">1.29</span>, <span class="n">12.0</span>, <span class="n">1024.0</span>, <span class="n">768.0</span>, b.style, b.source, rt.clone()));
+            <span class="k">if let</span> Some(sprite) = b.sprite {
+                basemaps::spawn_sprites(map.downgrade(), sprite, None, rt, cx);
+            }
+            map
+        })
+        .expect(<span class="n">"open the window"</span>);
+    });
+    std::mem::forget(runtime); <span class="dim">// the app owns the process from here</span>
+}</pre>
+    </div>
+    <p class="aside">地図は GPUI のビューなので、ほかの要素と同じようにウィンドウに追加できます。スタイル、独自データ、オフライン地図については<a href="https://github.com/swatmobility/gpui-maps/blob/master/docs/public/getting-started.md">スタートガイド</a>（英語）をご覧ください。</p>
   </div>
 </section>
 

@@ -110,6 +110,13 @@ h3 { font-size: 21px; line-height: 1.2; font-weight: 600; letter-spacing: -0.02e
 .code .k { color: #ff7ab2; }
 .code .n { color: #d9c97c; }
 .aside { margin: 28px 0 0; color: var(--ink-2); }
+.start-col { display: flex; flex-direction: column; min-width: 0; }
+.start-col h3 { margin: 0 0 14px; }
+.start-col .term { flex: 1; }
+.start-main { margin-top: 20px; }
+.code .dim { color: var(--term-dim); }
+.install-hint { margin: 16px 0 0; font-size: 15px; color: #a1a1a6; }
+.install-hint a { color: var(--atmo); }
 
 .specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px 40px; margin: 56px 0 0; }
 .specs div { border-top: 1px solid var(--line); padding-top: 16px; }
