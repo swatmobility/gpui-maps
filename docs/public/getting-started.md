@@ -46,9 +46,9 @@ and Shift+drag to rotate or tilt. At low zoom the map is a globe.
 gpui-maps = "0.8"
 # GPUI from crates.io, renamed so `gpui::` paths work; pin the exact version
 # gpui-maps is built against.
-gpui = { package = "gpui-pre", version = "=0.3.10" }
+gpui = { package = "gpui-pre", version = "=0.3.12" }
 # The platform layer. Keep `font-kit` on: without it macOS renders no text.
-gpui-platform = { package = "gpui-pre-platform", version = "=0.3.10", features = ["font-kit"] }
+gpui-platform = { package = "gpui-pre-platform", version = "=0.3.12", features = ["font-kit"] }
 # MapView fetches and decodes tiles on a Tokio runtime you hand it.
 tokio = { version = "1", features = ["rt-multi-thread"] }
 anyhow = "1"
@@ -58,8 +58,6 @@ anyhow = "1"
 [profile.dev.package.gpui-maps]
 opt-level = 2
 ```
-
-Pin a `rev = "..."` on the git dependency for reproducible builds.
 
 ### main.rs
 
