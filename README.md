@@ -65,7 +65,7 @@ On a Mac with the Rust toolchain installed:
 ```bash
 git clone https://github.com/swatmobility/gpui-maps
 cd gpui-maps
-cargo run --example hello_map
+cargo run --release --example hello_map
 ```
 
 `examples/hello_map.rs` opens a window on Singapore with OpenFreeMap's

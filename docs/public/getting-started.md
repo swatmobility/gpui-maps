@@ -26,13 +26,14 @@ You also need the Xcode command-line tools (`xcode-select --install`).
 ```bash
 git clone https://github.com/swatmobility/gpui-maps
 cd gpui-maps
-cargo run --example hello_map
+cargo run --release --example hello_map
 ```
 
 A window opens on Singapore at zoom 12, drawn from OpenFreeMap's planet
 tiles with the Liberty style. No account and no token are needed. The
 first build compiles GPUI and `wgpu` and takes several minutes; later
-builds are incremental.
+builds are incremental. Use `--release`: an unoptimised debug build of the
+map stutters when you zoom.
 
 Drag to pan, scroll to zoom toward the cursor, double-click to zoom in,
 and Shift+drag to rotate or tilt. At low zoom the map is a globe.

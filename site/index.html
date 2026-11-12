@@ -111,10 +111,10 @@
           <div class="term-bar"><i></i><i></i><i></i><span>zsh</span></div>
 <pre class="term-body"><span class="p">$</span> git clone https://github.com/swatmobility/gpui-maps
 <span class="p">$</span> cd gpui-maps
-<span class="p">$</span> cargo run --example hello_map
+<span class="p">$</span> cargo run --release --example hello_map
 <span class="dim">   Compiling gpui-maps v0.8.0
-    Finished `dev` profile
-     Running `target/debug/examples/hello_map`</span></pre>
+    Finished `release` profile [optimized]
+     Running `target/release/examples/hello_map`</span></pre>
         </div>
       </div>
       <div class="start-col" id="add">
@@ -128,7 +128,7 @@
     --rename gpui-platform -F font-kit
 <span class="p">$</span> cargo add tokio -F rt-multi-thread
 <span class="dim"># put the code below in src/main.rs</span>
-<span class="p">$</span> cargo run</pre>
+<span class="p">$</span> cargo run --release</pre>
         </div>
       </div>
     </div>
@@ -186,7 +186,7 @@
     <p class="lede">An app built on gpui-maps can open a local HTTP port that describes itself. An agent lists the actions, calls them, and reads the map's state back as JSON, so it can move, inspect and test the map without screenshots.</p>
     <div class="term term-agent" id="agent-term">
       <div class="term-bar"><i></i><i></i><i></i><span>claude</span></div>
-<pre class="term-body" aria-label="A coding agent session that drives the map"><span class="line"><span class="p">$</span> GPUI_MAP_AGENTIC_PORT=7334 cargo run --example basic_map &amp;</span>
+<pre class="term-body" aria-label="A coding agent session that drives the map"><span class="line"><span class="p">$</span> GPUI_MAP_AGENTIC_PORT=7334 cargo run --release --example basic_map &amp;</span>
 <span class="line"><span class="p">$</span> claude</span>
 <span class="line"> </span>
 <span class="line"><span class="you">&gt; Fly to Tokyo Station and tilt it so the buildings show.</span></span>
