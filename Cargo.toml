@@ -1,6 +1,6 @@
 [package]
 name = "gpui-maps"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2021"
 description = "A GPU vector-map engine for GPUI: MVT/PMTiles/MBTiles tiles, MapLibre-style JSON styling, globe, 3D buildings and data overlays."
 repository = "https://github.com/swatmobility/gpui-maps"

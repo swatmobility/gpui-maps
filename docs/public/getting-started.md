@@ -43,7 +43,7 @@ and Shift+drag to rotate or tilt. At low zoom the map is a globe.
 
 ```toml
 [dependencies]
-gpui-maps = "0.7"
+gpui-maps = "0.8"
 # GPUI from crates.io, renamed so `gpui::` paths work; pin the exact version
 # gpui-maps is built against.
 gpui = { package = "gpui-pre", version = "=0.3.10" }

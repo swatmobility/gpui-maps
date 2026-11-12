@@ -91,7 +91,7 @@ adding data and going offline.
 
 ```toml
 [dependencies]
-gpui-maps = "0.7"
+gpui-maps = "0.8"
 gpui = { package = "gpui-pre", version = "=0.3.12" }
 gpui-platform = { package = "gpui-pre-platform", version = "=0.3.12", features = ["font-kit"] }
 tokio = { version = "1", features = ["rt-multi-thread"] }

@@ -3048,7 +3048,7 @@ dependencies = [
 
 [[package]]
 name = "gpui-maps"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "anyhow",
  "arrow-array",
@@ -8147,7 +8147,7 @@ dependencies = [
 
 [[package]]
 name = "swat-maps-doc"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "serde",
  "serde_json",

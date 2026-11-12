@@ -13,7 +13,7 @@
 
 [package]
 name = "swat-maps-stac"
-version = "0.0.0"
+version = "0.1.0"
 edition = "2021"
 description = "A lenient static STAC 1.1 / Portolan catalog reader: lazy link walk, assets by role, licences, publisher styles, ETag disk cache. Pure Rust, no HTTP client of its own."
 repository = "https://github.com/swatmobility/gpui-maps"

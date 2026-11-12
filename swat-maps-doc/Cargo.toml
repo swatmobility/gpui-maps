@@ -12,7 +12,7 @@
 [package]
 # Published as swat-maps-doc; the library keeps its `swat_maps_doc` path.
 name = "swat-maps-doc"
-version = "0.0.0"
+version = "0.1.0"
 edition = "2021"
 description = "The map document format of gpui-maps: layers, filters, scales and the actions that edit them. Pure Rust, no GPU, wasm-ready."
 repository = "https://github.com/swatmobility/gpui-maps"
