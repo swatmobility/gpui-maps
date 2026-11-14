@@ -40,3 +40,9 @@ tools/census-pack/target/
 /embed-ios/sample/GpuiMapsSample.xcodeproj/
 /embed-ios/sample/Generated/
 /embed-ios/sample/build/
+
+# Release builds (scripts/bundle-studio.sh, notarize.sh): .app, zip, DMG.
+/dist/
+
+# macOS Finder metadata.
+.DS_Store

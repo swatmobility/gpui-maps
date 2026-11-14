@@ -302,3 +302,4 @@ html:lang(ja) {
 }
 .rot.out .ch { opacity: 0; transform: translateY(-0.28em); filter: blur(8px); }
 .rot.pre .ch { opacity: 0; transform: translateY(0.32em); filter: blur(8px); transition: none; }
+.studio-first { margin: 16px 0 0; max-width: 720px; }
