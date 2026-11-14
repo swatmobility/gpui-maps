@@ -1379,6 +1379,7 @@ mod child {
                 let stats = gpui_maps::render::allocation_stats();
                 let heap_before = gpui_maps::render::heap_in_use_bytes();
                 let dropped = target.map(|kind| view.drop_cache_for_measurement(kind));
+                #[cfg_attr(not(feature = "probe"), allow(unreachable_code))] // `part` is `Infallible` without `probe`
                 let stripped = strip.map(|part| strip_decoded(view, part));
                 let heap_after = gpui_maps::render::heap_in_use_bytes();
                 emit(

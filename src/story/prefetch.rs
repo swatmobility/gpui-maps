@@ -669,7 +669,7 @@ mod tests {
         let pl = plan(reqs.clone().into_iter());
         // The union counts each frame's stand-ins too (ruling F3: they
         // are planned and resident like exact tiles).
-        let window_max = (0..40).map(|n| { let mut s = HashSet::new(); for f in n..(n + 6).min(40) { s.extend(pl.needs[f].tiles.iter().chain(&pl.needs[f].stand_ins).copied()); } s.len() }).max().unwrap();
+        let window_max = (0..40).map(|n| { let mut s = HashSet::new(); for need in &pl.needs[n..(n + 6).min(40)] { s.extend(need.tiles.iter().chain(&need.stand_ins).copied()); } s.len() }).max().unwrap();
         let (_, _, max_resident) = run(FakeSource::fixture(Duration::ZERO), 40, |_| {});
         assert!(max_resident as f64 <= window_max as f64 * 1.1 + 1.0, "{max_resident} vs {window_max}");
     }

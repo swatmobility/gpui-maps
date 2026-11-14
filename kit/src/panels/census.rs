@@ -1712,13 +1712,13 @@ pub fn histogram_strip(layout: &LegendLayout, range: IncomeRange, hist: &Histogr
                     quad(x0, x1, HIST_HEIGHT, tint, tint);
                 }
                 let peak = overall.peak();
-                for k in 0..overall.counts.len() {
+                for (k, &count) in overall.counts.iter().enumerate() {
                     let (x0, x1) = x_of(k);
-                    quad(x0, x1 - 0.5, height(overall.counts[k], peak), gpui::rgb(HIST_OVERALL), gpui::rgb(HIST_OVERALL_OUT));
+                    quad(x0, x1 - 0.5, height(count, peak), gpui::rgb(HIST_OVERALL), gpui::rgb(HIST_OVERALL_OUT));
                 }
                 if let Some(in_view) = &in_view {
                     let peak = in_view.peak();
-                    for k in 0..in_view.counts.len() {
+                    for (k, &count) in in_view.counts.iter().enumerate() {
                         let (x0, x1) = x_of(k);
                         let (a, b) = bin_span(k);
                         let color = viridis_at((a + b) / 2.0);
@@ -1727,7 +1727,7 @@ pub fn histogram_strip(layout: &LegendLayout, range: IncomeRange, hist: &Histogr
                         quad(
                             x0 + inset,
                             x1 - 0.5 - inset,
-                            height(in_view.counts[k], peak),
+                            height(count, peak),
                             color,
                             gpui::Rgba { a: HIST_OUT_ALPHA, ..color },
                         );

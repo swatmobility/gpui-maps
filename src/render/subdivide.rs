@@ -593,8 +593,8 @@ pub(crate) fn subdivide_fill_span<V: SubdivVertex>(
     // `_initializeVertices` (`subdivision.ts:569-573`). Without it a
     // tile-covering quad's own four corners would be duplicated by the
     // cells that touch them.
-    for index in vertex_start..buffers.vertices.len() {
-        let position = buffers.vertices[index].position();
+    for (index, vertex) in buffers.vertices.iter().enumerate().skip(vertex_start) {
+        let position = vertex.position();
         scratch.dedupe.entry(position_key(position)).or_insert(index as u32);
     }
 

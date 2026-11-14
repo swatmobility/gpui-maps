@@ -231,12 +231,12 @@ pub fn bundle_density(edges: &[PathEdge], weights: &[f64], p: DensityBundlingPar
                 return;
             }
             let n = s.pts.len();
-            for i in 1..n - 1 {
+            for (i, pt) in s.pts.iter_mut().enumerate().take(n - 1).skip(1) {
                 let t = taper(i as f64 / (n - 1) as f64, taper_span);
                 if t <= 0.0 {
                     continue;
                 }
-                let q = s.pts[i];
+                let q = *pt;
                 let Some(m) = field.mean_shift(density, q, sigma) else { continue };
                 let k = step * t;
                 let (mut dx, mut dy) = (m[0] * k, m[1] * k);
@@ -245,7 +245,7 @@ pub fn bundle_density(edges: &[PathEdge], weights: &[f64], p: DensityBundlingPar
                     dx *= h / len;
                     dy *= h / len;
                 }
-                s.pts[i] = [q[0] + dx, q[1] + dy];
+                *pt = [q[0] + dx, q[1] + dy];
             }
             smooth(&mut s.pts, p.smoothing.clamp(0.0, 1.0), p.smoothing_passes);
             let pts = resample(&s.pts, n);
