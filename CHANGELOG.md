@@ -9,6 +9,18 @@ All notable changes to SWAT Maps for GPUI are recorded here. The crates
 follow [Semantic Versioning](https://semver.org); while they are on `0.x`, a
 minor version may break the API (see `docs/versioning.md`).
 
+## 0.8.1
+
+For hosts that draw their own pins, lines and buttons over the map.
+
+- `MapView::set_present_in_scene`: on macOS, the map is drawn as an image
+  in gpui's scene, under what the host draws in the same bounds, instead of
+  in its own `CAMetalLayer`. Clipping and z-order come from gpui; the cost is
+  a read-back per frame, as on Linux and Windows, where this is the only
+  path.
+- `MapView::set_chrome_left_inset`: keeps the brand mark clear of the left
+  edge, as `set_chrome_right_inset` keeps the credits clear of the right.
+
 ## 0.8.0 — the first public release
 
 The first open-source release of the engine and its format crates, under

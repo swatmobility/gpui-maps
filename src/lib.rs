@@ -30,8 +30,8 @@ pub mod geo;
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) mod image_cache;
 pub mod map_view;
-/// Off macOS: the map's frames shown as images in gpui's scene.
-#[cfg(not(target_os = "macos"))]
+/// Off macOS, and on it with `MapView::set_present_in_scene`: the map's
+/// frames shown as images in gpui's scene.
 pub(crate) mod offscreen_presenter;
 pub mod mvt;
 pub mod projection;

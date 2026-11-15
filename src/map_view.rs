@@ -4453,6 +4453,10 @@ pub struct MapView {
     /// `render::MapLayer` for the two placements and why the window change
     /// is inseparable from the layer one.
     chrome_above_map: bool,
+    /// macOS: the map reaches the screen as an image in gpui's scene (the
+    /// path Linux and Windows always take) rather than through its own
+    /// `CAMetalLayer`. See [`MapView::set_present_in_scene`].
+    present_in_scene: bool,
     /// Whether the raster source draws over the basemap's tiles rather
     /// than under them. See [`MapView::set_raster_above_basemap`].
     raster_above_basemap: bool,
@@ -4712,6 +4716,9 @@ pub struct MapView {
     /// Logical pixels at the right the credits keep clear of
     /// ([`Self::set_chrome_right_inset`]): a host panel over that edge.
     chrome_right_inset_px: f32,
+    /// Logical pixels at the left the brand mark keeps clear of
+    /// ([`Self::set_chrome_left_inset`]).
+    chrome_left_inset_px: f32,
     /// The host shows the credits itself ([`Self::set_credits_by_host`]).
     credits_by_host: bool,
     /// The plate as last drawn, in LOGICAL pixels `(x, y, w, h)`, and
@@ -5014,9 +5021,9 @@ pub struct MapView {
     nav_ticking: bool,
     /// Who waits for the next frame as drawn ([`Self::grab_next_frame`]).
     frame_grabs: Vec<std::sync::mpsc::Sender<crate::render::frame_grab::FrameGrab>>,
-    /// Off macOS, how frames reach the screen: drawn offscreen, read back,
-    /// painted as images (see `offscreen_presenter`).
-    #[cfg(not(target_os = "macos"))]
+    /// Off macOS (and on it with `present_in_scene`), how frames reach the
+    /// screen: drawn offscreen, read back, painted as images (see
+    /// `offscreen_presenter`).
     offscreen: crate::offscreen_presenter::OffscreenPresenter,
     /// The scale factor of the window this map last painted in (1 until
     /// one has): what an offscreen frame puts back when it is done.
@@ -5183,6 +5190,7 @@ impl MapView {
             camera_link: None,
             budget_share: None,
             chrome_above_map: false,
+            present_in_scene: false,
             raster_above_basemap: false,
             hidden: false,
             corner_radius: 0.0,
@@ -5219,6 +5227,7 @@ impl MapView {
             keyed_credits: Vec::new(),
             attribution_compact: crate::attribution::CompactState::interactive(),
             chrome_right_inset_px: 0.0,
+            chrome_left_inset_px: 0.0,
             credits_by_host: false,
             attribution_hit: None,
             attribution_narrow: false,
@@ -5248,7 +5257,6 @@ impl MapView {
             frame_dirty: true,
             observing_self: false,
             frame_grabs: Vec::new(),
-            #[cfg(not(target_os = "macos"))]
             offscreen: crate::offscreen_presenter::OffscreenPresenter::default(),
             window_scale_factor: 1.0,
             grab_surface: false,
@@ -6004,6 +6012,21 @@ impl MapView {
         self.chrome_right_inset_px = if px.is_finite() { px.max(0.0) } else { 0.0 };
     }
 
+    /// Keeps the brand mark clear of the left `px` logical pixels of the
+    /// view, as [`Self::set_chrome_right_inset`] keeps the credits clear of
+    /// the right: a host panel over that edge, or a map laid out wider than
+    /// the part of it the host shows. 0 (the default) is the view's edge.
+    pub fn set_chrome_left_inset(&mut self, px: f32) {
+        self.chrome_left_inset_px = if px.is_finite() { px.max(0.0) } else { 0.0 };
+    }
+
+    /// How far right of the view's left edge the brand mark moves, in
+    /// PHYSICAL pixels ([`Self::set_chrome_left_inset`]): none under a
+    /// story, whose frame is the whole view.
+    fn mark_left_shift(&self, scale_factor: f32) -> f32 {
+        if self.story_frame.is_some() { 0.0 } else { self.chrome_left_inset_px * scale_factor }
+    }
+
     /// `true`: the host shows the credits itself -- every one
     /// [`Self::attributions`] lists, e.g. one line of short names with an
     /// "i" that opens them in full -- and the live map draws no credit
@@ -6475,6 +6498,28 @@ impl MapView {
     /// the map (the request, not whether the placement succeeded).
     pub fn chrome_above_map(&self) -> bool {
         self.chrome_above_map
+    }
+
+    /// Draws the map as an image in gpui's own scene, under whatever the
+    /// host draws in the same bounds, instead of in a `CAMetalLayer` over
+    /// the window's content.
+    ///
+    /// For a host that keeps its own pins, lines and buttons over the map
+    /// and cannot make its window transparent ([`Self::set_chrome_above_map`]).
+    /// Clipping, rounded corners and z-order then come from gpui. The cost
+    /// is a read-back per frame (GPU -> CPU -> gpui's atlas) and a frame or
+    /// two of latency -- what Linux and Windows always pay; there it is the
+    /// only path, so this is accepted and ignored.
+    ///
+    /// Call once before the first paint; it has no effect afterwards.
+    pub fn set_present_in_scene(&mut self, enabled: bool) {
+        self.present_in_scene = enabled;
+    }
+
+    /// Whether the map is drawn into gpui's scene (always, off macOS).
+    #[must_use]
+    pub fn present_in_scene(&self) -> bool {
+        cfg!(not(target_os = "macos")) || self.present_in_scene
     }
 
     /// Sets the base window title `paint()` appends a live `zoom=` readout
@@ -16287,8 +16332,7 @@ impl gpui::Element for MapView {
         // Off macOS the map is an image in gpui's scene, which is rebuilt
         // every frame: the newest one is painted on every paint, skipped GPU
         // pass or not.
-        #[cfg(not(target_os = "macos"))]
-        if !self.hidden {
+        if !self.hidden && self.present_in_scene() {
             self.offscreen.paint(bounds, self.corner_radius as f32, self.backdrop_color, window);
         }
         let placement = FramePlacement::of(bounds, window);
@@ -16316,7 +16360,10 @@ impl gpui::Element for MapView {
             self.render_offscreen_live(bounds, placement, window, cx);
         }
         #[cfg(target_os = "macos")]
-        {
+        if self.present_in_scene {
+            self.window_scale_factor = window.scale_factor();
+            self.render_offscreen_live(bounds, placement, window, cx);
+        } else {
             if let Err(err) = self.ensure_gpu(window) {
                 eprintln!("gpui-maps: failed to initialize GPU/native layer, map will not render: {err:#}");
                 return;
@@ -16331,13 +16378,13 @@ impl gpui::Element for MapView {
 }
 
 impl MapView {
-    /// Off macOS, the window's frame: drawn into a texture of the element's
+    /// Off macOS (and on it with `set_present_in_scene`), the window's
+    /// frame: drawn into a texture of the element's
     /// pixel size on the map's own GPU, then read back off the UI thread and
     /// handed to `offscreen_presenter`, which a later paint shows. One read
     /// at a time; a frame owed while one is in flight is drawn when that read
     /// lands. A finished read repaints the WINDOW rather than notifying the
     /// map, so it does not count as a change: a map at rest stops drawing.
-    #[cfg(not(target_os = "macos"))]
     fn render_offscreen_live(&mut self, bounds: Bounds<Pixels>, placement: FramePlacement, window: &mut Window, cx: &mut gpui::App) {
         if self.hidden || self.offscreen.in_flight() || !self.gpu_pass_owed_when(true, placement) {
             return;
@@ -19318,6 +19365,15 @@ impl MapView {
                 corner_shapes,
             )
         };
+        // A host panel over the left edge: the mark sits right of it (never
+        // under a story, whose frame is the whole view).
+        let mut corner = corner;
+        let left_shift = self.mark_left_shift(scale_factor);
+        if left_shift > 0.0 {
+            if let Some(mark) = corner.mark.as_mut() {
+                mark.screen_x += left_shift;
+            }
+        }
         // What a press on the plate is tested against (logical pixels),
         // and the compact state the first move collapses.
         self.attribution_hit = attribution_hit_of(corner.layout.as_ref(), scale_factor);
@@ -23959,6 +24015,40 @@ mod tests {
         cache = Some((key, Some((64.0, 1000.0))));
         let _ = corner(&mut cache, 7, Some("© another credit"));
         assert_ne!(cache.expect("refilled").0, key, "the credit is in the key");
+    }
+
+    /// `set_chrome_left_inset`: the mark moves right by the inset, in
+    /// physical pixels; a non-finite or negative inset is the view's edge;
+    /// under a story the mark stays in the frame's own slot.
+    #[test]
+    fn the_left_inset_moves_the_mark_except_under_a_story() {
+        let mut app = gpui::TestAppContext::single();
+        let (_, _, frame, _) = design_story("9:16", "reels");
+        let entity = gpui::AppContext::new(&mut app, |_| test_map_view(4.0, 0.0, (1024.0, 768.0)));
+        entity.update(&mut app, |view, cx| {
+            assert_eq!(view.mark_left_shift(2.0), 0.0, "the view's edge by default");
+            view.set_chrome_left_inset(72.0);
+            assert_eq!(view.mark_left_shift(2.0), 144.0, "logical inset times the scale");
+            for bad in [f32::NAN, f32::INFINITY, -10.0] {
+                view.set_chrome_left_inset(bad);
+                assert_eq!(view.mark_left_shift(2.0), 0.0, "{bad} is the view's edge");
+            }
+            view.set_chrome_left_inset(72.0);
+            view.set_story_frame(Some(Arc::clone(&frame)), cx);
+            assert_eq!(view.mark_left_shift(2.0), 0.0, "a story's frame is the whole view");
+        });
+    }
+
+    /// `set_present_in_scene`: off by default on macOS (the `CAMetalLayer`),
+    /// always on elsewhere, where the scene is the only path.
+    #[test]
+    fn present_in_scene_is_opt_in_on_macos_and_always_on_elsewhere() {
+        let mut view = test_map_view(4.0, 0.0, (1024.0, 768.0));
+        assert_eq!(view.present_in_scene(), cfg!(not(target_os = "macos")));
+        view.set_present_in_scene(true);
+        assert!(view.present_in_scene());
+        view.set_present_in_scene(false);
+        assert_eq!(view.present_in_scene(), cfg!(not(target_os = "macos")));
     }
 
     /// Task R4 (spec §13): on a design frame the live map draws one credit
